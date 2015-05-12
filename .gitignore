@@ -1,0 +1,8 @@
+# Files to ignore when considering what GIT should commit.
+
+#Sublime
+*.sublime-workspace
+*.sublime-project
+
+#osx
+.DS_Store

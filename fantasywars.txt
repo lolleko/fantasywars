@@ -1,0 +1,40 @@
+"fantasywars"
+{
+	"base"		"base"
+	"title"		"Fantasy Wars"
+	"maps"		"^fw_"
+	"menusystem"	"1"
+	"workshopid"	"15895"
+
+	"settings"
+	{
+		1
+		{
+			"name"		"fw_maxfrags"
+			"text"		"Max Frags"
+			"help"		"The maxiumum number of frags before a map change"
+			"type"		"Numeric"
+			"default"	"20"
+		}
+
+
+		2
+		{
+			"name"		"fw_grenades"
+			"text"		"Allow Grenades"
+			"help"		"If enabled then grenades are enabled"
+			"type"		"CheckBox"
+			"default"	"1"
+		}
+		3
+		{
+			"name"		"fw_neededxp"
+			"text"		"The XP amount for Level 2."
+			"help"		"Set the required amount of XP for leveling up a team, scales with higher Levels"
+			"type"		"numeric"
+			"default"	"200"
+		}
+
+	}
+
+}
