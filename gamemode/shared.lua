@@ -6,11 +6,14 @@ GM.Website = "N/A"
 GM.TeamBased	= true
 
 include( "modules/team.lua" )
+include( "sh_warriors.lua")
 include( "player_classes/player_test.lua" )
 
 TEAM_BLUE = 1
 
 TEAM_RED = 2
+
+WL:CreateList()
 
 function GM:CreateTeams()
 
@@ -22,12 +25,6 @@ function GM:CreateTeams()
 
 	team.UpdateNeededXP( TEAM_BLUE )
 	team.UpdateNeededXP( TEAM_RED )
-
-	team.DistributeXP ( TEAM_BLUE )
-	team.DistributeXP ( TEAM_BLUE )
-	team.DistributeXP ( TEAM_BLUE )
-	team.DistributeXP ( TEAM_BLUE )
-	team.DistributeXP ( TEAM_BLUE )
 
 end
 

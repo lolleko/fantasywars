@@ -1,0 +1,10 @@
+{
+	"title"		:	"My Server Content",
+	"type"		:	"ServerContent",
+	"tags"		:	[ "roleplay", "realism" ],
+	"ignore"	:
+	[
+		".DS_Store",
+        ".git*"
+	]
+}

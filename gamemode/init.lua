@@ -1,15 +1,24 @@
 AddCSLuaFile( "cl_init.lua" )
+AddCSLuaFile( "cl_hud.lua" )
 AddCSLuaFile( "shared.lua" )
 AddCSLuaFile( "cl_teampick.lua" )
 AddCSLuaFile( "modules/team.lua")
 AddCSLuaFile( "player_classes/player_test.lua" )
+AddCSLuaFile( "sh_warriors.lua" )
+AddCSLuaFile( "vgui/DPickMenu.lua" )
 
 include( "shared.lua" )
 include( "player.lua" )
+include( "player_ext.lua" )
 
-function GM:GetFallDamage( ply, speed )
-	return ( 0 )
-end
+--net strings
+util.AddNetworkString('FW_SetWarrior')
+
+net.Receive('FW_SetWarrior', function(length, ply)
+	if  ply:IsValid() and ply:IsPlayer() then
+		ply:SetWarrior(net.ReadString())
+	end
+end)
 
 function PlayerCount()
    local playercount = 0

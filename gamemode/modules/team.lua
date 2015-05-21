@@ -48,8 +48,16 @@ end
 
 function LevelUp( id )
 
-	SetLevel( id, GetLevel( id ) + 1)
-	UpdateNeededXP( id )
+	--called when team has enough xp for levelup
+
+	SetLevel( id, GetLevel( id ) + 1) --add one level
+	UpdateNeededXP( id ) --next level requirements are higher
+
+	for _,ply in pairs( player.GetAll() ) do
+		if (IsValid(ply) and ply:Team() == id) then
+			ply:LevelUpPlayer() --level up/renew all stats for each player
+		end
+	end
 
 end
 
@@ -60,6 +68,8 @@ function AddXP( id, amount)
 end
 
 function DistributeXP( id )
+	--addxp
+	--TODO better function comeback stuff....
 	AddXP( id, 50)
 	local neededxp = GetNeededXP( id )
 
@@ -87,6 +97,8 @@ function UpdateNeededXP( id )
 	SetNeededXP( id, GetConVarNumber( "fw_neededxp" ) * GetLevel( id ) )
 
 end
+
+--default functions from /includes/modules/team.lua
 
 function GetAllTeams()
 
