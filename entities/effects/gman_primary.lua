@@ -1,4 +1,4 @@
-EFFECT.Mat = Material( "sprites/bluelaser1" )
+EFFECT.Mat = Material( "trails/plasma" )
 
 -- slightly bigger tooltracer
 

@@ -22,6 +22,7 @@ function PMENU:Init()
 			net.Start('FW_SetWarrior')
 				net.WriteString(name)
 			net.SendToServer()
+			Frame:Close()
 		end
 		posx = posx + 80
 	end

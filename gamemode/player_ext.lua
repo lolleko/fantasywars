@@ -46,7 +46,7 @@ function plymeta:GetStatusTable()
 end
 
 function plymeta:HasStatus( name )
-	if timer.Exists( self:Nick()..name ) then
+	if self:GetStatusTable()[name] then
 		return true
 	else
 		return false
@@ -110,13 +110,21 @@ function plymeta:StartWarriorTimer( name, duration )
 	timer.Create( name, 1, duration, function() self:SetNWInt(name, self:GetNWInt(name,0)-1) end) -- reduce cooldown till 0
 end
 
-function plymeta:SetStatus( duration, name, funcstart, funcend )
+function plymeta:CreateTimerName( name )
+	return self:Nick().."."..name
+end
+
+function plymeta:SetStatus( duration, name, funcstart, funcend, functick )
 
 	self:GetStatusTable()[name] = funcend
 
+	tname = self:CreateTimerName( name )
+
 	funcstart()
 
-	timer.Create( self:Nick()..name, duration, 1, function() self:RemoveStatus( name ) end  )
+	if functick then functick() timer.Create( tname..".tick", 1, duration, functick ) end
+ 
+	timer.Create( tname..".end", duration, 1, function() self:RemoveStatus( name ) end  )
 
 end
 
@@ -124,10 +132,17 @@ function plymeta:RemoveStatus( name )
 
 	local funcend = self:GetStatusTable()[name]
 
+	tname = self:CreateTimerName( name )
+
 	funcend()
 
-	if timer.Exists( self:Nick()..name ) then
-		timer.Destroy( self:Nick()..name )
+	self:GetStatusTable()[name] = nil
+
+	if timer.Exists( tname..".tick" ) then
+		timer.Destroy( tname..".tick" )
+	end
+	if timer.Exists( tname..".end" ) then
+		timer.Destroy( tname..".end" )
 	end
 
 end

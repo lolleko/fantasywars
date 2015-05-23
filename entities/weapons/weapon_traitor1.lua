@@ -50,26 +50,27 @@ function SWEP:SecondaryAttack()
 	if SERVER then -- we want the skill and cooldown to be handled by the SERVER not by the CLIENT
 
 		local cooldown = 15
+		local ply = self.Owner
 
-		self.Owner:SetStatus( 5, "Traitor_Invisible", function() self:MakeVisible( false ) end , function() self:MakeVisible( true ) end )
+		self.Owner:SetStatus( 5, "Traitor_Invisible", function() MakeVisible(  ply, false ) end , function() MakeVisible( ply, true ) end )
 
 		self:StartCooldown( self.Secondary.Slot ,cooldown)-- Start cooldown for first "ability"
 
 	end
 end
 
-function SWEP:MakeVisible( state )
+function MakeVisible( ply, state )
 	if( state ) then
-		self:SetColor( Color(0, 0, 0, 255 ) )
-		self.Owner:SetColor( Color(0, 0, 0, 255 ) )
-		self.Owner:SetWalkSpeed( self.Owner:GetWalkSpeed() - 200 )
-		self.Owner:DrawViewModel( true )
+		ply:GetWeapon( "weapon_traitor1" ):SetRenderMode(RENDERMODE_TRANSALPHA)
+		ply:GetWeapon( "weapon_traitor1" ):SetColor( Color(0, 0, 0, 255 ) )
+		ply:SetColor( Color(0, 0, 0, 255 ) )
+		ply:SetWalkSpeed( ply:GetWalkSpeed() - 200 )
+		ply:DrawViewModel( true )
 	else
-		self:SetRenderMode(RENDERMODE_TRANSALPHA)
-		self:SetColor( Color(0, 0, 0, 0 ) )
-		self.Owner:SetRenderMode(RENDERMODE_TRANSALPHA)
-		self.Owner:SetColor( Color(0, 0, 0, 15 ) )
-		self.Owner:DrawViewModel( false )
-		self.Owner:SetWalkSpeed( self.Owner:GetWalkSpeed() + 200 )
+		ply:GetWeapon( "weapon_traitor1" ):SetColor( Color(0, 0, 0, 0 ) )
+		ply:SetRenderMode(RENDERMODE_TRANSALPHA)
+		ply:SetColor( Color(0, 0, 0, 15 ) )
+		ply:DrawViewModel( false )
+		ply:SetWalkSpeed( ply:GetWalkSpeed() + 200 )
 	end
 end

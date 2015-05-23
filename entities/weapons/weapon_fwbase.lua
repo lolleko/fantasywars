@@ -65,6 +65,8 @@ end
 function SWEP:StartCooldown(slot, duration)
 	-- function should only be available for servers since all data is tstored serverside
 
+	if duration <= 0 then return end -- if duration < or 0 there is no need for a cooldown
+
 	local cdcallname = self.Owner:Nick().."Cooldown."..slot -- Create Timer and Network name
 
 	if self:IsOnCooldown( cdcallname ) then return end -- check if a cooldown exists already in case player died with ability on cd (Maybe uneeded here because it should be chekecd in the Attack functions)
