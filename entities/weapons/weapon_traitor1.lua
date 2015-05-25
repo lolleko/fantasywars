@@ -7,16 +7,17 @@ SWEP.AutoSwitchTo       = false
 SWEP.AutoSwitchFrom     = false
 SWEP.TracerName 		= "Tracer"
 SWEP.Tracer				= 1
+SWEP.Distance 			= 1000
 
-SWEP.Primary.Damage 		= 30
+SWEP.Primary.Damage 		= 10
 SWEP.Primary.ClipSize       = -1
 SWEP.Primary.DefaultClip    = -1
 SWEP.Primary.Automatic      = false
 SWEP.Primary.Ammo           = "none"
 
-SWEP.Primary.NumShots       = 1
-SWEP.Primary.Cone           = 0.0075
-SWEP.Primary.Delay 			= 0.5
+SWEP.Primary.NumShots       = 8
+SWEP.Primary.Cone           = 0.085
+SWEP.Primary.Delay 			= 1.5
 
 SWEP.Primary.Slot 			= 0
 SWEP.Secondary.Slot 		= 1
@@ -26,11 +27,10 @@ SWEP.Secondary.DefaultClip  = -1
 SWEP.Secondary.Automatic    = false
 SWEP.Secondary.Ammo         = "none"
 
-SWEP.Primary.Sound       	= Sound( "Weapon_AK47.Single" )
-SWEP.ViewModelFlip 			= true
-
-SWEP.ViewModel  = "models/weapons/v_rif_ak47.mdl"
-SWEP.WorldModel = "models/weapons/w_rif_ak47.mdl"
+SWEP.ViewModelFOV		= 54
+SWEP.ViewModel			= "models/weapons/cstrike/c_shot_xm1014.mdl"
+SWEP.WorldModel			= "models/weapons/w_shot_xm1014.mdl"
+SWEP.Primary.Sound			= Sound( "Weapon_XM1014.Single" )
 
 function SWEP:PrimaryAttack()
 
@@ -52,7 +52,8 @@ function SWEP:SecondaryAttack()
 		local cooldown = 15
 		local ply = self.Owner
 
-		self.Owner:SetStatus( 5, "Traitor_Invisible", function() MakeVisible(  ply, false ) end , function() MakeVisible( ply, true ) end )
+		ply:SetStatus( 5, "Traitor_Invisible", function() MakeVisible(  ply, false ) end , function() MakeVisible( ply, true ) end )
+		ply:SetStatusScreenEffect("Traitor_Invisible", "Blur")
 
 		self:StartCooldown( self.Secondary.Slot ,cooldown)-- Start cooldown for first "ability"
 

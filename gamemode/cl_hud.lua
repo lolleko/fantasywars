@@ -30,8 +30,9 @@ function FantasyHUD()
 	local hp = ply:Health()
 	local hpp = ply:Health()/ply:GetMaxHealth() * 400
     local ap = ply:Armor()
-	local cd1 = ply:GetNWInt( ply:Nick().."Cooldown.1",0)
-    local cd2 = ply:GetNWInt( ply:Nick().."Cooldown.2",0)
+	local cd1 = ply:GetNWInt( ply:Nick()..".Cooldown.1",0)
+    local cd2 = ply:GetNWInt( ply:Nick()..".Cooldown.2",0)
+    local cd3 = ply:GetNWInt( ply:Nick()..".Cooldown.3",0)
 	local bl = team.GetLevel( 1 )
     local rl = team.GetLevel( 2 )
     local bxp = team.GetXP( 1 )
@@ -39,11 +40,12 @@ function FantasyHUD()
     local bxpp = team.GetXP( 1 )/team.GetNeededXP( 1 ) * 100
     local rxpp = team.GetXP( 2 )/team.GetNeededXP( 2 ) * 100
 
+    --hpbar
 	draw.RoundedBox( 0, 50, ScrH() - 200, 400, 40, Color(0,0,0) )
 	draw.RoundedBox( 0, 50, ScrH() - 200, hpp, 40, Color(230,40,40) )
 
     --ArmorBar
-    draw.RoundedBox( 0, 50, ScrH() - 170, ap, 10, Color(25,25,235) )
+    draw.RoundedBox( 0, 50, ScrH() - 165, ap, 5, Color(25,25,150) )
 
 	surface.SetTextColor( 255, 255, 255, 255)
     surface.SetTextPos( 60, ScrH() - 195 )
@@ -56,33 +58,38 @@ function FantasyHUD()
     surface.DrawText( cd1 )
 
     surface.SetTextColor( 255, 255, 255, 255)
-    surface.SetTextPos( 80, ScrH() - 100 )
+    surface.SetTextPos( 90, ScrH() - 100 )
     surface.SetFont( "treb_small" )
     surface.DrawText( cd2 )
 
-	surface.SetTextColor( 0, 0, 255, 255)
-    surface.SetTextPos( ScrW()/3, 20 )
+    surface.SetTextColor( 255, 255, 255, 255)
+    surface.SetTextPos( 120, ScrH() - 100 )
+    surface.SetFont( "treb_small" )
+    surface.DrawText( cd3 )
+
+	surface.SetTextColor( 12,91,173, 255)
+    surface.SetTextPos( ScrW()/3+35, 20 )
     surface.SetFont( "treb" )
     surface.DrawText( bl )
 
-    surface.SetTextColor( 255, 0, 0, 255)
-    surface.SetTextPos( ScrW()/1.5, 20 )
+    surface.SetTextColor( 108,0,5, 255)
+    surface.SetTextPos( ScrW()/1.5+35, 20 )
     surface.SetFont( "treb" )
     surface.DrawText( rl )
 
-    draw.RoundedBox( 0, ScrW()/3, 50, 100, 20, Color(0,0,0) )
-    draw.RoundedBox( 0, ScrW()/3, 50, bxpp, 20, Color(0,0,255) )
+    draw.RoundedBox( 0, ScrW()/3, 50, 100, 20, Color(255,255,255, 100) )
+    draw.RoundedBox( 0, ScrW()/3, 50, bxpp, 20, Color(12,91,173) )
 
-    surface.SetTextColor( 255, 255, 255, 255)
-    surface.SetTextPos( ScrW()/3+10, 50 )
+    surface.SetTextColor( 0, 0, 0, 255)
+    surface.SetTextPos( ScrW()/3+10, 52 )
     surface.SetFont( "treb_small" )
     surface.DrawText( bxp )
 
-    draw.RoundedBox( 0, ScrW()/1.5, 50, 100, 20, Color(0,0,0) )
-    draw.RoundedBox( 0, ScrW()/1.5, 50, rxpp, 20, Color(255,0,0) )
+    draw.RoundedBox( 0, ScrW()/1.5, 50, 100, 20, Color(255,255,255, 100) )
+    draw.RoundedBox( 0, ScrW()/1.5, 50, rxpp, 20, Color(108,0,5) )
 
-    surface.SetTextColor( 255, 255, 255, 255)
-    surface.SetTextPos( ScrW()/1.5+10, 50 )
+    surface.SetTextColor( 0, 0, 0, 255)
+    surface.SetTextPos( ScrW()/1.5+10, 52 )
     surface.SetFont( "treb_small" )
     surface.DrawText( rxp )
 

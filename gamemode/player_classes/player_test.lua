@@ -12,6 +12,7 @@ function PLAYER:Loadout()
 	self.Player:RemoveAllAmmo()
 	self.Player:SetUpLoadout()
 
+
 end
 
 player_manager.RegisterClass( "player_test", PLAYER, "player_default" )

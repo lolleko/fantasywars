@@ -26,16 +26,10 @@ SWEP.Secondary.DefaultClip  = -1
 SWEP.Secondary.Automatic    = false
 SWEP.Secondary.Ammo         = "none"
 
-SWEP.ViewModel  = "models/weapons/v_hands.mdl"
-SWEP.WorldModel = "models/weapons/c_arms_citizen.mdl"
+SWEP.ViewModel  = "models/weapons/rainchu/v_nothing.mdl"
+SWEP.WorldModel = "models/weapons/rainchu/w_nothing.mdl"
 
 local gmantracer = 0 
-
-function SWEP:Initialize()
-	self:SetWeaponHoldType( self.HoldType ) -- Allow custom weapon hold type since it's just "pistol" in weapon_base
-	self:SetRenderMode(RENDERMODE_TRANSALPHA)
-	self:SetColor( Color(0, 0, 0, 0 ) )
-end
 
 function SWEP:Think()
 	--laser effect (modified green laser)
@@ -43,7 +37,7 @@ function SWEP:Think()
 
 	local hitEntity = trace.Entity
 
-	if trace.Hit and hitEntity:IsPlayer() then
+	if trace.Hit and hitEntity:IsPlayer() and hitEntity:Team() != self.Owner:Team() then
 		local effectdata = EffectData()
 		effectdata:SetOrigin( trace.HitPos )
 
@@ -81,7 +75,7 @@ function SWEP:SecondaryAttack()
 
 		local cooldown = 2
 
-		--Shittiest stuck prevention
+		--Shittiest stuck prevention ever (maybe redo at some point)
 		if trace.HitPos:Distance(trace.StartPos) > 3000 then
 			
 			self.Owner:PrintMessage( HUD_PRINTTALK, "Can't Teleport so far.")

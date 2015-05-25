@@ -8,6 +8,8 @@ GM.TeamBased	= true
 include( "modules/team.lua" )
 include( "sh_warriors.lua")
 include( "player_classes/player_test.lua" )
+include( "player_ext_sh.lua" )
+include( "screen_effects.lua" )
 
 TEAM_BLUE = 1
 

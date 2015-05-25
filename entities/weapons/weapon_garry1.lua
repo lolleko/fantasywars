@@ -46,17 +46,15 @@ function SWEP:SecondaryAttack()
 
 	--laser effect (modified green laser)
 	local trace = self.Owner:GetEyeTrace()
-	local effectdata = EffectData()
-	effectdata:SetOrigin( trace.HitPos )
-	effectdata:SetStart( self.Owner:GetShootPos() )
-	effectdata:SetAttachment( 1 )
-	effectdata:SetEntity( self.Weapon )
-	util.Effect( "garry_stuntracer", effectdata )
 
+	self:CustomTracer( "garry_stuntracer", trace.HitPos )
+
+	self:ShootEffects()
+		
 	if SERVER then -- we want the skill and cooldown to be handled by the SERVER not by the CLIENT
 		local cooldown = 10
 		local hitEntity = trace.Entity
-		if trace.Hit and hitEntity:IsPlayer() then -- if tracer hits player freeze him
+		if trace.Hit and hitEntity:IsPlayer() and hitEntity:Team() != self.Owner:Team() then -- if tracer hits player freeze him
 			hitEntity:SetStatus( 1.5, "Garry_Stungun", function() hitEntity:Freeze(true) end , function() hitEntity:Freeze( false ) end ) -- unfreeze after 1.5sec
 		else
 			cooldown = cooldown/5 -- if target not hit reset to a lower cooldown

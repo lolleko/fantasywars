@@ -12,7 +12,9 @@ include( "player.lua" )
 include( "player_ext.lua" )
 
 --net strings
-util.AddNetworkString('FW_SetWarrior')
+util.AddNetworkString('FW_SetWarrior' )
+util.AddNetworkString( "FW_SetScreenEffect" ) 
+util.AddNetworkString( "FW_RemoveScreenEffect" ) 
 
 net.Receive('FW_SetWarrior', function(length, ply)
 	if  ply:IsValid() and ply:IsPlayer() then

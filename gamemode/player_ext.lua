@@ -41,18 +41,6 @@ function plymeta:GetWarriorArmor()
 	return self:GetWarrior().Armor
 end
 
-function plymeta:GetStatusTable()
-	return self:GetWarrior().Status
-end
-
-function plymeta:HasStatus( name )
-	if self:GetStatusTable()[name] then
-		return true
-	else
-		return false
-	end
-end
-
 function plymeta:SetWarrior( name )
 	local warrior = WL:GetWarrior( name )
 	local war = {}
@@ -105,20 +93,73 @@ function plymeta:LevelUpPlayer()
 	self:SetHealth( self:Health() + healthgain)
 end
 
-function plymeta:StartWarriorTimer( name, duration )
+function plymeta:StartWarriorCooldown( name, duration )
 	self:SetNWInt(name,duration) -- Sent cooldown to client  HUD
 	timer.Create( name, 1, duration, function() self:SetNWInt(name, self:GetNWInt(name,0)-1) end) -- reduce cooldown till 0
 end
 
-function plymeta:CreateTimerName( name )
+--Status Table for setting Status effects on players
+
+function plymeta:GetStatusTable()
+	return self:GetWarrior().Status
+end
+
+function plymeta:GetStatus( name )
+	return self:GetStatusTable()[name]
+end
+
+function plymeta:GetStatusFuncend( name )
+	return self:GetStatus( name ).funcend
+end
+
+function plymeta:CreateStatus( name )
+	self:GetStatusTable()[name] = {}
+end
+
+function plymeta:SetStatusFuncend( name, endfunc )
+	self:GetStatus( name ).funcend = endfunc
+end
+
+function plymeta:SetStatusScreenEffect( name, effect )
+	self:GetStatus( name ).screeneffect = effect
+
+	net.Start( "FW_SetScreenEffect" )
+			net.WriteString( effect )
+	net.Send( self )
+end
+
+function plymeta:GetStatusScreenEffect( name )
+	return self:GetStatus( name ).screeneffect
+end
+
+function plymeta:RemoveStatusScreenEffect( name )
+	net.Start( "FW_RemoveScreenEffect" )
+			net.WriteString( self:GetStatusScreenEffect( name ) )
+	net.Send( self )
+
+	self:GetStatus( name ).screeneffect = nil
+end
+
+function plymeta:HasStatus( name )
+	if self:GetStatus( name ) then
+		return true
+	else
+		return false
+	end
+end
+
+function plymeta:CreateStatusTimerName( name )
 	return self:Nick().."."..name
 end
 
+--Sets a Status
 function plymeta:SetStatus( duration, name, funcstart, funcend, functick )
 
-	self:GetStatusTable()[name] = funcend
+	self:CreateStatus( name )
 
-	tname = self:CreateTimerName( name )
+	self:SetStatusFuncend( name, funcend )
+
+	tname = self:CreateStatusTimerName( name )
 
 	funcstart()
 
@@ -128,11 +169,14 @@ function plymeta:SetStatus( duration, name, funcstart, funcend, functick )
 
 end
 
+--Removes named Status
 function plymeta:RemoveStatus( name )
 
-	local funcend = self:GetStatusTable()[name]
+	local funcend = self:GetStatusTable()[name].funcend
 
-	tname = self:CreateTimerName( name )
+	tname = self:CreateStatusTimerName( name )
+
+	if self:GetStatusScreenEffect( name ) then self:RemoveStatusScreenEffect( name ) end
 
 	funcend()
 
@@ -147,6 +191,7 @@ function plymeta:RemoveStatus( name )
 
 end
 
+--Clears every statrtus called on PlayerDeath
 function plymeta:ClearStatus()
 	for name ,_ in pairs(self:GetStatusTable()) do
 		self:RemoveStatus( name )

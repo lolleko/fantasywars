@@ -4,6 +4,7 @@ function GM:PlayerInitialSpawn( ply )
 	-- reduce number of bullet holes by default
 	ply:ConCommand( "r_decals 50" )
 	ply:SetCanZoom( false )
+	team.LevelUp(TEAM_BLUE)
 
 	if ( GAMEMODE.TeamBased ) then
 		ply:ConCommand( "gm_showteam" )
@@ -40,11 +41,16 @@ function GM:GetFallDamage( ply, speed )
 end
 
 function GM:PlayerShouldTakeDamage( ply, victim )
-	if ply:IsPlayer() then
+	if ply:IsPlayer() and victim:IsPlayer() then
 		if ply:Team() == victim:Team() then
 			return false
 		end
+	elseif ply:IsPlayer() and IsEntity( victim ) then
+		if victim:GetOwner():IsPlayer() and ply:Team() == victim:GetOwner():Team() then
+			return false
+		end
 	end
+	
 	return true
 end
 

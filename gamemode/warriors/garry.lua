@@ -5,4 +5,4 @@ WARRIOR.JumpPower = 300
 WARRIOR.Health = 100
 WARRIOR.Armor = 0
 WARRIOR.HealthGain  = 10
-WARRIOR.Weapons = {"weapon_garry1"}
+WARRIOR.Weapons = {"weapon_garry1","weapon_garry2"}
