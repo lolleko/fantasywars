@@ -27,6 +27,8 @@ SWEP.Secondary.Ammo         = "none"
 SWEP.ViewModel  = "models/weapons/rainchu/v_nothing.mdl"
 SWEP.WorldModel = "models/weapons/rainchu/w_nothing.mdl"
 
+SWEP.ToggleWH = false
+
 function SWEP:DrawHUD()
 	if not self:IsLevelAchieved(6) then return end
 	for id,target in pairs(player.GetAll()) do
@@ -76,7 +78,7 @@ function SWEP:SecondaryAttack()
 
 	if SERVER then -- we want the skill and cooldown to be handled by the SERVER not by the CLIENT
 
-		local cooldown = 2
+		local cooldown = 1
 
 		self:StartCooldown( self.Secondary.Slot ,cooldown)-- Start cooldown for first "ability"
 

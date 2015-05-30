@@ -61,7 +61,7 @@ function SWEP:SecondaryAttack()
 		local cooldown = 60
 
 		for _,ply in pairs(player.GetAll()) do
-			if ply:Team() != self.Owner:Team() then ply:SetStatus( 2.5, "Garry_Disarm", function() ply:StripWeapons() end , function() ply:SetUpLoadout() end) end
+			if ply:Team() != self.Owner:Team() then ply:SetStatus( 1.5, "Garry_Disarm", function() ply:StripWeapons() end , function() ply:SetUpLoadout() end) end
 		end
 
 		self:StartCooldown( self.Secondary.Slot ,cooldown)

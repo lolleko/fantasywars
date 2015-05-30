@@ -77,14 +77,14 @@ function SWEP:StartCooldown(slot, duration)
 	
 end
 
-function SWEP:IsOnCooldown( slot )
+function SWEP:IsOnCooldown( slot, supressmsg )
 
 	if  self.Owner:GetNWInt( self.Owner:Nick()..".Cooldown."..slot ,0) == 0 then -- return if NWInt exists (is it safe to check the nwint!?)
 
 		return false
 
 	else
-		self.Owner:PrintMessage( HUD_PRINTTALK, "Wait "..self.Owner:GetNWInt( self.Owner:Nick()..".Cooldown."..slot ,0).." more seconds to use that again.")
+		if not supressmsg then self.Owner:PrintMessage( HUD_PRINTTALK, "Wait "..self.Owner:GetNWInt( self.Owner:Nick()..".Cooldown."..slot ,0).." more seconds to use that again.") end
 		return true
 
 	end

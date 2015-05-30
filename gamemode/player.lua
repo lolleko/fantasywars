@@ -5,6 +5,18 @@ function GM:PlayerInitialSpawn( ply )
 	ply:ConCommand( "r_decals 50" )
 	ply:SetCanZoom( false )
 	team.LevelUp(TEAM_BLUE)
+	team.LevelUp(TEAM_BLUE)
+	team.LevelUp(TEAM_BLUE)
+	team.LevelUp(TEAM_BLUE)
+	team.LevelUp(TEAM_BLUE)
+	team.LevelUp(TEAM_BLUE)
+
+	team.LevelUp(TEAM_RED)
+	team.LevelUp(TEAM_RED)
+	team.LevelUp(TEAM_RED)
+	team.LevelUp(TEAM_RED)
+	team.LevelUp(TEAM_RED)
+	team.LevelUp(TEAM_RED)
 
 	if ( GAMEMODE.TeamBased ) then
 		ply:ConCommand( "gm_showteam" )

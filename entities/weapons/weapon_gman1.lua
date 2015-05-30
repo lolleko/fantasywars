@@ -49,7 +49,7 @@ function SWEP:Think()
 
 		effectdata:SetAttachment( 1 )
 		effectdata:SetEntity( self.Weapon )
-		if gmantracer == 7 then
+		if gmantracer == 5 then
 			util.Effect( "gman_primary", effectdata )
 			gmantracer = 0
 		end
