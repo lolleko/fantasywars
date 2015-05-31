@@ -55,7 +55,7 @@ function SWEP:Think()
 		end
 		gmantracer = gmantracer + 1
 		if SERVER then 
-			hitEntity:TakeDamage( self.Primary.Damage , self.Owner, self)
+			hitEntity:TakeDamage( hitEntity:GetMaxHealth() * 0.005 , self.Owner, self) --percentage base dmg
 		end
 	end
 end

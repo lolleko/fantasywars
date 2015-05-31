@@ -85,16 +85,17 @@ function SWEP:IsOnCooldown( slot, supressmsg )
 
 	else
 		if not supressmsg then self.Owner:PrintMessage( HUD_PRINTTALK, "Wait "..self.Owner:GetNWInt( self.Owner:Nick()..".Cooldown."..slot ,0).." more seconds to use that again.") end
+		
 		return true
 
 	end
 end
 
-function SWEP:IsLevelAchieved(lvl)
+function SWEP:IsLevelAchieved(lvl, supressmsg)
 
 	if team.GetLevel(self.Owner:Team()) < lvl then
 
-		self.Owner:PrintMessage( HUD_PRINTTALK, "You need Level ["..lvl.."] to use that ability.")
+		if not supressmsg then self.Owner:PrintMessage( HUD_PRINTTALK, "You need Level ["..lvl.."] to use that ability.") end
 
 		return false
 

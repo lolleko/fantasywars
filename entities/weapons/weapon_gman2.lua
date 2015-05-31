@@ -27,10 +27,8 @@ SWEP.Secondary.Ammo         = "none"
 SWEP.ViewModel  = "models/weapons/rainchu/v_nothing.mdl"
 SWEP.WorldModel = "models/weapons/rainchu/w_nothing.mdl"
 
-SWEP.ToggleWH = false
-
 function SWEP:DrawHUD()
-	if not self:IsLevelAchieved(6) then return end
+	if not self:IsLevelAchieved(6, true) then return end
 	for id,target in pairs(player.GetAll()) do
 		if target:Alive() and self.Owner:Nick() != target:Nick() then
 
