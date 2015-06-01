@@ -6,7 +6,7 @@ SWEP.HoldType 			= "physgun"
 SWEP.AutoSwitchTo       = false
 SWEP.AutoSwitchFrom     = false
 SWEP.TracerName 		= "garry_bullettracer"
-SWEP.Tracer				= 3
+SWEP.Tracer				= 1
 
 SWEP.Primary.Damage 		= 12
 SWEP.Primary.ClipSize       = -1

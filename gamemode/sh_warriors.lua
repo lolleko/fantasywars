@@ -16,6 +16,7 @@ function WL:CreateList()
 			self.Warriors[WARRIOR.Name] = WARRIOR
 	end
 
+	print("Loaded following Warriors:")
 	PrintTable(self.Warriors)
 
 end

@@ -12,7 +12,6 @@ SWEP.HoldType 			= "pistol"
 SWEP.AutoSwitchTo       = false
 SWEP.AutoSwitchFrom     = false
 SWEP.Tracer				= 2
-SWEP.Distance 			= 10000
 SWEP.UseHands			= true
 SWEP.Slot 				= 0
 
@@ -43,13 +42,13 @@ function SWEP:Initialize()
     self:SetWeaponHoldType( self.HoldType ) -- Allow custom weapon hold type since it's just "pistol" in weapon_base
 end
 
-function SWEP:ShootBullet( damage, num_bullets, aimcone )
+function SWEP:ShootBullet( damage, num_bullets, aimcone, distance )
 	
 	local bullet = {}
 	bullet.Num 			= num_bullets
 	bullet.Src 			= self.Owner:GetShootPos()			-- Source
 	bullet.Dir 			= self.Owner:GetAimVector()			-- Dir of bullet
-	bullet.Distance 	= self.Distance 					-- Distance
+	if distance then bullet.Distance 	= distance end			-- Distance
 	bullet.Spread 		= Vector( aimcone, aimcone, 0 )		-- Aim Cone
 	if self.TracerName then bullet.TracerName 	= self.TracerName end					-- TracerName
 	bullet.Tracer		= self.Tracer				-- Show a tracer on every x bullets 
@@ -114,5 +113,42 @@ function SWEP:CustomTracer( name, hitpos )--shitty tracer
 	effectdata:SetAttachment( 1 )
 	effectdata:SetEntity( self.Weapon )
 	util.Effect( name , effectdata )
+
+end
+
+function SWEP:MeleeAttack( dmg, distance, type)
+
+	if not IsValid(self.Owner) then return end
+	if not type then type = DMG_CLUB end
+	if not distance then distance = 50 end
+
+   local ply = self.Owner
+   local pos = ply:GetPos()
+   local spos= ply:GetShootPos()
+   local ang = ply:GetAimVector()
+    
+   local trace = util.TraceHull( {
+      start = spos,
+      endpos = spos + ( ang * distance ),
+      filter = ply,
+      mins = Vector( -10, -10, -10 ),
+      maxs = Vector( 10, 10, 10 ),
+      mask = MASK_SHOT_HULL
+   } )
+    
+   local hitEntity = trace.Entity
+
+   if IsValid(hitEntity) or trace.HitWorld then
+      self.Weapon:SendWeaponAnim( ACT_VM_HITCENTER )
+
+      if SERVER then
+         if trace.Hit and hitEntity:IsPlayer() and hitEntity:Team() != ply:Team() then
+            hitEntity:TakeDamage( dmg , ply , self)
+         end
+      end
+
+   else
+      self.Weapon:SendWeaponAnim( ACT_VM_MISSCENTER )
+   end
 
 end

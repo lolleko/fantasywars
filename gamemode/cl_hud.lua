@@ -59,7 +59,7 @@ function FWHUD:DrawAbilities( ply )
 
     for slot,wep in pairs(weps) do --So many dirty little "ifs" (TIDY)
 
-        if slot == 1 then
+        if slot == 1 or wep.Primary.Slot == -1 or wep.Secondary.Slot == -1 then
 
             local xsave = x
             local ysave = y
@@ -75,13 +75,24 @@ function FWHUD:DrawAbilities( ply )
             y = y+8
             k = k -16
 
-            local cdsec     = ply:GetNWInt( ply:Nick()..".Cooldown.1",0)
+            if wep.Primary.Slot == -1 or slot == 1 then cdnumber = wep.Secondary.Slot else cdnumber = wep.Primary.Slot end
 
-            if wep:IsOnCooldown(wep.Secondary.Slot, true) then
-                self:DrawPanel(x,y,k,k, clrs.innerBackgroundCd, 2)
-                self:DrawText(x+17,y+14, cdsec,  "treb", clrs.whiteText ) 
+            local cd     = ply:GetNWInt( ply:Nick()..".Cooldown."..cdnumber ,0)
+
+            if wep.Primary.Slot == -1 or slot == 1 then
+                if wep:IsOnCooldown(wep.Secondary.Slot, true) then
+                    self:DrawPanel(x,y,k,k, clrs.innerBackgroundCd, 2)
+                    self:DrawText(x+17,y+14, cd,  "treb", clrs.whiteText ) 
+                else
+                    self:DrawPanel(x,y,k,k, clrs.innerBackground, 2)
+                end
             else
-                self:DrawPanel(x,y,k,k, clrs.innerBackground, 2)
+                if wep:IsOnCooldown(wep.Primary.Slot, true) then
+                    self:DrawPanel(x,y,k,k, clrs.innerBackgroundCd, 2)
+                    self:DrawText(x+17,y+14, cd,  "treb", clrs.whiteText ) 
+                else
+                    self:DrawPanel(x,y,k,k, clrs.innerBackground, 2)
+                end
             end
 
             x = xsave+88
@@ -136,7 +147,7 @@ function FWHUD:DrawPanel( x, y, w, h, clrs, brdwidth)
         surface.SetDrawColor( color( clrs.border ) )
 
         for i=0, b - 1 do
-            surface.DrawOutlinedRect( x + i - b, y + i - b , w + b * 2 - i * 2, h + b * 2 - i * 2 ) --What a mess (TIDY PLS)
+            surface.DrawOutlinedRect( x + i - b, y + i - b , w + b * 2 - i * 2, h + b * 2 - i * 2 ) --What a mess (TIDY)
         end
 
     end

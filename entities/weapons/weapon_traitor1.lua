@@ -7,7 +7,7 @@ SWEP.AutoSwitchTo       = false
 SWEP.AutoSwitchFrom     = false
 SWEP.TracerName 		= "Tracer"
 SWEP.Tracer				= 1
-SWEP.Distance 			= 1000
+SWEP.Primary.Distance 	= 1500
 
 SWEP.Primary.Damage 		= 10
 SWEP.Primary.ClipSize       = -1
@@ -38,7 +38,7 @@ function SWEP:PrimaryAttack()
 	
 	self.Weapon:EmitSound(self.Primary.Sound)
 
-	self:ShootBullet( self.Primary.Damage, self.Primary.NumShots, self.Primary.Cone )
+	self:ShootBullet( self.Primary.Damage, self.Primary.NumShots, self.Primary.Cone, self.Primary.Distance )
 
 	self.Weapon:SetNextPrimaryFire( CurTime() + self.Primary.Delay )
 end
