@@ -35,8 +35,11 @@ function SWEP:DrawHUD()
 			local targetModelHeight = target:OBBMaxs():Length()
 			local targetPos = target:GetPos() + Vector(0,0,targetModelHeight/2)
 			local targetScreenpos = targetPos:ToScreen()
+			local shootScreenpos = self.Owner:GetShootPos():ToScreen()
 			
-			surface.DrawCircle( tonumber(targetScreenpos.x), tonumber(targetScreenpos.y), 15, Color(200,0,0))
+			surface.SetDrawColor( 200, 0, 0)
+			surface.DrawLine( tonumber(shootScreenpos.x), tonumber(shootScreenpos.y), tonumber(targetScreenpos.x), tonumber(targetScreenpos.y))
+			
 		end
 	end
 end

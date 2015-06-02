@@ -138,11 +138,13 @@ function SWEP:MeleeAttack( dmg, distance, type)
     
    local hitEntity = trace.Entity
 
+   ply:SetAnimation( PLAYER_ATTACK1 )
+
    if IsValid(hitEntity) or trace.HitWorld then
       self.Weapon:SendWeaponAnim( ACT_VM_HITCENTER )
 
       if SERVER then
-         if trace.Hit and hitEntity:IsPlayer() and hitEntity:Team() != ply:Team() then
+         if trace.Hit and hitEntity:IsPlayer() then
             hitEntity:TakeDamage( dmg , ply , self)
          end
       end
