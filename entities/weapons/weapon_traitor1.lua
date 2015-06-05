@@ -3,29 +3,17 @@ AddCSLuaFile()
 SWEP.Base = "weapon_fwbase"
 
 SWEP.HoldType 			= "ar2"
-SWEP.AutoSwitchTo       = false
-SWEP.AutoSwitchFrom     = false
 SWEP.TracerName 		= "Tracer"
 SWEP.Tracer				= 1
 SWEP.Primary.Distance 	= 1500
 
 SWEP.Primary.Damage 		= 10
-SWEP.Primary.ClipSize       = -1
-SWEP.Primary.DefaultClip    = -1
-SWEP.Primary.Automatic      = false
-SWEP.Primary.Ammo           = "none"
-
 SWEP.Primary.NumShots       = 8
 SWEP.Primary.Cone           = 0.085
 SWEP.Primary.Delay 			= 1.5
 
 SWEP.Primary.Slot 			= 0
 SWEP.Secondary.Slot 		= 1
-
-SWEP.Secondary.ClipSize     = -1
-SWEP.Secondary.DefaultClip  = -1
-SWEP.Secondary.Automatic    = false
-SWEP.Secondary.Ammo         = "none"
 
 SWEP.ViewModelFOV		= 54
 SWEP.ViewModel			= "models/weapons/cstrike/c_shot_xm1014.mdl"

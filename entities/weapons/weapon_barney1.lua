@@ -12,11 +12,6 @@ SWEP.Primary.Delay 			= 1
 SWEP.Primary.Slot 		= 0
 SWEP.Secondary.Slot 		= 1
 
-SWEP.Secondary.ClipSize     = -1
-SWEP.Secondary.DefaultClip  = -1
-SWEP.Secondary.Automatic    = false
-SWEP.Secondary.Ammo         = "none"
-
 SWEP.Primary.Sound       	= Sound( "Weapon_Crowbar.Single" )
 
 SWEP.ViewModel				= "models/weapons/c_crowbar.mdl"

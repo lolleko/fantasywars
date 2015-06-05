@@ -3,29 +3,11 @@ AddCSLuaFile()
 SWEP.Base = "weapon_fwbase"
 
 SWEP.HoldType 			= "magic"
-SWEP.AutoSwitchTo       = false
-SWEP.AutoSwitchFrom     = false
 SWEP.Slot 				= 1
-
-SWEP.Primary.ClipSize       = -1
-SWEP.Primary.DefaultClip    = -1
-SWEP.Primary.Automatic      = false
-SWEP.Primary.Ammo           = "none"
-
-SWEP.Primary.NumShots       = 1
-SWEP.Primary.Cone           = 0.005
-SWEP.Primary.Delay 			= 0.1
 
 SWEP.Primary.Slot 			= 2
 SWEP.Secondary.Slot 		= 3
 
-SWEP.Secondary.ClipSize     = -1
-SWEP.Secondary.DefaultClip  = -1
-SWEP.Secondary.Automatic    = false
-SWEP.Secondary.Ammo         = "none"
-
-SWEP.ViewModel  = "models/weapons/rainchu/v_nothing.mdl"
-SWEP.WorldModel = "models/weapons/rainchu/w_nothing.mdl"
 
 function SWEP:DrawHUD()
 	if not self:IsLevelAchieved(6, true) then return end
@@ -35,11 +17,10 @@ function SWEP:DrawHUD()
 			local targetModelHeight = target:OBBMaxs():Length()
 			local targetPos = target:GetPos() + Vector(0,0,targetModelHeight/2)
 			local targetScreenpos = targetPos:ToScreen()
-			local shootScreenpos = self.Owner:GetShootPos():ToScreen()
 			
 			surface.SetDrawColor( 200, 0, 0)
-			surface.DrawLine( tonumber(shootScreenpos.x), tonumber(shootScreenpos.y), tonumber(targetScreenpos.x), tonumber(targetScreenpos.y))
-			
+			surface.DrawLine( ScrW()/3, ScrH()/2, tonumber(targetScreenpos.x), tonumber(targetScreenpos.y))
+
 		end
 	end
 end

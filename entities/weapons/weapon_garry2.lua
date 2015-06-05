@@ -2,14 +2,10 @@ AddCSLuaFile()
 
 SWEP.Base = "weapon_fwbase"
 
-SWEP.AutoSwitchTo       = false
-SWEP.AutoSwitchFrom     = false
 SWEP.Slot 				= 1
 
 SWEP.Primary.Slot 			= 2
 SWEP.Secondary.Slot 		= 3
-
-SWEP.ShootSound			= Sound( "Airboat.FireGunRevDown" )
 
 SWEP.ViewModel			= "models/weapons/c_toolgun.mdl"
 SWEP.WorldModel			= "models/weapons/w_toolgun.mdl"

@@ -3,28 +3,15 @@ AddCSLuaFile()
 SWEP.Base = "weapon_fwbase"
 
 SWEP.HoldType 			= "physgun"
-SWEP.AutoSwitchTo       = false
-SWEP.AutoSwitchFrom     = false
 SWEP.TracerName 		= "garry_bullettracer"
 SWEP.Tracer				= 1
 
 SWEP.Primary.Damage 		= 12
-SWEP.Primary.ClipSize       = -1
-SWEP.Primary.DefaultClip    = -1
-SWEP.Primary.Automatic      = true
-SWEP.Primary.Ammo           = "none"
-
-SWEP.Primary.NumShots       = 1
 SWEP.Primary.Cone           = 0.005
 SWEP.Primary.Delay 			= 0.2
 
 SWEP.Primary.Slot 			= 0
 SWEP.Secondary.Slot 		= 1
-
-SWEP.Secondary.ClipSize     = -1
-SWEP.Secondary.DefaultClip  = -1
-SWEP.Secondary.Automatic    = false
-SWEP.Secondary.Ammo         = "none"
 
 SWEP.Primary.Sound = Sound( "Weapon_MegaPhysCannon.ChargeZap" )
 

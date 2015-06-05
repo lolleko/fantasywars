@@ -3,31 +3,10 @@ AddCSLuaFile()
 SWEP.Base = "weapon_fwbase"
 
 SWEP.HoldType 			= "normal"
-SWEP.AutoSwitchTo       = false
-SWEP.AutoSwitchFrom     = false
-SWEP.TracerName 		= "garry_bullettracer"
-SWEP.Tracer				= 2
-
 SWEP.Primary.Damage 		= 0.5
-SWEP.Primary.ClipSize       = -1
-SWEP.Primary.DefaultClip    = -1
-SWEP.Primary.Automatic      = true
-SWEP.Primary.Ammo           = "none"
-
-SWEP.Primary.NumShots       = 1
-SWEP.Primary.Cone           = 0.005
-SWEP.Primary.Delay 			= 0.1
 
 SWEP.Primary.Slot 			= 0
 SWEP.Secondary.Slot 		= 1
-
-SWEP.Secondary.ClipSize     = -1
-SWEP.Secondary.DefaultClip  = -1
-SWEP.Secondary.Automatic    = false
-SWEP.Secondary.Ammo         = "none"
-
-SWEP.ViewModel  = "models/weapons/rainchu/v_nothing.mdl"
-SWEP.WorldModel = "models/weapons/rainchu/w_nothing.mdl"
 
 local gmantracer = 0 
 
@@ -61,6 +40,7 @@ function SWEP:Think()
 end
 
 function SWEP:PrimaryAttack()
+	return 
 end
 
 function SWEP:SecondaryAttack()
