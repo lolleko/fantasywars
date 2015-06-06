@@ -40,15 +40,22 @@ function SWEP:SecondaryAttack()
 		local cooldown = 15
 		local ply = self.Owner
 
-		ply:SetStatus( 5, "Traitor_Invisible", function() MakeVisible(  ply, false ) end , function() MakeVisible( ply, true ) end )
-		ply:SetStatusScreenEffect("Traitor_Invisible", "Blur")
+		local status = {}
+		status.Name = "Traitor_Invisible"
+		status.DisplayName = "Traitor Cloak"
+		status.Duration = 5
+		status.FuncStart = function() MakeVisible(  ply, false ) end
+		status.FuncEnd = function() MakeVisible( ply, true ) end
+		status.ScreenEffect = "Blur"
+
+		ply:SetStatus( status )
 
 		self:StartCooldown( self.Secondary.Slot ,cooldown)-- Start cooldown for first "ability"
 
 	end
 end
 
-function MakeVisible( ply, state )
+function MakeVisible( ply, state ) -- TODO mamke weapon invis too
 	if( state ) then
 		ply:GetWeapon( "weapon_traitor1" ):SetRenderMode(RENDERMODE_TRANSALPHA)
 		ply:GetWeapon( "weapon_traitor1" ):SetColor( Color(0, 0, 0, 255 ) )

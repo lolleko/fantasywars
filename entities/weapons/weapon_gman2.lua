@@ -38,12 +38,22 @@ function SWEP:PrimaryAttack()
 
 		local hitEntity = trace.Entity
 
-		local wep = self
-
 		local owner = self.Owner
 
 		if trace.Hit and hitEntity:IsPlayer() and hitEntity:Team() != owner:Team() then
-			hitEntity:SetStatus(7, "Gman_Mindray", function() hitEntity:SetColor( Color(100, 40, 130 ) ) end, function() hitEntity:SetColor( Color(255, 255, 255 ) ) end, function() hitEntity:TakeDamage( 5 , owner, wep) end )
+			
+			local wep = self
+
+			local status = {}
+			status.Name = "Gman_Mindray"
+			status.DisplayName = "Propaganda"
+			status.Duration = 7
+			status.FuncStart = function() hitEntity:SetColor( Color(100, 40, 130 ) ) end
+			status.FuncEnd = function() hitEntity:SetColor( Color(255, 255, 255 ) ) end
+			status.FuncTick = function() hitEntity:TakeDamage( 5 , owner, wep) end
+
+			hitEntity:SetStatus( status )
+			
 		else 
 			cooldown = cooldown / 5
 		end

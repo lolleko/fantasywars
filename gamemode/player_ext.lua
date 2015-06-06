@@ -60,7 +60,7 @@ function plymeta:SetWarrior( name )
 end
 
 function plymeta:GetWarriorMaxHealth()
-	return (team.GetLevel(self:Team())-1) * self:GetWarriorHealthGain() + self:GetWarriorHealth() --math for healthgain per lvl
+	return (team.GetLevel(self:Team())-1) * self:GetWarriorHealthGain() + self:GetWarriorHealth() --"math" for healthgain per lvl
 end
 
 function plymeta:SetUpLoadout()
@@ -100,6 +100,8 @@ end
 
 --Status Table for setting Status effects on players
 
+--TODO table structure for args like bullet or effecdata
+
 function plymeta:GetStatusTable()
 	return self:GetWarrior().Status
 end
@@ -109,35 +111,27 @@ function plymeta:GetStatus( name )
 end
 
 function plymeta:GetStatusFuncend( name )
-	return self:GetStatus( name ).funcend
-end
-
-function plymeta:CreateStatus( name )
-	self:GetStatusTable()[name] = {}
-end
-
-function plymeta:SetStatusFuncend( name, endfunc )
-	self:GetStatus( name ).funcend = endfunc
-end
-
-function plymeta:SetStatusScreenEffect( name, effect )
-	self:GetStatus( name ).screeneffect = effect
-
-	net.Start( "FW_SetScreenEffect" )
-			net.WriteString( effect )
-	net.Send( self )
+	return self:GetStatus( name ).FuncEnd
 end
 
 function plymeta:GetStatusScreenEffect( name )
-	return self:GetStatus( name ).screeneffect
+	return self:GetStatus( name ).ScreenEffect
 end
 
-function plymeta:RemoveStatusScreenEffect( name )
-	net.Start( "FW_RemoveScreenEffect" )
-			net.WriteString( self:GetStatusScreenEffect( name ) )
+function plymeta:SetStatusScreenEffect( effectname )
+
+	net.Start( "FW_SetScreenEffect" )
+			net.WriteString( effectname )
 	net.Send( self )
 
-	self:GetStatus( name ).screeneffect = nil
+end
+
+function plymeta:RemoveStatusScreenEffect( effectname )
+
+	net.Start( "FW_RemoveScreenEffect" )
+			net.WriteString( effectname )
+	net.Send( self )
+
 end
 
 function plymeta:HasStatus( name )
@@ -153,47 +147,69 @@ function plymeta:CreateStatusTimerName( name )
 end
 
 --Sets a Status
-function plymeta:SetStatus( duration, name, funcstart, funcend, functick )
+/*
+	local status = {}
+	status.Name = String required
+	status.DisplayName = String optional
+	status.Duration = Number required must be greater or equal 1
+	status.FuncStart = Function not required but should be supplied in any case
+	status.FuncTick = Function optional
+	status.FuncEnd = Function required
+	status.ScreenEffect = String optional
+	status.Icon = String(path) optional if not set default icon will be used 
+	status.DeBuff = Boolean optional default: false
+*/
+function plymeta:SetStatus( status )
 
-	self:CreateStatus( name )
+	if status.FuncStart then status.FuncStart() end
 
-	self:SetStatusFuncend( name, funcend )
+	local newstatus = {} -- save only required stuff for later usage
+	newstatus.DisplayName = status.DisplayName or status.Name
+	newstatus.FuncEnd = status.FuncEnd
+	newstatus.ScreenEffect = status.ScreenEffect or nil
+	newstatus.Icon = status.Icon or "path/to/default"
+	newstatus.DeBuff = status.Debuff or false
 
-	tname = self:CreateStatusTimerName( name )
+	self:GetStatusTable()[status.Name] = newstatus
 
-	funcstart()
+	tname = self:CreateStatusTimerName( status.Name )
 
-	if functick then functick() timer.Create( tname..".tick", 1, duration, functick ) end
- 
-	timer.Create( tname..".end", duration, 1, function() self:RemoveStatus( name ) end  )
+	if status.FuncTick then status.FuncTick() timer.Create( tname..".Tick", 1, status.Duration, status.FuncTick() ) end
+
+	if status.ScreenEffect then self:SetStatusScreenEffect( status.ScreenEffect ) end
+	
+	-- TODO self:SetStatusIcon( status.Icon, status.DeBuff )
+
+	timer.Create( tname..".End", status.Duration, 1, function() self:RemoveStatus( status.Name ) end  )
 
 end
 
 --Removes named Status
 function plymeta:RemoveStatus( name )
 
-	local funcend = self:GetStatusTable()[name].funcend
+	local funcend = self:GetStatusFuncend( name )
 
 	tname = self:CreateStatusTimerName( name )
 
-	if self:GetStatusScreenEffect( name ) then self:RemoveStatusScreenEffect( name ) end
+	if self:GetStatusScreenEffect( name ) then self:RemoveStatusScreenEffect( self:GetStatusScreenEffect( name ) ) end
 
 	funcend()
 
 	self:GetStatusTable()[name] = nil
 
-	if timer.Exists( tname..".tick" ) then
-		timer.Destroy( tname..".tick" )
+	if timer.Exists( tname..".Tick" ) then
+		timer.Destroy( tname..".Tick" )
 	end
-	if timer.Exists( tname..".end" ) then
-		timer.Destroy( tname..".end" )
+	if timer.Exists( tname..".End" ) then
+		timer.Destroy( tname..".End" )
 	end
 
 end
 
---Clears every statrtus called on PlayerDeath
+--Clears every status called on GM:PlayerDeath
 function plymeta:ClearStatus()
 	for name ,_ in pairs(self:GetStatusTable()) do
 		self:RemoveStatus( name )
 	end
 end
+

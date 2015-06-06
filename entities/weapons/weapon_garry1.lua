@@ -42,7 +42,26 @@ function SWEP:SecondaryAttack()
 		local cooldown = 10
 		local hitEntity = trace.Entity
 		if trace.Hit and hitEntity:IsPlayer() and hitEntity:Team() != self.Owner:Team() then -- if tracer hits player freeze him
-			hitEntity:SetStatus( 1.5, "Garry_Stungun", function() hitEntity:Freeze(true) end , function() hitEntity:Freeze( false ) end ) -- unfreeze after 1.5sec
+
+			--fancy sparks
+			local effectdata = EffectData()
+			effectdata:SetOrigin( hitEntity:GetPos() )
+			effectdata:SetNormal( hitEntity:GetPos() )
+			effectdata:SetMagnitude( 8 )
+			effectdata:SetScale( 1 )
+			effectdata:SetRadius( 16 )
+			util.Effect( "Sparks", effectdata )
+			self.BaseClass.ShootEffects( self )
+
+			local status = {}
+			status.Name = "Garry_Stun"
+			status.DisplayName = "Froozen by Garry"
+			status.Duration = 1.5
+			status.FuncStart = function() hitEntity:Freeze( true ) end
+			status.FuncEnd = function() hitEntity:Freeze( false ) end
+
+			hitEntity:SetStatus( status )
+
 		else
 			cooldown = cooldown/5 -- if target not hit reset to a lower cooldown
 		end

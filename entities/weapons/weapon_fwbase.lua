@@ -70,7 +70,7 @@ function SWEP:StartCooldown(slot, duration)
 
 	local cdcallname = self.Owner:Nick()..".Cooldown."..slot -- Create Timer and Network name
 
-	if self:IsOnCooldown( cdcallname ) then return end -- check if a cooldown exists already in case player died with ability on cd (Maybe uneeded here because it should be chekecd in the Attack functions)
+	if self:IsOnCooldown( cdcallname ) then return end -- check if a cooldown exists already in case player died with ability on cd (Maybe uneeded here because it should be checked in the Attack functions)
 
 	self.Owner:StartWarriorCooldown(cdcallname,duration) -- we need to call the timer in the player table so it still works if the swep owner dies
 	

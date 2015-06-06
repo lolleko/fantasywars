@@ -55,9 +55,15 @@ function SWEP:SecondaryAttack()
 	if SERVER then -- we want the skill and cooldown to be handled by the SERVER not by the CLIENT
 
 		local cooldown = 60
+		local status = {}
+		status.Name = "Garry_Disarm"
+		status.DisplayName = "Disarmed by Garry"
+		status.Duration = 1.5
+		status.FuncStart = function() ply:StripWeapons() end
+		status.FuncEnd = function() ply:SetUpLoadout() end
 
 		for _,ply in pairs(player.GetAll()) do
-			if ply:Team() != self.Owner:Team() then ply:SetStatus( 1.5, "Garry_Disarm", function() ply:StripWeapons() end , function() ply:SetUpLoadout() end) end
+			if ply:Team() != self.Owner:Team() then ply:SetStatus( status ) end
 		end
 
 		self:StartCooldown( self.Secondary.Slot ,cooldown)

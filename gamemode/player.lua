@@ -67,6 +67,7 @@ function GM:PlayerShouldTakeDamage( ply, victim )
 end
 
 function GM:PlayerSetModel(ply)
+	--set warrior specific model
    local mdl = ply:GetWarriorModel()
    util.PrecacheModel(mdl)
    ply:SetModel(mdl)

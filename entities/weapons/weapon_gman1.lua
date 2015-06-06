@@ -3,7 +3,7 @@ AddCSLuaFile()
 SWEP.Base = "weapon_fwbase"
 
 SWEP.HoldType 			= "normal"
-SWEP.Primary.Damage 		= 0.5
+SWEP.Primary.Damage 		= 0.01 --percantage 1%
 
 SWEP.Primary.Slot 			= 0
 SWEP.Secondary.Slot 		= 1
@@ -33,8 +33,9 @@ function SWEP:Think()
 			gmantracer = 0
 		end
 		gmantracer = gmantracer + 1
+
 		if SERVER then 
-			hitEntity:TakeDamage( hitEntity:GetMaxHealth() * 0.005 , self.Owner, self) --percentage base dmg
+			hitEntity:TakeDamage( hitEntity:GetMaxHealth() * self.Primary.Damage , self.Owner, self) --percentage base dmg
 		end
 	end
 end
