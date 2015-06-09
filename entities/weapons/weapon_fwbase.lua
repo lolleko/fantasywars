@@ -22,9 +22,6 @@ SWEP.Primary.Automatic      = false
 SWEP.Primary.Ammo           = "none"
 SWEP.Primary.NumShots       = 1
 
-SWEP.Primary.Slot 			= 0
-SWEP.Secondary.Slot 		= 1
-
 SWEP.Secondary.ClipSize     = -1
 SWEP.Secondary.DefaultClip  = -1
 SWEP.Secondary.Automatic    = false
@@ -119,8 +116,8 @@ end
 function SWEP:MeleeAttack( dmg, distance, type)
 
 	if not IsValid(self.Owner) then return end
-	if not type then type = DMG_CLUB end
-	if not distance then distance = 50 end
+	type = type or DMG_CLUB
+	distance = distance or 50
 
    local ply = self.Owner
    local pos = ply:GetPos()

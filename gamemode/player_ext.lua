@@ -151,10 +151,10 @@ end
 	local status = {}
 	status.Name = String required
 	status.DisplayName = String optional
-	status.Duration = Number required must be greater or equal 1
-	status.FuncStart = Function not required but should be supplied in any case
+	status.Duration = optional, but required with functick or funcend
+	status.FuncStart = Function optional
 	status.FuncTick = Function optional
-	status.FuncEnd = Function required
+	status.FuncEnd = Function optional
 	status.ScreenEffect = String optional
 	status.Icon = String(path) optional if not set default icon will be used 
 	status.DeBuff = Boolean optional default: false
@@ -163,10 +163,14 @@ function plymeta:SetStatus( status )
 
 	if status.FuncStart then status.FuncStart() end
 
+	local funcend = status.FuncEnd
+	local functick = status.FuncTick
+	local screeneffect = status.ScreenEffect
+
 	local newstatus = {} -- save only required stuff for later usage
 	newstatus.DisplayName = status.DisplayName or status.Name
-	newstatus.FuncEnd = status.FuncEnd
-	newstatus.ScreenEffect = status.ScreenEffect or nil
+	if funcend then newstatus.FuncEnd = funcend end
+	if screeneffect then newstatus.ScreenEffect = screeneffect end
 	newstatus.Icon = status.Icon or "path/to/default"
 	newstatus.DeBuff = status.Debuff or false
 
@@ -174,13 +178,13 @@ function plymeta:SetStatus( status )
 
 	tname = self:CreateStatusTimerName( status.Name )
 
-	if status.FuncTick then status.FuncTick() timer.Create( tname..".Tick", 1, status.Duration, status.FuncTick() ) end
+	if functick then functick timer.Create( tname..".Tick", 1, status.Duration, functick ) end
 
 	if status.ScreenEffect then self:SetStatusScreenEffect( status.ScreenEffect ) end
 	
 	-- TODO self:SetStatusIcon( status.Icon, status.DeBuff )
 
-	timer.Create( tname..".End", status.Duration, 1, function() self:RemoveStatus( status.Name ) end  )
+	if funcend then timer.Create( tname..".End", status.Duration, 1, function() self:RemoveStatus( status.Name ) end  ) end
 
 end
 
@@ -193,7 +197,7 @@ function plymeta:RemoveStatus( name )
 
 	if self:GetStatusScreenEffect( name ) then self:RemoveStatusScreenEffect( self:GetStatusScreenEffect( name ) ) end
 
-	funcend()
+	if funcend then funcend() end
 
 	self:GetStatusTable()[name] = nil
 

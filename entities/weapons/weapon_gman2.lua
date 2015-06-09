@@ -2,6 +2,8 @@ AddCSLuaFile()
 
 SWEP.Base = "weapon_fwbase"
 
+SWEP.ShowViewModel = false
+SWEP.ShowWorldModel = false
 SWEP.HoldType 			= "magic"
 SWEP.Slot 				= 1
 
@@ -19,7 +21,7 @@ function SWEP:DrawHUD()
 			local targetScreenpos = targetPos:ToScreen()
 			
 			surface.SetDrawColor( 200, 0, 0)
-			surface.DrawLine( ScrW()/3, ScrH()/2, tonumber(targetScreenpos.x), tonumber(targetScreenpos.y))
+			surface.DrawLine( ScrW()/2, ScrH()/2, tonumber(targetScreenpos.x), tonumber(targetScreenpos.y))
 
 		end
 	end

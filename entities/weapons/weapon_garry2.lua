@@ -17,6 +17,8 @@ function SWEP:PrimaryAttack()
 	if not self:IsLevelAchieved(4) then return end 	-- check if required level is achieved if not return
 	if self:IsOnCooldown( self.Primary.Slot ) then return end -- check if ability is on cooldow
 
+	self:ShootEffects()
+
 	if SERVER then -- we want the skill and cooldown to be handled by the SERVER not by the CLIENT
 
 		local trace = self.Owner:GetEyeTrace()
@@ -51,6 +53,8 @@ end
 function SWEP:SecondaryAttack()
 	if not self:IsLevelAchieved(6) then return end 	-- check if required level is achieved if not return
 	if self:IsOnCooldown( self.Secondary.Slot ) then return end -- check if ability is on cooldow
+
+	self:ShootEffects()
 
 	if SERVER then -- we want the skill and cooldown to be handled by the SERVER not by the CLIENT
 

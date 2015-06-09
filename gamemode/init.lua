@@ -30,3 +30,6 @@ function PlayerCount()
    end
    return playercount
 end
+
+
+PrintTable(ents.GetAll())

@@ -59,7 +59,7 @@ function FWHUD:DrawAbilities( ply )
 
     for slot,wep in pairs(weps) do --So many dirty little "ifs" (TIDY)
 
-        if slot == 1 or wep.Primary.Slot == -1 or wep.Secondary.Slot == -1 then
+        if slot == 1 or not wep.Primary.Slot or not wep.Secondary.Slot then
 
             local xsave = x
             local ysave = y
@@ -75,7 +75,7 @@ function FWHUD:DrawAbilities( ply )
             y = y+8
             k = k -16
 
-            if wep.Primary.Slot == -1 or slot == 1 then cdnumber = wep.Secondary.Slot else cdnumber = wep.Primary.Slot end
+            if not wep.Primary.Slot or slot == 1 then cdnumber = wep.Secondary.Slot else cdnumber = wep.Primary.Slot end
 
             local cd     = ply:GetNWInt( ply:Nick()..".Cooldown."..cdnumber ,0)
 
@@ -193,7 +193,7 @@ function FantasyHUD()
 
 	local ply = LocalPlayer()
 	local hp = ply:Health()
-	local hpp = ply:Health()/ply:GetMaxHealth() * 400
+	local hpp = ply:Health()/ply:GetMaxHealth()
     local ap = ply:Armor()
 	local bl = team.GetLevel( TEAM_BLUE )
     local rl = team.GetLevel( TEAM_RED )

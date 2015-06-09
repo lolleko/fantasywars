@@ -2,6 +2,8 @@ AddCSLuaFile()
 
 SWEP.Base = "weapon_fwbase"
 
+SWEP.ShowViewModel = false
+SWEP.ShowWorldModel = false
 SWEP.HoldType 			= "normal"
 SWEP.Primary.Damage 		= 0.01 --percantage 1%
 

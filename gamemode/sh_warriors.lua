@@ -6,7 +6,7 @@ WL.Warriors = {}
 function WL:CreateList()
 	local wardata = file.Find('fantasywars/gamemode/warriors/*', 'LUA')
 
-	--Get table of all warriors stored in "warriros"
+	--Get table of all warriors stored in "warriros/" 
 	for _, warrior in pairs(wardata) do
 			AddCSLuaFile( "warriors/"..warrior )
 			WARRIOR = {}

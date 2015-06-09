@@ -27,7 +27,7 @@ end
 -----------------------------------------------------------]]
 function EFFECT:Think( )
 
-	self.Life = self.Life + FrameTime() * 3 --def: 4
+	self.Life = self.Life + FrameTime() * 6 --def: 4
 	self.Alpha = 255 * ( 1 - self.Life )
 	
 	return ( self.Life < 1 )
