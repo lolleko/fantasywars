@@ -14,6 +14,7 @@ SWEP.Primary.Delay 			= 1.5
 
 SWEP.Primary.Slot 			= 0
 SWEP.Secondary.Slot 		= 1
+SWEP.Secondary.Level 		= 2
 
 SWEP.ViewModelFOV		= 54
 SWEP.ViewModel			= "models/weapons/cstrike/c_shot_xm1014.mdl"
@@ -32,8 +33,7 @@ function SWEP:PrimaryAttack()
 end
 
 function SWEP:SecondaryAttack()
-	if not self:IsLevelAchieved(2) then return end 	-- check if required level is achieved if not return
-	if self:IsOnCooldown( self.Secondary.Slot ) then return end -- check if ability is on cooldow
+	if not self:CanSecondaryAbility() then return end
 
 	if SERVER then -- we want the skill and cooldown to be handled by the SERVER not by the CLIENT
 
@@ -50,7 +50,7 @@ function SWEP:SecondaryAttack()
 
 		ply:SetStatus( status )
 
-		self:StartCooldown( self.Secondary.Slot ,cooldown)-- Start cooldown for first "ability"
+		self:StartSecondaryCooldown( cooldown)-- Start cooldown for first "ability"
 
 	end
 end

@@ -6,7 +6,9 @@ SWEP.Slot = 1
 SWEP.HoldType 			= "slam"
 
 SWEP.Primary.Slot 			= 2
+SWEP.Primary.Level 			= 4
 SWEP.Secondary.Slot 		= 3
+SWEP.Secondary.Level 		= 6
 
 SWEP.ViewModel			= "models/weapons/cstrike/c_c4.mdl"
 SWEP.WorldModel			= "models/weapons/w_c4.mdl"
@@ -18,8 +20,7 @@ function SWEP:Deploy()
 end
 
 function SWEP:PrimaryAttack()
-	if not self:IsLevelAchieved(4) then return end 	-- check if required level is achieved if not return
-	if self:IsOnCooldown( self.Primary.Slot ) then return end -- check if ability is on cooldow
+	if not self:CanPrimaryAbility() then return end
 
 	local ply = self.Owner
 
@@ -43,17 +44,16 @@ function SWEP:PrimaryAttack()
 
 		ply:SetStatus( status )
 
-		self:StartCooldown( self.Primary.Slot, 50)
+		self:StartPrimaryCooldown( 50 )
 	end
 end
 
 function SWEP:SecondaryAttack() --TODO AWESOME ULT
-	if not self:IsLevelAchieved(6) then return end
-	if self:IsOnCooldown( self.Secondary.Slot ) then return end
+	if not self:CanSecondaryAbility() then return end
 
 	if SERVER then
 
-		self:StartCooldown( self.Secondary.Slot , 2)
+		self:StartSecondaryCooldown(2)
 
 	end
 end

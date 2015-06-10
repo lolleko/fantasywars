@@ -201,6 +201,7 @@ function FantasyHUD()
 	local hp = ply:Health()
 	local hpp = ply:Health()/ply:GetMaxHealth()
     local ap = ply:Armor()
+    local app = ply:Armor()/300
 	local bl = team.GetLevel( TEAM_BLUE )
     local rl = team.GetLevel( TEAM_RED )
     local bxp = team.GetXP( 1 )
@@ -215,7 +216,7 @@ function FantasyHUD()
         },
         whiteText = Color(255,255,255,255),
         ap = {
-            fill = Color(25,25,100,255)
+            fill = Color(25,25,100,255),
         },
         panelLightGrey = {
             background = Color(25,25,25,100)
@@ -231,7 +232,8 @@ function FantasyHUD()
     FWHUD:DrawText( 30, ScrH() - 180, hp, "treb", clrs.whiteText )
 
     --ArmorBar
-    FWHUD:DrawBar( 20, ScrH() - 144, 300, 24, clrs.ap , ap )
+    FWHUD:DrawBar( 20, ScrH() - 144, 300, 24, clrs.ap , app )
+    if ap > 0 then FWHUD:DrawText( 30, ScrH() - 140, ap, "treb_small", clrs.whiteText ) end
 
 	surface.SetTextColor( 12,91,173, 255)
     surface.SetTextPos( ScrW()/3+35, 20 )

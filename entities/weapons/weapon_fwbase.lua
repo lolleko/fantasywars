@@ -1,12 +1,14 @@
 /*
 	weapon base for FW stuff (weps/skills)
-	some extra functions, but 90% just wepaon_base
+	DO NOT MODIFY unless you know what you are doing
 */
 AddCSLuaFile()
 
 SWEP.Base = "weapon_base"
 
 SWEP.Spawnable          = false
+SWEP.ShowWorldModel 	= true
+SWEP.ShowViewModel 		= true
 
 SWEP.HoldType 			= "pistol"
 SWEP.AutoSwitchTo       = false
@@ -21,22 +23,48 @@ SWEP.Primary.DefaultClip    = -1
 SWEP.Primary.Automatic      = false
 SWEP.Primary.Ammo           = "none"
 SWEP.Primary.NumShots       = 1
+SWEP.Primary.Level 			= 1
 
 SWEP.Secondary.ClipSize     = -1
 SWEP.Secondary.DefaultClip  = -1
 SWEP.Secondary.Automatic    = false
 SWEP.Secondary.Ammo         = "none"
+SWEP.Secondary.Level 		= 1
 
 SWEP.DeploySpeed = 10 -- high deploy speed since you need to switch for additional abilities
 
-SWEP.ViewModel		= "models/weapons/v_pistol.mdl"
+SWEP.ViewModel		= "models/weapons/c_pistol.mdl"
 SWEP.WorldModel		= "models/weapons/w_357.mdl"
-
---almost copied from weapon_base
 
 function SWEP:Initialize()
 	self:SetDeploySpeed( self.DeploySpeed )	-- set deployspeed for every wepaon (very fast by default)
     self:SetWeaponHoldType( self.HoldType ) -- Allow custom weapon hold type since it's just "pistol" in weapon_base
+end
+
+function SWEP:DrawWorldModel()
+	if self.ShowWorldModel then
+		self:DrawModel()
+	end
+end
+
+function SWEP:CanPrimaryAbility()
+	if not self:IsLevelAchieved( self.Primary.Level ) then return false end
+
+	if self:IsOnCooldown( self.Primary.Slot ) then
+		return false
+	end
+
+	return true
+end
+
+function SWEP:CanSecondaryAbility()
+	if not self:IsLevelAchieved( self.Secondary.Level ) then return false end
+
+	if self:IsOnCooldown( self.Secondary.Slot ) then
+		return false
+	end
+
+	return true
 end
 
 function SWEP:ShootBullet( damage, num_bullets, aimcone, distance )
@@ -60,12 +88,25 @@ function SWEP:ShootBullet( damage, num_bullets, aimcone, distance )
 end
 
 
-function SWEP:StartCooldown(slot, duration)
+function SWEP:StartSecondaryCooldown( duration)
 	if CLIENT then return end -- function should only be available for servers since all data is stored serverside
 
 	if duration < 1 then return end -- if duration < 1 there is no need for a cooldown
 
-	local cdcallname = self.Owner:Nick()..".Cooldown."..slot -- Create Timer and Network name
+	local cdcallname = self.Owner:Nick()..".Cooldown."..self.Secondary.Slot -- Create Timer and Network name
+
+	if self:IsOnCooldown( cdcallname ) then return end -- check if a cooldown exists already in case player died with ability on cd (Maybe uneeded here because it should be checked in the Attack functions)
+
+	self.Owner:StartWarriorCooldown(cdcallname,duration) -- we need to call the timer in the player table so it still works if the swep owner dies
+	
+end
+
+function SWEP:StartPrimaryCooldown( duration)
+	if CLIENT then return end -- function should only be available for servers since all data is stored serverside
+
+	if duration < 1 then return end -- if duration < 1 there is no need for a cooldown
+
+	local cdcallname = self.Owner:Nick()..".Cooldown."..self.Primary.Slot -- Create Timer and Network name
 
 	if self:IsOnCooldown( cdcallname ) then return end -- check if a cooldown exists already in case player died with ability on cd (Maybe uneeded here because it should be checked in the Attack functions)
 
@@ -141,8 +182,8 @@ function SWEP:MeleeAttack( dmg, distance, type)
       self.Weapon:SendWeaponAnim( ACT_VM_HITCENTER )
 
       if SERVER then
-         if trace.Hit and hitEntity:IsPlayer() then
-            hitEntity:TakeDamage( dmg , ply , self)
+         if trace.Hit then
+         	self:ShootBullet( dmg, 1, 0, distance )
          end
       end
 

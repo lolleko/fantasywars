@@ -5,13 +5,14 @@ SWEP.Base = "weapon_fwbase"
 
 SWEP.HoldType 			= "melee"
 
-SWEP.Primary.Distance        = 60
+SWEP.Primary.Distance        = 80
 SWEP.Primary.Damage 		= 40
 SWEP.Primary.Delay 			= 0.5
 SWEP.Primary.Automatic = true
 
 SWEP.Primary.Slot 		= 0
 SWEP.Secondary.Slot 		= 1
+SWEP.Secondary.Level    = 2
 
 SWEP.Primary.Sound       	= Sound( "Weapon_Crowbar.Single" )
 
@@ -30,8 +31,7 @@ end
 
 function SWEP:SecondaryAttack()
 	-- check if required level is achieved if not return
-	if not self:IsLevelAchieved(2) then return end
-	if self:IsOnCooldown( self.Secondary.Slot ) then return end --check if ability is on cooldow
+	if not self:CanSecondaryAbility() then return end
 
 	if SERVER then -- we want the skill and cooldown to be handled by the SERVER not by the CLIENT
 
@@ -47,7 +47,7 @@ function SWEP:SecondaryAttack()
 		
 		self.Owner:SetStatus( status  )
 
-		self:StartCooldown( self.Secondary.Slot ,cooldown)-- Start cooldown for first "ability"
+		self:StartSecondaryCooldown( cooldown )-- Start cooldown for first "ability"
 
 	end
 end

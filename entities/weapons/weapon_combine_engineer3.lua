@@ -14,6 +14,7 @@ SWEP.Primary.Delay 			= 0.4
 SWEP.Primary.Automatic 		= false
 
 SWEP.Primary.Slot 			= 2
+SWEP.Primary.Level 			= 4
 
 function SWEP:DrawHUD()
 
@@ -24,9 +25,7 @@ function SWEP:DrawHUD()
 
 end
 function SWEP:PrimaryAttack()
-	-- check if required level is achieved if not return
-	if not self:IsLevelAchieved(4) then return end
-	if self:IsOnCooldown( self.Primary.Slot ) then return end --check if ability is on cooldow
+	if not self:CanPrimaryAbility() then return end
 
 	local trace = self.Owner:GetEyeTrace()
 
@@ -48,7 +47,7 @@ function SWEP:PrimaryAttack()
 		end )
 
 		
-		self:StartCooldown( self.Primary.Slot ,cooldown)-- Start cooldown for first "ability"
+		self:StartPrimaryCooldown( cooldown)-- Start cooldown for first "ability"
 
 	end
 end

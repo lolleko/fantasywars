@@ -13,6 +13,7 @@ SWEP.Primary.Automatic      = true
 
 SWEP.Primary.Slot 			= 0
 SWEP.Secondary.Slot 		= 1
+SWEP.Secondary.Level 		= 2
 
 SWEP.Primary.Sound = Sound( "Weapon_MegaPhysCannon.ChargeZap" )
 
@@ -28,9 +29,7 @@ function SWEP:PrimaryAttack()
 end
 
 function SWEP:SecondaryAttack()
-	-- check if required level is achieved if not return
-	if not self:IsLevelAchieved(2) then return end
-	if self:IsOnCooldown( self.Secondary.Slot ) then return end --check if ability is on cooldow
+	if not self:CanSecondaryAbility() then return end
 
 	--laser effect (modified green laser)
 	local trace = self.Owner:GetEyeTrace()
@@ -42,7 +41,7 @@ function SWEP:SecondaryAttack()
 	if SERVER then -- we want the skill and cooldown to be handled by the SERVER not by the CLIENT
 		local cooldown = 10
 		local hitEntity = trace.Entity
-		if trace.Hit and hitEntity:IsPlayer() and hitEntity:Team() != self.Owner:Team() then -- if tracer hits player freeze him
+		if trace.Hit and IsValid(hitEntity) and hitEntity:Team() != self.Owner:Team() then -- if tracer hits player freeze him
 
 			--fancy sparks
 			local effectdata = EffectData()
@@ -52,7 +51,6 @@ function SWEP:SecondaryAttack()
 			effectdata:SetScale( 1 )
 			effectdata:SetRadius( 16 )
 			util.Effect( "Sparks", effectdata )
-			self.BaseClass.ShootEffects( self )
 
 			local status = {}
 			status.Name = "Garry_Stun"
@@ -67,7 +65,7 @@ function SWEP:SecondaryAttack()
 			cooldown = cooldown/5 -- if target not hit reset to a lower cooldown
 		end
 
-		self:StartCooldown( self.Secondary.Slot ,cooldown)-- Start cooldown for first "ability"
+		self:StartSecondaryCooldown( cooldown )-- Start cooldown for first "ability"
 
 	end
 end

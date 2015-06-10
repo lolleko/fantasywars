@@ -9,6 +9,7 @@ SWEP.Primary.Damage 		= 0.01 --percantage 1%
 
 SWEP.Primary.Slot 			= 0
 SWEP.Secondary.Slot 		= 1
+SWEP.Secondary.Level 		= 2
 
 local gmantracer = 0 
 
@@ -47,9 +48,7 @@ function SWEP:PrimaryAttack()
 end
 
 function SWEP:SecondaryAttack()
-	-- check if required level is achieved if not return
-	if not self:IsLevelAchieved(2) then return end
-	if self:IsOnCooldown( self.Secondary.Slot ) then return end --check if ability is on cooldow
+	if not self:CanSecondaryAbility() then return end
 
 	--laser effect (modified green laser)
 	local trace = self.Owner:GetEyeTrace()
@@ -58,7 +57,8 @@ function SWEP:SecondaryAttack()
 
 		local cooldown = 2
 
-		--Shittiest stuck prevention ever (maybe redo at some point)
+		--Shittiest stuck prevention ever (maybe redo at some point) 
+		--NOTE TO ME Redo it with normalized vectors
 		if trace.HitPos:Distance(trace.StartPos) > 3000 then
 			
 			self.Owner:PrintMessage( HUD_PRINTTALK, "Can't Teleport so far.")
@@ -85,7 +85,7 @@ function SWEP:SecondaryAttack()
 
 		end
 
-		self:StartCooldown( self.Secondary.Slot ,cooldown)-- Start cooldown for first "ability"
+		self:StartSecondaryCooldown( cooldown)-- Start cooldown for first "ability"
 
 	end
 end

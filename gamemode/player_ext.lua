@@ -145,19 +145,22 @@ end
 function plymeta:CreateStatusTimerName( name )
 	return self:Nick().."."..name
 end
-
---Sets a Status
 /*
+	-- Sets a Status --
+
+	Status Table Structure:
+
 	local status = {}
 	status.Name = String required
 	status.DisplayName = String optional
-	status.Duration = optional, but required with functick or funcend
+	status.Duration = optional, but required with functick or funcend pass 0 for infinite duration
 	status.FuncStart = Function optional
 	status.FuncTick = Function optional
 	status.FuncEnd = Function optional
 	status.ScreenEffect = String optional
 	status.Icon = String(path) optional if not set default icon will be used 
 	status.DeBuff = Boolean optional default: false
+	
 */
 function plymeta:SetStatus( status )
 
