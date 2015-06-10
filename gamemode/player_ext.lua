@@ -178,13 +178,13 @@ function plymeta:SetStatus( status )
 
 	tname = self:CreateStatusTimerName( status.Name )
 
-	if functick then functick timer.Create( tname..".Tick", 1, status.Duration, functick ) end
+	if functick and status.Duration then functick() timer.Create( tname..".Tick", 1, status.Duration, functick ) end
 
 	if status.ScreenEffect then self:SetStatusScreenEffect( status.ScreenEffect ) end
 	
 	-- TODO self:SetStatusIcon( status.Icon, status.DeBuff )
 
-	if funcend then timer.Create( tname..".End", status.Duration, 1, function() self:RemoveStatus( status.Name ) end  ) end
+	if funcend and status.Duration then timer.Create( tname..".End", status.Duration, 1, function() self:RemoveStatus( status.Name ) end  ) end
 
 end
 

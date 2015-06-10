@@ -27,7 +27,7 @@ SWEP.Secondary.DefaultClip  = -1
 SWEP.Secondary.Automatic    = false
 SWEP.Secondary.Ammo         = "none"
 
-SWEP.DeploySpeed = 20 -- high deploy speed since you need to switch for additional abilities
+SWEP.DeploySpeed = 10 -- high deploy speed since you need to switch for additional abilities
 
 SWEP.ViewModel		= "models/weapons/v_pistol.mdl"
 SWEP.WorldModel		= "models/weapons/w_357.mdl"
@@ -63,7 +63,7 @@ end
 function SWEP:StartCooldown(slot, duration)
 	if CLIENT then return end -- function should only be available for servers since all data is stored serverside
 
-	if duration <= 0 then return end -- if duration < or 0 there is no need for a cooldown
+	if duration < 1 then return end -- if duration < 1 there is no need for a cooldown
 
 	local cdcallname = self.Owner:Nick()..".Cooldown."..slot -- Create Timer and Network name
 

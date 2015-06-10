@@ -27,7 +27,7 @@ end
 -----------------------------------------------------------]]
 function EFFECT:Think( )
 
-	self.Life = self.Life + FrameTime() * 6 --def: 4
+	self.Life = self.Life + FrameTime() * 15 --def: 4
 	self.Alpha = 255 * ( 1 - self.Life )
 	
 	return ( self.Life < 1 )
@@ -48,21 +48,16 @@ function EFFECT:Render()
 
 	self.Length = norm:Length()
 	
-	for i = 1, 3 do
+	for i = 1, 5 do
 		
-		render.DrawBeam( self.StartPos - norm,		-- Start
-					self.EndPos,					-- End
-					16,								-- Width
-					texcoord,						-- Start tex coord
-					texcoord + self.Length / 128,	-- End tex coord
-					Color( 255, 255, 255 ) )		-- Color (optional)
-	end
-
-	render.DrawBeam( self.StartPos,
+		render.DrawBeam( self.StartPos,
 					self.EndPos,
 					16,
 					texcoord,
 					texcoord + ((self.StartPos - self.EndPos):Length() / 128),
 					Color( 255, 255, 255, 128 * ( 1 - self.Life ) ) )
+
+	end
+
 
 end

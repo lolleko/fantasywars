@@ -59,7 +59,7 @@ function FWHUD:DrawAbilities( ply )
 
     for slot,wep in pairs(weps) do --So many dirty little "ifs" (TIDY)
 
-        if slot == 1 or not wep.Primary.Slot or not wep.Secondary.Slot then
+        if not wep.Primary.Slot or not wep.Secondary.Slot then
 
             local xsave = x
             local ysave = y
@@ -75,11 +75,11 @@ function FWHUD:DrawAbilities( ply )
             y = y+8
             k = k -16
 
-            if not wep.Primary.Slot or slot == 1 then cdnumber = wep.Secondary.Slot else cdnumber = wep.Primary.Slot end
+            if not wep.Primary.Slot then cdnumber = wep.Secondary.Slot else cdnumber = wep.Primary.Slot end
 
-            local cd     = ply:GetNWInt( ply:Nick()..".Cooldown."..cdnumber ,0)
+            local cd = ply:GetNWInt( ply:Nick()..".Cooldown."..cdnumber ,0)
 
-            if wep.Primary.Slot == -1 or slot == 1 then
+            if not wep.Primary.Slot then
                 if wep:IsOnCooldown(wep.Secondary.Slot, true) then
                     self:DrawPanel(x,y,k,k, clrs.innerBackgroundCd, 2)
                     self:DrawText(x+17,y+14, cd,  "treb", clrs.whiteText ) 
@@ -100,6 +100,10 @@ function FWHUD:DrawAbilities( ply )
             k = ksave
 
         else
+
+            local xsave = x
+            local ysave = y
+            local ksave = k 
 
             if actwep and actwep.Slot == slot-1 then
                 self:DrawPanel(x,y,k*2-6,k, clrs.outerBackgroundActive)
@@ -130,7 +134,9 @@ function FWHUD:DrawAbilities( ply )
                 self:DrawPanel(x,y,k,k, clrs.innerBackground ,2)
             end
 
-            x = x+154
+            x = xsave+154
+            y = ysave
+            k = ksave
 
         end
     end

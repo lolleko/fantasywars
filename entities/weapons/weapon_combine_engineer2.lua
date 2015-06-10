@@ -37,6 +37,8 @@ function SWEP:PrimaryAttack()
 	if SERVER then -- we want the skill and cooldown to be handled by the SERVER not by the CLIENT
 		local cooldown = 30
 
+		if self.Owner:HasStatus("Turret_Placed") then self.Owner:RemoveStatus("Turret_Placed") end
+
 		local turret = ents.Create( "npc_turret_floor" )
 		if ( !IsValid( turret ) ) then return end
 		turret:SetOwner( self.Owner )
@@ -47,9 +49,16 @@ function SWEP:PrimaryAttack()
 	    if turretphys:IsValid() then
 	        turretphys:EnableMotion(false)
 	    end
-		timer.Simple( 20, function()
-			turret:Remove()
-		end )
+
+	    for _,target in pairs(player.GetAll()) do
+			if target:Team() != self.Owner:Team() then
+				turret:AddEntityRelationship( target, D_HT, 99 )
+			else
+				turret:AddEntityRelationship( target, D_LI, 99 )
+			end
+		end
+		
+		self.Owner:SetStatus({Name = "Turret_Placed", FuncEnd = function() turret:Remove() end})
 
 		
 		self:StartCooldown( self.Primary.Slot ,cooldown)-- Start cooldown for first "ability"

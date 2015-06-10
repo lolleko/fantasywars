@@ -11,20 +11,42 @@ function PMENU:Init()
 	Frame:ShowCloseButton( true )
 	Frame:MakePopup()
 
-	local posx = 20
-	local posy = 40
+	local Scroll = vgui.Create( "DScrollPanel", Frame ) //Create the Scroll panel
+	Scroll:SetSize( ScrW() -120 , ScrH()-140 )
+	Scroll:SetPos( 10, 30 )
 
-	for _, name in pairs(WL:GetNames()) do
-		local PButton = vgui.Create( "DButton", Frame )
-		PButton:SetPos( posx, posy )
-		PButton:SetText( name )
+	local List	= vgui.Create( "DIconLayout", Scroll )
+	List:SetSize( ScrW() -135 , ScrH()-140 )
+	List:SetPos( 0, 0 )
+	List:SetSpaceY( 5 )
+	List:SetSpaceX( 5 )
+
+	for _, warrior in pairs(WL:GetList()) do
+
+		--create panel for each warrior
+		local HPanel = vgui.Create( "DPanel", Frame )
+		HPanel:SetSize( 240, 300 )
+		HPanel:SetBackgroundColor( Color(0,0,0,50) )
+
+		local icon = vgui.Create( "DModelPanel", HPanel )
+		icon:SetPos( 20, 20 )
+		icon:SetSize( 200, 200 )
+		icon:SetModel( warrior.Model )
+		function icon:LayoutEntity( Entity ) return end -- disables default rotation
+
+		local PButton = vgui.Create( "DButton", HPanel )
+		PButton:SetPos( 20, 240 )
+		PButton:SetSize( 200, 40 )
+		PButton:SetText( warrior.Name )
 		PButton.DoClick = function()
 			net.Start('FW_SetWarrior')
-				net.WriteString(name)
+				net.WriteString( warrior.Name )
 			net.SendToServer()
 			Frame:Close()
 		end
-		posx = posx + 80
+
+	List:Add(HPanel)
+
 	end
 end
 

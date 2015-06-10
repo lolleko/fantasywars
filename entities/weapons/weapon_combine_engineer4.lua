@@ -30,25 +30,26 @@ function SWEP:PrimaryAttack()
 
 	local trace = self.Owner:GetEyeTrace()
 
-	if trace.HitPos:Distance(self.Owner:GetPos()) > 200 then self.Owner:PrintMessage( HUD_PRINTTALK, "Can't Place the Turret so far Away.") return end
+	if trace.HitPos:Distance(self.Owner:GetPos()) > 200 then self.Owner:PrintMessage( HUD_PRINTTALK, "Can't Place the Thumper so far Away.") return end
 
 	self:ShootEffects()
 		
 	if SERVER then -- we want the skill and cooldown to be handled by the SERVER not by the CLIENT
 		local cooldown = 10
 
-		local turret = ents.Create( "prop_physics" )
-		if ( !IsValid( turret ) ) then return end
-		turret:SetModel( "models/props_combine/combinethumper002.mdl" )
-		turret:SetPos( trace.HitPos + trace.HitNormal )
-		turret:Spawn()
-		local turretphys = turret:GetPhysicsObject()
-	    if turretphys:IsValid() then
-	    	turretphys:EnableMotion(false)
+		if self.Owner:HasStatus("Thumper_Placed") then self.Owner:RemoveStatus("Thumper_Placed") end
+
+		local thumper = ents.Create( "prop_physics" )
+		if ( !IsValid( thumper ) ) then return end
+		thumper:SetModel( "models/props_combine/combinethumper002.mdl" )
+		thumper:SetPos( trace.HitPos + trace.HitNormal )
+		thumper:Spawn()
+		local thumperphys = thumper:GetPhysicsObject()
+	    if thumperphys:IsValid() then
+	    	thumperphys:EnableMotion(false)
 	    end
-		timer.Simple( 20, function()
-			turret:Remove()
-		end )
+		
+		self.Owner:SetStatus({Name = "Thumper_Placed", FuncEnd = function() thumper:Remove() end})
 
 		
 		self:StartCooldown( self.Primary.Slot ,cooldown)-- Start cooldown for first "ability"

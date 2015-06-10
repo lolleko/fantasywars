@@ -7,7 +7,8 @@ SWEP.HoldType 			= "melee"
 
 SWEP.Primary.Distance        = 60
 SWEP.Primary.Damage 		= 40
-SWEP.Primary.Delay 			= 1
+SWEP.Primary.Delay 			= 0.5
+SWEP.Primary.Automatic = true
 
 SWEP.Primary.Slot 		= 0
 SWEP.Secondary.Slot 		= 1
@@ -18,7 +19,6 @@ SWEP.ViewModel				= "models/weapons/c_crowbar.mdl"
 SWEP.WorldModel				= "models/weapons/w_crowbar.mdl"
 
 function SWEP:PrimaryAttack()
---stolen from weapon_zm_improvised (TTT) mayb i will recode it from scratch at somepoint
 
    self.Weapon:SetNextPrimaryFire( CurTime() + self.Primary.Delay )
 
@@ -36,9 +36,16 @@ function SWEP:SecondaryAttack()
 	if SERVER then -- we want the skill and cooldown to be handled by the SERVER not by the CLIENT
 
 		local cooldown = 15
+      local ply = self.Owner
 
-		self.Owner:SetArmor(200)
-		self.Owner:SetStatus( 3, "Gordon_ArmorCharge", function() self.Owner:SetWalkSpeed(-1) self.Owner:SetRunSpeed(-1) end , function() self.Owner:SetWalkSpeed( self.Owner:GetWarriorSpeed() ) self.Owner:SetRunSpeed( self.Owner:GetWarriorSpeed() ) end )
+      local status = {}
+      status.Name = "Gordon_ArmorCharge"
+      status.DisplayName = "POWER"
+      status.Duration = 3
+      status.FuncStart = function() ply:SetWalkSpeed(-1) ply:SetRunSpeed(-1) ply:SetArmor(200) end
+      status.FuncEnd = function() ply:SetWalkSpeed( ply:GetWarriorSpeed() ) ply:SetRunSpeed( ply:GetWarriorSpeed() ) end
+		
+		self.Owner:SetStatus( status  )
 
 		self:StartCooldown( self.Secondary.Slot ,cooldown)-- Start cooldown for first "ability"
 

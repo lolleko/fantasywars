@@ -43,7 +43,7 @@ function SWEP:PrimaryAttack()
 
 		ply:SetStatus( status )
 
-		self:StartCooldown( self.Primary.Slot , 50)
+		self:StartCooldown( self.Primary.Slot, 50)
 	end
 end
 

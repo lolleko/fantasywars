@@ -25,6 +25,10 @@ function WL:GetWarrior( name )
 	return self.Warriors[name]
 end
 
+function WL:GetList()
+	return self.Warriors
+end
+
 function WL:GetNames()
 	local wlist = {}
 	for _, warrior in pairs(self.Warriors) do
