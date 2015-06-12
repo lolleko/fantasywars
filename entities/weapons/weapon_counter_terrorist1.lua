@@ -7,7 +7,7 @@ SWEP.TracerName 		= "Tracer"
 SWEP.Tracer				= 4
 SWEP.Primary.Distance 	= 1500
 
-SWEP.Primary.Damage 		= 10
+SWEP.Primary.Damage 		= 21
 SWEP.Primary.Cone           = 0.01
 SWEP.Primary.Delay 			= 0.18
 SWEP.Primary.Automatic 		= true
@@ -31,7 +31,7 @@ function SWEP:PrimaryAttack()
 
 	local aimcone = self.Primary.Cone
 
-	if self.Owner:HasStatus("CT_Spray") then aimcone = (2^(shots/300)-1) + aimcone else shots = 0  end
+	if SERVER then if self.Owner:HasStatus("CT_Spray") then aimcone = (2^(shots/300)-1) + aimcone else shots = 0  end end
 
 	self.Weapon:EmitSound(self.Primary.Sound)
 
@@ -42,7 +42,7 @@ function SWEP:PrimaryAttack()
 
 	self.Weapon:SetNextPrimaryFire( CurTime() + self.Primary.Delay )
 
-	self.Owner:SetStatus({Name = "CT_Spray", Duration = 0.2})
+	if SERVER then self.Owner:SetStatus({Name = "CT_Spray", Duration = 0.2}) end
 
 	shots = shots +1
 

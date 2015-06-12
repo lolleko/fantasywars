@@ -5,7 +5,7 @@ SWEP.Base = "weapon_fwbase"
 SWEP.ShowViewModel = false
 SWEP.ShowWorldModel = false
 SWEP.HoldType 			= "normal"
-SWEP.Primary.Damage 		= 0.01 --percantage 1%
+SWEP.Primary.Damage 		= 0.0075 --percantage 1%
 
 SWEP.Primary.Slot 			= 0
 SWEP.Secondary.Slot 		= 1
