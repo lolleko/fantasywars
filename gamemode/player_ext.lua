@@ -187,8 +187,11 @@ function plymeta:SetStatus( status )
 	
 	-- TODO self:SetStatusIcon( status.Icon, status.DeBuff )
 
-	if funcend and status.Duration then timer.Create( tname..".End", status.Duration, 1, function() self:RemoveStatus( status.Name ) end  ) end
-
+	if timer.Exists( tname..".End" ) then -- if timer already exists adjust it
+		timer.Adjust( tname..".End", status.Duration, 1, function() self:RemoveStatus( status.Name ) end  )
+	else
+		if funcend and status.Duration or status.Duration then timer.Create( tname..".End", status.Duration, 1, function() self:RemoveStatus( status.Name ) end  ) end
+	end
 end
 
 --Removes named Status

@@ -67,7 +67,7 @@ function SWEP:CanSecondaryAbility()
 	return true
 end
 
-function SWEP:ShootBullet( damage, num_bullets, aimcone, distance )
+function SWEP:ShootBullet( damage, num_bullets, aimcone, distance, recoil )
 	
 	local bullet = {}
 	bullet.Num 			= num_bullets
@@ -77,10 +77,16 @@ function SWEP:ShootBullet( damage, num_bullets, aimcone, distance )
 	bullet.Spread 		= Vector( aimcone, aimcone, 0 )		-- Aim Cone
 	if self.TracerName then bullet.TracerName 	= self.TracerName end					-- TracerName
 	bullet.Tracer		= self.Tracer				-- Show a tracer on every x bullets 
-	bullet.Force		= 1									-- Amount of force to give to phys objects
+	bullet.Force		= 10									-- Amount of force to give to phys objects
 	bullet.Damage		= damage
 	bullet.AmmoType 	= "Pistol"
 	
+	if recoil then
+		local eyeang = self.Owner:EyeAngles()
+	    eyeang.pitch = eyeang.pitch - recoil
+	    self.Owner:SetEyeAngles( eyeang )
+	end
+
 	self.Owner:FireBullets( bullet )
 	
 	self:ShootEffects()

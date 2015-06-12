@@ -73,15 +73,7 @@ function SWEP:SecondaryAttack()
 
 		else 
 
-			local ratio = 0.993
-
-			if trace.HitPos:Distance( trace.StartPos ) < 500 then ratio = 0.75
-			elseif trace.HitPos:Distance(trace.StartPos) <1000 then ratio = 0.94
-			elseif trace.HitPos:Distance(trace.StartPos) <2000 then ratio = 0.945
-			elseif trace.HitPos:Distance(trace.StartPos) <3000 then ratio = 0.981 end
-			
-
-			self.Owner:SetPos(((trace.HitPos - trace.StartPos)*ratio) + trace.StartPos)
+			self.Owner:SetPos(trace.HitPos + (trace.HitNormal * 25) )
 
 		end
 
