@@ -33,6 +33,8 @@ function SWEP:PrimaryAttack()
 
 	if SERVER then if self.Owner:HasStatus("CT_Spray") then aimcone = (2^(shots/300)-1) + aimcone else shots = 0  end end
 
+	print(aimcone)
+
 	self.Weapon:EmitSound(self.Primary.Sound)
 
 	self:ShootBullet( self.Primary.Damage, self.Primary.NumShots, aimcone, self.Primary.Distance, self.Primary.Recoil )

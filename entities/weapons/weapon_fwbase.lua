@@ -81,10 +81,13 @@ function SWEP:ShootBullet( damage, num_bullets, aimcone, distance, recoil )
 	bullet.Damage		= damage
 	bullet.AmmoType 	= "Pistol"
 	
-	if recoil then
-		local eyeang = self.Owner:EyeAngles()
-	    eyeang.pitch = eyeang.pitch - recoil
-	    self.Owner:SetEyeAngles( eyeang )
+	if ((game.SinglePlayer() and SERVER) or
+       ((not game.SinglePlayer()) and CLIENT and IsFirstTimePredicted())) then
+		if recoil then
+			local eyeang = self.Owner:EyeAngles()
+		    eyeang.pitch = eyeang.pitch - recoil
+		    self.Owner:SetEyeAngles( eyeang )
+		end
 	end
 
 	self.Owner:FireBullets( bullet )
