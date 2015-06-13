@@ -9,6 +9,7 @@ include( "modules/team.lua" )
 include( "sh_warriors.lua")
 include( "player_classes/player_test.lua" )
 include( "screen_effects.lua" )
+include( "player_ext.lua" )
 
 TEAM_BLUE = 1
 
