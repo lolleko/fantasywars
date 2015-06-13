@@ -37,8 +37,10 @@ function SWEP:PrimaryAttack()
 
 	self:ShootBullet( self.Primary.Damage, self.Primary.NumShots, aimcone, self.Primary.Distance, self.Primary.Recoil )
 
-	self:TakePrimaryAmmo(1)
-	self.Owner:GiveAmmo(1, "Pistol", true)
+	if SERVER then
+		self:TakePrimaryAmmo(1)
+		self.Owner:GiveAmmo(1, "Pistol", true)
+	end
 
 	self.Weapon:SetNextPrimaryFire( CurTime() + self.Primary.Delay )
 
