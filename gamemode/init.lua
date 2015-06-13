@@ -9,8 +9,7 @@ AddCSLuaFile( "vgui/DPickMenu.lua" )
 
 include( "shared.lua" )
 include( "player.lua" )
-
-
+include( "player_ext.lua" )
 
 --net strings
 util.AddNetworkString('FW_SetWarrior' )
