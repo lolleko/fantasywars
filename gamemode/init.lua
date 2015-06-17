@@ -5,6 +5,7 @@ AddCSLuaFile( "cl_teampick.lua" )
 --AddCSLuaFile( "modules/team.lua")
 AddCSLuaFile( "player_classes/player_test.lua" )
 AddCSLuaFile( "sh_warriors.lua" )
+AddCSLuaFile( "cl_warriors.lua")
 AddCSLuaFile( "vgui/DPickMenu.lua" )
 
 include( "shared.lua" )
