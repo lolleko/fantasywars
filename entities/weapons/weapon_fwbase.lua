@@ -31,7 +31,10 @@ SWEP.Secondary.Automatic    = false
 SWEP.Secondary.Ammo         = "none"
 SWEP.Secondary.Level 		= 1
 
-SWEP.DeploySpeed = 10 -- high deploy speed since you need to switch for additional abilities
+SWEP.PrimaryAnim = ACT_VM_PRIMARYATTACK
+SWEP.ReloadAnim = ACT_VM_RELOAD
+
+SWEP.DeploySpeed = 2 -- high deploy speed since you need to switch for additional abilities
 
 SWEP.ViewModel		= "models/weapons/c_pistol.mdl"
 SWEP.WorldModel		= "models/weapons/w_357.mdl"
@@ -47,8 +50,12 @@ function SWEP:DrawWorldModel()
 	end
 end
 
+function SWEP:PostDrawViewModel( vm, ply, weapon )
+	self.Owner:DrawViewModel( self.ShowViewModel )
+end
+
 function SWEP:CanPrimaryAbility()
-	if not self:IsLevelAchieved( self.Primary.Level ) then return false end
+	--if not self:IsLevelAchieved( self.Primary.Level ) then return false end
 
 	if self:IsOnCooldown( self.Primary.Slot ) then
 		return false
@@ -58,7 +65,7 @@ function SWEP:CanPrimaryAbility()
 end
 
 function SWEP:CanSecondaryAbility()
-	if not self:IsLevelAchieved( self.Secondary.Level ) then return false end
+	--if not self:IsLevelAchieved( self.Secondary.Level ) then return false end
 
 	if self:IsOnCooldown( self.Secondary.Slot ) then
 		return false
@@ -67,8 +74,19 @@ function SWEP:CanSecondaryAbility()
 	return true
 end
 
+function SWEP:Reload()
+	self.Weapon:DefaultReload( self.ReloadAnim );
+end
+
 function SWEP:ShootBullet( damage, num_bullets, aimcone, distance, recoil )
 	
+   self:SendWeaponAnim(self.PrimaryAnim)
+
+   self.Owner:MuzzleFlash()
+   self.Owner:SetAnimation( PLAYER_ATTACK1 )
+
+   if not IsFirstTimePredicted() then return end
+
 	local bullet = {}
 	bullet.Num 			= num_bullets
 	bullet.Src 			= self.Owner:GetShootPos()			-- Source
@@ -91,9 +109,7 @@ function SWEP:ShootBullet( damage, num_bullets, aimcone, distance, recoil )
 	end
 
 	self.Owner:FireBullets( bullet )
-	
-	self:ShootEffects()
-	
+		
 end
 
 
@@ -169,35 +185,69 @@ function SWEP:MeleeAttack( dmg, distance, type)
 	type = type or DMG_CLUB
 	distance = distance or 50
 
-   local ply = self.Owner
-   local pos = ply:GetPos()
-   local spos= ply:GetShootPos()
-   local ang = ply:GetAimVector()
-    
-   local trace = util.TraceHull( {
-      start = spos,
-      endpos = spos + ( ang * distance ),
-      filter = ply,
-      mins = Vector( -10, -10, -10 ),
-      maxs = Vector( 10, 10, 10 ),
-      mask = MASK_SHOT_HULL
-   } )
-    
-   local hitEntity = trace.Entity
+	local ply = self.Owner
 
-   ply:SetAnimation( PLAYER_ATTACK1 )
+	if self.Owner.LagCompensation then
+	  self.Owner:LagCompensation(true)
+	end
 
-   if IsValid(hitEntity) or trace.HitWorld then
-      self.Weapon:SendWeaponAnim( ACT_VM_HITCENTER )
+	local pos = ply:GetPos()
+	local spos= ply:GetShootPos()
+	local ang = ply:GetAimVector()
 
-      if SERVER then
-         if trace.Hit then
-         	self:ShootBullet( dmg, 1, 0, distance )
-         end
-      end
+	local trace = util.TraceHull( {
+	  start = spos,
+	  endpos = spos + ( ang * distance ),
+	  filter = ply,
+	  mins = Vector( -5, -5, -5 ),
+	  maxs = Vector( 5, 5, 5 ),
+	  mask = MASK_SHOT_HULL
+	} )
 
-   else
-      self.Weapon:SendWeaponAnim( ACT_VM_MISSCENTER )
-   end
+	local hitEntity = trace.Entity
 
+	self.Owner:LagCompensation(false)
+
+	ply:SetAnimation( PLAYER_ATTACK1 )
+
+	if IsValid(hitEntity) or trace.HitWorld then
+		self.Weapon:SendWeaponAnim( ACT_VM_HITCENTER )
+		if hitEntity:IsPlayer() or hitEntity:IsNPC() then
+			if hitEntity:GetBloodColor() != DONT_BLEED or hitEntity:GetClass() == "prop_ragdoll" then
+				local effectdata = EffectData()
+				effectdata:SetOrigin( hitEntity:GetPos() + hitEntity:OBBCenter() + Vector(0,0,10) )
+				util.Effect( "BloodImpact" , effectdata )
+			end
+			if SERVER then
+				local dmginfo = DamageInfo()
+				dmginfo:SetDamage(dmg)
+				dmginfo:SetAttacker(ply)
+				dmginfo:SetInflictor(self.Weapon)
+				dmginfo:SetDamagePosition(ply:GetPos())
+				dmginfo:SetDamageType(type)
+
+				hitEntity:TakeDamageInfo(dmginfo)
+			end
+		else
+			self:ShootBullet( 0, 1, 0, distance )
+		end
+
+	else
+	  self.Weapon:SendWeaponAnim( ACT_VM_MISSCENTER )
+	end
+end
+
+function SWEP:CompensatedTraceLine( distance )
+	if self.Owner.LagCompensation then
+		self.Owner:LagCompensation(true)
+	end
+	if not distance then
+		self.Owner:LagCompensation(false)
+		return self.Owner:GetEyeTrace()
+	end
+	local spos = self.Owner:GetShootPos()
+	local sdest = spos + (self.Owner:GetAimVector() * distance)
+    local tr = util.TraceLine({start=spos, endpos=sdest, filter=self.Owner, mask=MASK_SHOT_HULL})
+    self.Owner:LagCompensation(false)
+    return tr
 end

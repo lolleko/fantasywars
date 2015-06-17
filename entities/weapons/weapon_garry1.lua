@@ -31,8 +31,7 @@ end
 function SWEP:SecondaryAttack()
 	if not self:CanSecondaryAbility() then return end
 
-	--laser effect (modified green laser)
-	local trace = self.Owner:GetEyeTrace()
+	local trace = self:CompensatedTraceLine()
 
 	self:CustomTracer( "garry_stuntracer", trace.HitPos )
 

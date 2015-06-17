@@ -4,19 +4,6 @@ function GM:PlayerInitialSpawn( ply )
 	-- reduce number of bullet holes by default
 	ply:ConCommand( "r_decals 50" )
 	ply:SetCanZoom( false )
-	team.LevelUp(TEAM_BLUE)
-	team.LevelUp(TEAM_BLUE)
-	team.LevelUp(TEAM_BLUE)
-	team.LevelUp(TEAM_BLUE)
-	team.LevelUp(TEAM_BLUE)
-	team.LevelUp(TEAM_BLUE)
-
-	team.LevelUp(TEAM_RED)
-	team.LevelUp(TEAM_RED)
-	team.LevelUp(TEAM_RED)
-	team.LevelUp(TEAM_RED)
-	team.LevelUp(TEAM_RED)
-	team.LevelUp(TEAM_RED)
 
 	if ( GAMEMODE.TeamBased ) then
 		ply:ConCommand( "gm_showteam" )
@@ -27,14 +14,14 @@ end
 
 function GM:ScalePlayerDamage( ply, hitgroup, dmginfo )
 
-	// More damage when we're shot in the head
+	-- Disable Headshots include option later maybe
 	if ( hitgroup == HITGROUP_HEAD ) then
 
 		dmginfo:ScaleDamage( 1 )
 
 	end
 
-	// Less damage when we're shot in the arms or legs
+	--Smae dmg everywhere
 	if ( hitgroup == HITGROUP_LEFTARM or
 		hitgroup == HITGROUP_RIGHTARM or
 		hitgroup == HITGROUP_LEFTLEG or
@@ -116,7 +103,7 @@ function GM:PlayerDeath( victim, infl, attacker)
 
 	victim:Extinguish()
 
-	if(attacker:Team() != victim:Team()) then
+	if attacker:GetOwner():IsPlayer() and attacker:GetOwner():Team() != victim:Team() or attacker:IsPlayer() and attacker:Team() != victim:Team() then
 		team.DistributeXP(attacker:Team())
 	end
 

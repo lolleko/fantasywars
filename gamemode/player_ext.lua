@@ -57,6 +57,8 @@ function plymeta:SetWarrior( name )
 	war.Status = {}
 
 	self.war = war
+
+	self:SetupHands()
 end
 
 function plymeta:GetWarriorMaxHealth()
@@ -80,18 +82,19 @@ function plymeta:SetUpStats()
 	self:SetJumpPower( self:GetWarriorJumpPower() )
 
 	--health
-	local health = self:GetWarriorMaxHealth()
+	local health = self:GetWarriorHealth()
 	self:SetMaxHealth( health )
 	self:SetHealth( health )
 	self:SetArmor( self:GetWarriorArmor() )
 end
 
-function plymeta:LevelUpPlayer()
+/*function plymeta:LevelUpPlayer()
 	--levelup while alive
 	local healthgain = self:GetWarriorHealthGain()
 	self:SetMaxHealth( self:GetWarriorMaxHealth() + healthgain)
 	self:SetHealth( self:Health() + healthgain)
 end
+*/
 
 function plymeta:StartWarriorCooldown( name, duration )
 	self:SetNWInt(name,duration) -- Sent cooldown to client  HUD
@@ -99,8 +102,6 @@ function plymeta:StartWarriorCooldown( name, duration )
 end
 
 --Status Table for setting Status effects on players
-
---TODO table structure for args like bullet or effecdata
 
 function plymeta:GetStatusTable()
 	return self:GetWarrior().Status
@@ -116,22 +117,6 @@ end
 
 function plymeta:GetStatusScreenEffect( name )
 	return self:GetStatus( name ).ScreenEffect
-end
-
-function plymeta:SetStatusScreenEffect( effectname )
-
-	net.Start( "FW_SetScreenEffect" )
-			net.WriteString( effectname )
-	net.Send( self )
-
-end
-
-function plymeta:RemoveStatusScreenEffect( effectname )
-
-	net.Start( "FW_RemoveScreenEffect" )
-			net.WriteString( effectname )
-	net.Send( self )
-
 end
 
 function plymeta:HasStatus( name )
@@ -168,25 +153,27 @@ function plymeta:SetStatus( status )
 
 	local funcend = status.FuncEnd
 	local functick = status.FuncTick
-	local screeneffect = status.ScreenEffect
-
 	local newstatus = {} -- save only required stuff for later usage
 	newstatus.DisplayName = status.DisplayName or status.Name
-	if funcend then newstatus.FuncEnd = funcend end
 	if screeneffect then newstatus.ScreenEffect = screeneffect end
 	newstatus.Icon = status.Icon or "path/to/default"
 	newstatus.DeBuff = status.Debuff or false
+	if not status.Show then newstatus.Show = status.Show else newstatus.Show = true end
+	net.Start( "FW_SetStatus" ) --Send info to client before adding function
+		net.WriteString( status.Name )
+		net.WriteTable( newstatus )
+	net.Send( self )
+	if funcend then newstatus.FuncEnd = funcend end --save end function to be able to call it in RemoveStatus
 
 	self:GetStatusTable()[status.Name] = newstatus
-
 	tname = self:CreateStatusTimerName( status.Name )
 
-	if functick and status.Duration then functick() timer.Create( tname..".Tick", 1, status.Duration, functick ) end
-
-	if status.ScreenEffect then self:SetStatusScreenEffect( status.ScreenEffect ) end
+	if timer.Exists( tname..".Tick" ) then -- if timer already exists adjust it
+		timer.Adjust( tname..".Tick", 1, status.Duration, functick  )
+	else
+		if functick and status.Duration then functick() timer.Create( tname..".Tick", 1, status.Duration, functick ) end
+	end
 	
-	-- TODO self:SetStatusIcon( status.Icon, status.DeBuff )
-
 	if timer.Exists( tname..".End" ) then -- if timer already exists adjust it
 		timer.Adjust( tname..".End", status.Duration, 1, function() self:RemoveStatus( status.Name ) end  )
 	else
@@ -201,9 +188,11 @@ function plymeta:RemoveStatus( name )
 
 	tname = self:CreateStatusTimerName( name )
 
-	if self:GetStatusScreenEffect( name ) then self:RemoveStatusScreenEffect( self:GetStatusScreenEffect( name ) ) end
-
 	if funcend then funcend() end
+
+	net.Start( "FW_RemoveStatus" )
+		net.WriteString( name )
+	net.Send( self )
 
 	self:GetStatusTable()[name] = nil
 
@@ -213,6 +202,7 @@ function plymeta:RemoveStatus( name )
 	if timer.Exists( tname..".End" ) then
 		timer.Destroy( tname..".End" )
 	end
+
 
 end
 

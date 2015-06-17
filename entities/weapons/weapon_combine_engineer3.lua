@@ -18,11 +18,6 @@ SWEP.Primary.Level 			= 4
 
 function SWEP:DrawHUD()
 
-	local trace = self.Owner:GetEyeTrace()
-	
-	if not self:IsLevelAchieved(4, true) or trace.HitPos:Distance(self.Owner:GetPos()) > 200 then surface.DrawCircle( ScrW()/2, ScrH()/2, 24, Color(255,0,0)) return end
-	surface.DrawCircle( ScrW()/2, ScrH()/2, 24, Color(0,255,0))
-
 end
 function SWEP:PrimaryAttack()
 	if not self:CanPrimaryAbility() then return end
@@ -41,11 +36,6 @@ function SWEP:PrimaryAttack()
 		turret:SetOwner( self.Owner )
 		turret:SetPos( trace.HitPos + trace.HitNormal )
 		turret:Spawn()
-		turret:SetHealth(100)
-		timer.Simple( 20, function()
-			turret:Remove()
-		end )
-
 		
 		self:StartPrimaryCooldown( cooldown)-- Start cooldown for first "ability"
 

@@ -25,7 +25,7 @@ function WL:GetWarrior( name )
 	return self.Warriors[name]
 end
 
-function WL:GetList()
+function WL:GetWarriorList()
 	return self.Warriors
 end
 

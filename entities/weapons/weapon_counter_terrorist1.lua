@@ -8,7 +8,7 @@ SWEP.Tracer				= 4
 SWEP.Primary.Distance 	= 1500
 
 SWEP.Primary.Damage 		= 21
-SWEP.Primary.Cone           = 0.01
+SWEP.Primary.Cone           = 0.005
 SWEP.Primary.Delay 			= 0.18
 SWEP.Primary.Automatic 		= true
 SWEP.Primary.Recoil 		= 1.1
@@ -23,7 +23,6 @@ SWEP.WorldModel			= "models/weapons/w_rif_m4a1.mdl"
 SWEP.Primary.Sound			= Sound( "Weapon_m4a1.Single" )
 
 local shots = 0
-local precise = true
 
 function SWEP:PrimaryAttack()
 
@@ -32,9 +31,8 @@ function SWEP:PrimaryAttack()
 	local aimcone = self.Primary.Cone
 
 	if SERVER then if self.Owner:HasStatus("CT_Spray") then aimcone = (2^(shots/300)-1) + aimcone else shots = 0  end end
-
-	print(aimcone)
-
+	if CLIENT then if WL:HasStatus("CT_Spray") then aimcone = (2^(shots/300)-1) + aimcone else shots = 0  end end --For proper tracers and decals
+	
 	self.Weapon:EmitSound(self.Primary.Sound)
 
 	self:ShootBullet( self.Primary.Damage, self.Primary.NumShots, aimcone, self.Primary.Distance, self.Primary.Recoil )
@@ -50,18 +48,4 @@ function SWEP:PrimaryAttack()
 
 	shots = shots +1
 
-end
-
-function SWEP:SecondaryAttack()
-	if not self:CanSecondaryAbility() then return end
-
-	if SERVER then -- we want the skill and cooldown to be handled by the SERVER not by the CLIENT
-
-		local cooldown = 15
-		local ply = self.Owner
-
-		
-		self:StartSecondaryCooldown( cooldown)-- Start cooldown for first "ability"
-
-	end
 end

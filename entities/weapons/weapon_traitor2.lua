@@ -33,14 +33,14 @@ function SWEP:PrimaryAttack()
 	util.Effect( "Sparks", effectdata )
 	self.BaseClass.ShootEffects( self )
 	
-	if (SERVER) then
+	if SERVER then
 
 		local status = {}
 		status.Name = "Traitor_Jihad"
 		status.DisplayName = "Kabooooom"
 		status.Duration = 2
 		status.FuncStart = function() ply:SetWalkSpeed( ply:GetWalkSpeed() + 200 ) end
-		status.FuncEnd = function() Explode( ply ) ply:SetWalkSpeed( ply:GetWalkSpeed() - 200 ) end
+		status.FuncEnd = function() Explode( ply ) ply:SetWalkSpeed( ply:GetWalkSpeed() - 200 ) ply:Kill() end
 
 		ply:SetStatus( status )
 

@@ -5,11 +5,6 @@ SWEP.Base = "weapon_fwbase"
 SWEP.Slot = 1
 SWEP.HoldType 			= "ar2"
 
-SWEP.Primary.Distance        = 60
-SWEP.Primary.Damage 		= 40
-SWEP.Primary.Delay 			= 0.5
-SWEP.Primary.Automatic = true
-
 SWEP.Primary.Slot 		= 2
 SWEP.Primary.Level      = 4
 SWEP.Secondary.Slot 		= 3
@@ -26,6 +21,15 @@ function SWEP:PrimaryAttack()
    if SERVER then -- we want the skill and cooldown to be handled by the SERVER not by the CLIENT
 
       local cooldown = 15
+
+      local trace = self:CompensatedTraceLine( 2000 )
+
+
+      local hitEntity = trace.Entity
+
+      if trace.Hit and IsValid(hitEntity) then
+         hitEntity:SetPos(trace.StartPos)
+      end
 
       self:StartPrimaryCooldown( cooldown)-- Start cooldown for first "ability"
 

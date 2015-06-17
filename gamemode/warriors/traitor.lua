@@ -1,7 +1,7 @@
 WARRIOR.Name = "Traitor"
 WARRIOR.Model = "models/player/phoenix.mdl"
-WARRIOR.Speed = 300
-WARRIOR.JumpPower = 300
+WARRIOR.Speed = 200
+WARRIOR.JumpPower = 200
 WARRIOR.Health = 75
 WARRIOR.Armor = 0
 WARRIOR.HealthGain  = 7

@@ -20,7 +20,7 @@ surface.CreateFont( "treb_small",
             })
 
 function hidehud(name) -- Removing the default HUD
-	for k, v in pairs({"CHudHealth", "CHudBattery", "CHudAmmo", "CHudSecondaryAmmo", })do
+	for k, v in pairs({"CHudHealth", "CHudBattery", "CHudAmmo", "CHudSecondaryAmmo", "CHudCrosshair"})do
 		if name == v then return false end
 	end
 end
@@ -29,6 +29,19 @@ hook.Add("HUDShouldDraw", "HideOurHud", hidehud)
 --Nice Tutorial http://facepunch.com/showthread.php?t=1178196
 
 local function color( clr ) return clr.r, clr.g, clr.b, clr.a end --not equal to "Color()"
+
+function FWHUD:DrawStatus( ply )
+    local clrs = {
+        whiteText = Color(255,255,255,255)
+    }
+    local x = 0
+    for _, status in pairs(WL:GetStatusTable()) do
+        if status.Show then 
+            FWHUD:DrawText( 30, ScrH()/2 + x, status.DisplayName, "treb_small", clrs.whiteText )
+            x = x+30
+        end
+    end
+end
 
 function FWHUD:DrawAbilities( ply )
     local clrs = {
@@ -196,6 +209,13 @@ function FWHUD:DrawBar( x, y, w, h, clrs, value )
  
 end
 
+function FWHUD:Crosshair()
+    local x = ScrW() / 2
+    local y = ScrH() / 2
+
+    surface.DrawCircle( x, y, 1, Color(255,255,255) )
+end
+
 function FantasyHUD()
 
 	local ply = LocalPlayer()
@@ -203,12 +223,6 @@ function FantasyHUD()
 	local hpp = ply:Health()/ply:GetMaxHealth()
     local ap = ply:Armor()
     local app = ply:Armor()/300
-	local bl = team.GetLevel( TEAM_BLUE )
-    local rl = team.GetLevel( TEAM_RED )
-    local bxp = team.GetXP( 1 )
-    local rxp = team.GetXP( 2 )
-    local bxpp = team.GetXP( 1 )/team.GetNeededXP( 1 ) * 100
-    local rxpp = team.GetXP( 2 )/team.GetNeededXP( 2 ) * 100
 
     local clrs = {
         hp = {
@@ -228,6 +242,10 @@ function FantasyHUD()
 
     FWHUD:DrawAbilities( ply ) --wrapped in extra function due to size
 
+    FWHUD:DrawStatus( ply )
+
+    FWHUD:Crosshair()
+
     --Health Points
     FWHUD:DrawBar( 20, ScrH() - 190, 400, 48, clrs.hp , hpp )
     FWHUD:DrawText( 30, ScrH() - 180, hp, "treb", clrs.whiteText )
@@ -236,7 +254,15 @@ function FantasyHUD()
     FWHUD:DrawBar( 20, ScrH() - 144, 300, 24, clrs.ap , app )
     if ap > 0 then FWHUD:DrawText( 30, ScrH() - 140, ap, "treb_small", clrs.whiteText ) end
 
-	surface.SetTextColor( 12,91,173, 255)
+	/*
+    local bl = team.GetLevel( TEAM_BLUE )
+    local rl = team.GetLevel( TEAM_RED )
+    local bxp = team.GetXP( 1 )
+    local rxp = team.GetXP( 2 )
+    local bxpp = team.GetXP( 1 )/team.GetNeededXP( 1 ) * 100
+    local rxpp = team.GetXP( 2 )/team.GetNeededXP( 2 ) * 100
+
+    surface.SetTextColor( 12,91,173, 255)
     surface.SetTextPos( ScrW()/3+35, 20 )
     surface.SetFont( "treb" )
     surface.DrawText( bl )
@@ -260,7 +286,7 @@ function FantasyHUD()
     surface.SetTextColor( 0, 0, 0, 255)
     surface.SetTextPos( ScrW()/1.5+10, 52 )
     surface.SetFont( "treb_small" )
-    surface.DrawText( rxp )
+    surface.DrawText( rxp )*/
 
     /*
 	for id,target in pairs(player.GetAll()) do

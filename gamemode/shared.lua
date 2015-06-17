@@ -5,7 +5,7 @@ GM.Website = "N/A"
 
 GM.TeamBased	= true
 
-include( "modules/team.lua" )
+--include( "modules/team.lua" )
 include( "sh_warriors.lua")
 include( "player_classes/player_test.lua" )
 include( "screen_effects.lua" )
@@ -21,11 +21,25 @@ function GM:CreateTeams()
 	team.SetUp( TEAM_BLUE, "Blue", Color(0,0,255))
 	team.SetUp( TEAM_RED, "Red", Color(255,0,0))
 
-	team.SetLevel( TEAM_BLUE, 1)
+	/*team.SetLevel( TEAM_BLUE, 1)
 	team.SetLevel( TEAM_RED, 1)
 
 	team.UpdateNeededXP( TEAM_BLUE )
 	team.UpdateNeededXP( TEAM_RED )
+
+	team.LevelUp(TEAM_BLUE)
+	team.LevelUp(TEAM_BLUE)
+	team.LevelUp(TEAM_BLUE)
+	team.LevelUp(TEAM_BLUE)
+	team.LevelUp(TEAM_BLUE)
+	team.LevelUp(TEAM_BLUE)
+
+	team.LevelUp(TEAM_RED)
+	team.LevelUp(TEAM_RED)
+	team.LevelUp(TEAM_RED)
+	team.LevelUp(TEAM_RED)
+	team.LevelUp(TEAM_RED)
+	team.LevelUp(TEAM_RED)*/
 
 end
 

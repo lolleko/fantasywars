@@ -1,7 +1,7 @@
 WARRIOR.Name = "Barney"
 WARRIOR.Model = "models/player/barney.mdl"
 WARRIOR.Speed = 350
-WARRIOR.JumpPower = 300
+WARRIOR.JumpPower = 200
 WARRIOR.Health = 150
 WARRIOR.Armor = 100
 WARRIOR.HealthGain  = 20

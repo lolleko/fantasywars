@@ -70,7 +70,7 @@ function SWEP:PrimaryAttack()
 			end
 		end
 		
-		self.Owner:SetStatus({Name = "Turret_Placed", FuncEnd = function() turret:Remove() end})
+		self.Owner:SetStatus({Name = "Turret_Placed", FuncEnd = function() turret:Remove() end, Show = false})
 
 		
 		self:StartPrimaryCooldown( cooldown)-- Start cooldown for first "ability"
@@ -82,10 +82,9 @@ function SWEP:Initialize()
 	if CLIENT then
 		if !IsValid(self.viewturret) then
 			self.viewturret = ents.CreateClientProp(WorldModel)
-			print("created")
+			self.viewturret:SetNoDraw(true)
 		end
 		if IsValid(self.viewturret) then
-			print("created")
 			self.viewturret:SetParent(self)
 			self.viewturret:Spawn()
 			self:Think()
