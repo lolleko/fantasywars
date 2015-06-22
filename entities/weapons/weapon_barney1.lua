@@ -42,8 +42,8 @@ function SWEP:SecondaryAttack()
       status.Name = "Gordon_ArmorCharge"
       status.DisplayName = "POWER"
       status.Duration = 3
-      status.FuncStart = function() ply:SetWalkSpeed(-1) ply:SetRunSpeed(-1) ply:SetArmor(200) end
-      status.FuncEnd = function() ply:SetWalkSpeed( ply:GetWarriorSpeed() ) ply:SetRunSpeed( ply:GetWarriorSpeed() ) end
+      status.FuncStart = function() ply:SetWarriorSpeed(-1) ply:SetArmor(200) end
+      status.FuncEnd = function() ply:SetWarriorSpeed( ply:GetWarriorSpeed() ) end
 		
 		self.Owner:SetStatus( status  )
 

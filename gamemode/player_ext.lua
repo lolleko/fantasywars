@@ -75,9 +75,7 @@ end
 
 function plymeta:SetUpStats()
 	--movement
-	local speed = self:GetWarriorSpeed()
-	self:SetRunSpeed(speed)
-	self:SetWalkSpeed(speed)
+	self:SetWarriorSpeed(self:GetWarriorSpeed())
 
 	self:SetJumpPower( self:GetWarriorJumpPower() )
 
@@ -88,6 +86,11 @@ function plymeta:SetUpStats()
 	self:SetArmor( self:GetWarriorArmor() )
 end
 
+
+function plymeta:SetWarriorSpeed( speed )
+	self:SetRunSpeed(speed)
+	self:SetWalkSpeed(speed)
+end
 /*function plymeta:LevelUpPlayer()
 	--levelup while alive
 	local healthgain = self:GetWarriorHealthGain()
@@ -188,14 +191,6 @@ function plymeta:RemoveStatus( name )
 
 	tname = self:CreateStatusTimerName( name )
 
-	if funcend then funcend() end
-
-	net.Start( "FW_RemoveStatus" )
-		net.WriteString( name )
-	net.Send( self )
-
-	self:GetStatusTable()[name] = nil
-
 	if timer.Exists( tname..".Tick" ) then
 		timer.Destroy( tname..".Tick" )
 	end
@@ -203,6 +198,13 @@ function plymeta:RemoveStatus( name )
 		timer.Destroy( tname..".End" )
 	end
 
+	if funcend then funcend() end
+
+	net.Start( "FW_RemoveStatus" )
+		net.WriteString( name )
+	net.Send( self )
+
+	self:GetStatusTable()[name] = nil
 
 end
 

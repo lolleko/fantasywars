@@ -55,18 +55,19 @@ function SWEP:SecondaryAttack()
 	end
 end
 
-function MakeVisible( ply, state ) -- TODO mamke weapon invis too
-	if( state ) then
+function MakeVisible( ply, state ) -- TODO make weapon invis too
+	if state  then
 		ply:GetWeapon( "weapon_traitor1" ):SetRenderMode(RENDERMODE_TRANSALPHA)
 		ply:GetWeapon( "weapon_traitor1" ):SetColor( Color(0, 0, 0, 255 ) )
 		ply:SetColor( Color(0, 0, 0, 255 ) )
-		ply:SetWalkSpeed( ply:GetWalkSpeed() - 200 )
+		ply:SetWarriorSpeed( ply:GetWalkSpeed() - 200 )
 		ply:DrawViewModel( true )
 	else
+		ply:GetWeapon( "weapon_traitor1" ):SetRenderMode(RENDERMODE_TRANSALPHA)
 		ply:GetWeapon( "weapon_traitor1" ):SetColor( Color(0, 0, 0, 0 ) )
 		ply:SetRenderMode(RENDERMODE_TRANSALPHA)
 		ply:SetColor( Color(0, 0, 0, 15 ) )
 		ply:DrawViewModel( false )
-		ply:SetWalkSpeed( ply:GetWalkSpeed() + 200 )
+		ply:SetWarriorSpeed( ply:GetWalkSpeed() + 200 )
 	end
 end

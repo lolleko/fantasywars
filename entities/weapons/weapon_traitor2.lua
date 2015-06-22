@@ -1,71 +1,66 @@
 AddCSLuaFile()
 
-SWEP.Base = "weapon_fwbase"
+SWEP.Base = "weapon_fwplaceable"
 SWEP.Slot = 1
 
 SWEP.HoldType 			= "slam"
 
 SWEP.Primary.Slot 			= 2
 SWEP.Primary.Level 			= 4
-SWEP.Secondary.Slot 		= 3
-SWEP.Secondary.Level 		= 6
 
 SWEP.ViewModel			= "models/weapons/cstrike/c_c4.mdl"
 SWEP.WorldModel			= "models/weapons/w_c4.mdl"
-
-function SWEP:Deploy()
-
-	if SERVER and self.Owner:HasStatus( "Traitor_Invisible" ) then self.Owner:RemoveStatus( "Traitor_Invisible" ) end
-
-end
+local Preview = Model("models/weapons/w_c4_planted.mdl")
+SWEP.PreviewModel 		= Preview
 
 function SWEP:PrimaryAttack()
 	if not self:CanPrimaryAbility() then return end
 
-	local ply = self.Owner
+	if not self:CanPlace() then return end
 
-	local effectdata = EffectData()
-	effectdata:SetOrigin( ply:GetPos() )
-	effectdata:SetNormal( ply:GetPos() )
-	effectdata:SetMagnitude( 8 )
-	effectdata:SetScale( 1 )
-	effectdata:SetRadius( 16 )
-	util.Effect( "Sparks", effectdata )
-	self.BaseClass.ShootEffects( self )
-	
-	if SERVER then
+	self:ShootEffects()
+		
+	if SERVER then -- we want the skill and cooldown to be handled by the SERVER not by the CLIENT
+		local cooldown = 10
+		local ply = self.Owner
 
-		local status = {}
-		status.Name = "Traitor_Jihad"
-		status.DisplayName = "Kabooooom"
-		status.Duration = 2
-		status.FuncStart = function() ply:SetWalkSpeed( ply:GetWalkSpeed() + 200 ) end
-		status.FuncEnd = function() Explode( ply ) ply:SetWalkSpeed( ply:GetWalkSpeed() - 200 ) ply:Kill() end
+		if self.Owner:HasStatus("Explosive_Placed") then self.Owner:RemoveStatus("Explosive_Placed") end
 
-		ply:SetStatus( status )
+		local explosive = ents.Create( "prop_physics" )
+		if ( !IsValid( explosive ) ) then return end
+		explosive:SetModel( "models/weapons/w_c4_planted.mdl" )
+		explosive:SetPos( self:CalculatePos() )
+		explosive:SetAngles( self:CalculateAngles() )
+		explosive:Spawn()
+		local explosivephys = explosive:GetPhysicsObject()
+	    if explosivephys:IsValid() then
+	       explosivephys:EnableMotion(false)
+	    end
 
-		self:StartPrimaryCooldown( 50 )
-	end
-end
+		self.Owner:SetStatus({Name = "Explosive_Placed", FuncEnd = function()  Explode( explosive, ply ) end, Show = false})
 
-function SWEP:SecondaryAttack() --TODO AWESOME ULT
-	if not self:CanSecondaryAbility() then return end
-
-	if SERVER then
-
-		self:StartSecondaryCooldown(2)
+		
+		self:StartPrimaryCooldown( cooldown )-- Start cooldown for first "ability"
 
 	end
 end
 
-function Explode( ply )
+function SWEP:SecondaryAttack()
+	if SERVER then
+		if self.Owner:HasStatus("Explosive_Placed") then self.Owner:RemoveStatus("Explosive_Placed") end
+	end
+end
+
+function Explode( prop, ply )
 
 	local ent = ents.Create( "env_explosion" )
-	ent:SetPos( ply:GetPos() )
+	ent:SetPos( prop:GetPos() )
 	ent:SetOwner( ply )
 	ent:Spawn()
 	ent:SetKeyValue( "iMagnitude", "125" )
 	ent:Fire( "Explode", 0, 0 )
-	ent:EmitSound( "siege/big_explosion.wav", 500, 500 )
+	ent:EmitSound( "weapon_AWP.Single", 500, 500 )
+
+	prop:Remove()
 
 end

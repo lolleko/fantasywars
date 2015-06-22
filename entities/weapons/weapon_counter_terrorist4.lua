@@ -22,12 +22,12 @@ SWEP.ViewModel          = "models/weapons/cstrike/c_knife_t.mdl"
 SWEP.WorldModel         = "models/weapons/w_knife_t.mdl"
 
 function SWEP:Deploy()
-   self.Owner:SetWalkSpeed( self.Owner:GetWalkSpeed() + 100 )
+   self.Owner:SetWarriorSpeed( self.Owner:GetWarriorSpeed() + 100 )
    return true
 end
 
 function SWEP:Holster()
-   self.Owner:SetWalkSpeed( self.Owner:GetWalkSpeed() - 100 )
+   self.Owner:SetWarriorSpeed( self.Owner:GetWarriorSpeed() - 100 )
    return true
 end
 

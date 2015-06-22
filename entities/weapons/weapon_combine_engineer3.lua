@@ -16,28 +16,46 @@ SWEP.Primary.Automatic 		= false
 SWEP.Primary.Slot 			= 2
 SWEP.Primary.Level 			= 4
 
-function SWEP:DrawHUD()
+local ShootSound = Sound( "Metal.SawbladeStick" )
 
-end
 function SWEP:PrimaryAttack()
+
 	if not self:CanPrimaryAbility() then return end
 
-	local trace = self.Owner:GetEyeTrace()
+	local cooldown = 10
 
-	if trace.HitPos:Distance(self.Owner:GetPos()) > 200 then self.Owner:PrintMessage( HUD_PRINTTALK, "Can't Place the Turret so far Away.") return end
+	local tr = self.Owner:GetEyeTrace()
 
+	local effectdata = EffectData()
+	effectdata:SetOrigin( tr.HitPos )
+	effectdata:SetNormal( tr.HitNormal )
+	effectdata:SetMagnitude( 8 )
+	effectdata:SetScale( 1 )
+	effectdata:SetRadius( 16 )
+	util.Effect( "Sparks", effectdata )
+ 
+	self.Weapon:EmitSound( ShootSound )
 	self:ShootEffects()
-		
-	if SERVER then -- we want the skill and cooldown to be handled by the SERVER not by the CLIENT
-		local cooldown = 10
+ 
+	if !SERVER then return end
+ 
+	if self.Owner:HasStatus("Manhack_Placed") then self.Owner:RemoveStatus("Manhack_Placed") end
 
-		local turret = ents.Create( "combine_mine" )
-		if ( !IsValid( turret ) ) then return end
-		turret:SetOwner( self.Owner )
-		turret:SetPos( trace.HitPos + trace.HitNormal )
-		turret:Spawn()
-		
-		self:StartPrimaryCooldown( cooldown)-- Start cooldown for first "ability"
+	local ent = ents.Create( "npc_manhack" )
+	ent:SetPos( tr.HitPos + self.Owner:GetAimVector() * -16 )
+	ent:SetAngles( tr.HitNormal:Angle() )
+	ent:SetOwner( self.Owner )
+	ent:Spawn()
 
+	for _,target in pairs(player.GetAll()) do
+		if target:Team() != self.Owner:Team() then
+			ent:AddEntityRelationship( target, D_HT, 99 )
+		else
+			ent:AddEntityRelationship( target, D_LI, 99 )
+		end
 	end
+
+	self.Owner:SetStatus({Name = "Manhack_Placed", FuncEnd = function() ent:Remove() end, Show = false})
+
+	self:StartPrimaryCooldown( cooldown)-- Start cooldown for first "ability"
 end

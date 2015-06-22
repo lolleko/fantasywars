@@ -242,8 +242,9 @@ function SWEP:CompensatedTraceLine( distance )
 		self.Owner:LagCompensation(true)
 	end
 	if not distance then
+		local tr = self.Owner:GetEyeTrace()
 		self.Owner:LagCompensation(false)
-		return self.Owner:GetEyeTrace()
+		return tr
 	end
 	local spos = self.Owner:GetShootPos()
 	local sdest = spos + (self.Owner:GetAimVector() * distance)
