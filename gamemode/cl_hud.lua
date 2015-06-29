@@ -228,8 +228,8 @@ function FantasyHUD()
     local state = FW:GetRoundState() or "State"
     local time = FW:GetTimeInMinutes()
     local roundnumber = FW:GetRoundNumber()
-    local bs = team.GetScore()
-    local rs = team.GetScore()
+    local bs = team.GetScore(TEAM_BLUE)
+    local rs = team.GetScore(TEAM_RED)
 
     local clrs = {
         hp = {

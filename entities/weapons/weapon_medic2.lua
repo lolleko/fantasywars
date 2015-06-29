@@ -34,7 +34,7 @@ function SWEP:PrimaryAttack()
 	local trace = self:CompensatedTraceLine(400)
 	local hitEntity = trace.Entity
 
-	if trace.Hit and hitEntity:IsPlayer() and hitEntity:Team() == owner:Team() then
+	if trace.Hit and hitEntity:IsPlayer() and hitEntity:Team() == self.owner:Team() then
 
 		self:ShootEffects()
 
