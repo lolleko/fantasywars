@@ -1,15 +1,11 @@
 function GM:PlayerInitialSpawn( ply )
 
-	ply:SetTeam( TEAM_UNASSIGNED )
+	ply:SetTeam( TEAM_SPECTATOR )
 	-- reduce number of bullet holes by default
 	ply:ConCommand( "r_decals 50" )
 	ply:SetCanZoom( false )
 
-	if ( GAMEMODE.TeamBased ) then
-		ply:ConCommand( "gm_showteam" )
-		player_manager.SetPlayerClass( ply, "player_test")
-	end
-
+	player_manager.SetPlayerClass( ply, "player_warrior")
 end
 
 function GM:ScalePlayerDamage( ply, hitgroup, dmginfo )
@@ -62,7 +58,7 @@ end
 
 function GM:PlayerSpawn( ply )
 	--
-	-- If the player doesn't have a team in a TeamBased game
+	-- If the player doesn't have a team or a warrior in a TeamBased game
 	-- then spawn him as a spectator
 	--
 	if ( GAMEMODE.TeamBased && ( ply:Team() == TEAM_SPECTATOR || ply:Team() == TEAM_UNASSIGNED ) ) then

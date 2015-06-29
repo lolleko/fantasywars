@@ -15,4 +15,4 @@ function PLAYER:Loadout()
 
 end
 
-player_manager.RegisterClass( "player_test", PLAYER, "player_default" )
+player_manager.RegisterClass( "player_warrior", PLAYER, "player_default" )

@@ -6,7 +6,7 @@ SWEP.HoldType 			= "pistol"
 SWEP.Tracer				= 1
 
 SWEP.Primary.Damage 		= 30
-SWEP.Primary.Cone           = 0.05
+SWEP.Primary.Cone           = 0.1
 SWEP.Primary.Delay 			= 0.9
 
 SWEP.Primary.Slot 			= 0

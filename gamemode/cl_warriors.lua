@@ -2,8 +2,6 @@ FW.Status = {}
 
 net.Receive('FW_SetStatus', function(length)
 	FW.Status[net.ReadString()] = net.ReadTable()
-	PrintTable(FW.Status)
-	print("test")
 end)
 
 net.Receive('FW_RemoveStatus', function(length)

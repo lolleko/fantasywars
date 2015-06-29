@@ -9,7 +9,7 @@ SWEP.TracerName      = "Tracer"
 SWEP.Tracer          = 4
 SWEP.Primary.Distance   = 10000
 
-SWEP.Primary.Damage     = 100
+SWEP.Primary.Damage     = 50
 SWEP.Primary.Cone       = 0.001
 SWEP.Primary.Slot          = 2
 SWEP.Primary.Level       = 6

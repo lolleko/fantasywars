@@ -69,6 +69,11 @@ function PMENU:Init()
 	PButton:SetText( "CHOOSE YOUR WARRIOR!" )
 	PButton:SetDisabled(true )
 
+	local SButton = vgui.Create( "DButton", self )
+	SButton:SetPos( ScrW()/1.5 +20, ScrH()-20)
+	SButton:SetSize( ScrW()/3 - 40, 20 )
+	SButton:SetText( "Spectate" )
+	SButton.DoClick = function() self:Remove() gui.EnableScreenClicker(false) end
 	
 	for _, warrior in pairs(FW:GetWarriorList()) do
 

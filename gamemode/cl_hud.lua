@@ -90,7 +90,7 @@ function FWHUD:DrawAbilities( ply )
 
             if not wep.Primary.Slot then cdnumber = wep.Secondary.Slot else cdnumber = wep.Primary.Slot end
 
-            local cd = ply:GetNWInt( ply:Nick()..".Cooldown."..cdnumber ,0)
+            local cd = ply:GetNWInt( "Cooldown."..cdnumber ,0)
             if cd == 0 and wep.Primary.Ammo != "none" then cd = wep:Clip1() end
 
             if not wep.Primary.Slot then
@@ -129,8 +129,8 @@ function FWHUD:DrawAbilities( ply )
             y = y+8
             k = k-16
 
-            local cdprim    = ply:GetNWInt( ply:Nick()..".Cooldown."..wep.Primary.Slot,0)
-            local cdsec     = ply:GetNWInt( ply:Nick()..".Cooldown."..wep.Secondary.Slot,0)
+            local cdprim    = ply:GetNWInt( "Cooldown."..wep.Primary.Slot,0)
+            local cdsec     = ply:GetNWInt( "Cooldown."..wep.Secondary.Slot,0)
 
             if wep:IsOnCooldown(wep.Primary.Slot, true) then
                 self:DrawPanel(x,y,k,k, clrs.innerBackgroundCd ,2)

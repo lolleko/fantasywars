@@ -56,22 +56,12 @@ end
 
 function SWEP:CanPrimaryAbility()
 	--if not self:IsLevelAchieved( self.Primary.Level ) then return false end
-
-	if self:IsOnCooldown( self.Primary.Slot ) then
-		return false
-	end
-
-	return true
+	return not self:IsOnCooldown( self.Primary.Slot )
 end
 
 function SWEP:CanSecondaryAbility()
 	--if not self:IsLevelAchieved( self.Secondary.Level ) then return false end
-
-	if self:IsOnCooldown( self.Secondary.Slot ) then
-		return false
-	end
-
-	return true
+	return not self:IsOnCooldown( self.Secondary.Slot )
 end
 
 function SWEP:Reload()
@@ -118,7 +108,7 @@ function SWEP:StartSecondaryCooldown( duration)
 
 	if duration < 1 then return end -- if duration < 1 there is no need for a cooldown
 
-	local cdcallname = self.Owner:Nick()..".Cooldown."..self.Secondary.Slot -- Create Timer and Network name
+	local cdcallname = "Cooldown."..self.Secondary.Slot -- Create Timer and Network name
 
 	if self:IsOnCooldown( cdcallname ) then return end -- check if a cooldown exists already in case player died with ability on cd (Maybe uneeded here because it should be checked in the Attack functions)
 
@@ -131,7 +121,7 @@ function SWEP:StartPrimaryCooldown( duration)
 
 	if duration < 1 then return end -- if duration < 1 there is no need for a cooldown
 
-	local cdcallname = self.Owner:Nick()..".Cooldown."..self.Primary.Slot -- Create Timer and Network name
+	local cdcallname = "Cooldown."..self.Primary.Slot -- Create Timer and Network name
 
 	if self:IsOnCooldown( cdcallname ) then return end -- check if a cooldown exists already in case player died with ability on cd (Maybe uneeded here because it should be checked in the Attack functions)
 
@@ -140,13 +130,12 @@ function SWEP:StartPrimaryCooldown( duration)
 end
 
 function SWEP:IsOnCooldown( slot, supressmsg )
-
-	if  self.Owner:GetNWInt( self.Owner:Nick()..".Cooldown."..slot ,0) == 0 then -- return if NWInt exists (is it safe to check the nwint!?)
+	if  self.Owner:GetNWInt( "Cooldown."..slot ,0) == 0 then -- return if NWInt exists (is it safe to check the nwint!?) since this function is only relevant client side its probably safe... prove me wrong
 
 		return false
 
 	else
-		if not supressmsg then self.Owner:PrintMessage( HUD_PRINTTALK, "Wait "..self.Owner:GetNWInt( self.Owner:Nick()..".Cooldown."..slot ,0).." more seconds to use that again.") end
+		if not supressmsg then self.Owner:PrintMessage( HUD_PRINTTALK, "Wait "..self.Owner:GetNWInt( "Cooldown."..slot ,0).." more seconds to use that again.") end
 		
 		return true
 

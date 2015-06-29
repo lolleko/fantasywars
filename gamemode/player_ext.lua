@@ -10,7 +10,7 @@ function plymeta:HasWarrior()
 end
 
 function plymeta:GetWarrior()
-	return self.war
+	return self.Warrior
 end
 
 function plymeta:GetWarriorName()
@@ -55,10 +55,15 @@ function plymeta:SetWarrior( name )
 	war.Armor = warrior.Armor
 	war.Weapons = warrior.Weapons
 	war.Status = {}
+	war.Cooldowns = {}
 
-	self.war = war
+	self.Warrior = war
 
 	self:SetupHands()
+end
+
+function plymeta:RemoveWarrior()
+	self.Warrior = nil
 end
 
 function plymeta:GetWarriorMaxHealth()
@@ -100,10 +105,36 @@ end
 */
 
 function plymeta:StartWarriorCooldown( name, duration )
+	self:GetWarrior().Cooldowns[name] = duration
 	self:SetNWInt(name,duration) -- Sent cooldown to client  HUD
-	timer.Create( name, 1, duration, function() self:SetNWInt(name, self:GetNWInt(name,0)-1) end) -- reduce cooldown till 0
+	timer.Create( name, 1, duration, function() self:CooldownThink( name ) end) -- reduce cooldown till 0
 end
 
+function plymeta:CooldownThink( name )
+	self:GetWarrior().Cooldowns[name] = self:GetWarrior().Cooldowns[name] - 1
+	self:SetNWInt(name, self:GetWarrior().Cooldowns[name])
+end
+
+function plymeta:ResetCooldown( cdname )
+	if timer.Exists(cdname) then timer.Destroy(cdname) end
+	self:SetNWInt(cdname, 0)
+	self:GetWarrior().Cooldowns[cdname] = 0
+end
+
+function plymeta:ResetCooldowns()
+	for cdname,_ in pairs(self:GetWarrior().Cooldowns) do
+		print(cdname)
+		self:ResetCooldown( cdname )
+	end
+end
+
+function plymeta:IsOnCooldown( cdname )
+	if self:GetWarrior().Cooldowns[name] == 0 or self:GetWarrior().Cooldowns[name] == nil then
+		return false
+	else
+		return true
+	end
+end
 --Status Table for setting Status effects on players
 
 function plymeta:GetStatusTable()
@@ -222,4 +253,3 @@ function plymeta:ClearStatus()
 		self:RemoveStatus( name )
 	end
 end
-

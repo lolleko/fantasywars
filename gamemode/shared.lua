@@ -7,7 +7,7 @@ GM.TeamBased	= true
 
 --include( "modules/team.lua" )
 include( "sh_warriors.lua")
-include( "player_classes/player_test.lua" )
+include( "player_classes/player_warrior.lua" )
 include( "screen_effects.lua" )
 
 TEAM_BLUE = 1
@@ -44,8 +44,4 @@ function GM:CreateTeams()
 	team.LevelUp(TEAM_RED)
 	team.LevelUp(TEAM_RED)*/
 
-end
-
-function GM:Initialize()
-	self.BaseClass.Initialize( self )
 end
