@@ -12,7 +12,7 @@ SWEP.Primary.Level 			= 4
 
 
 function SWEP:DrawHUD()
-	if not self:IsLevelAchieved(6, true) then return end
+	/*if not self:IsLevelAchieved(6, true) then return end
 	for id,target in pairs(player.GetAll()) do
 		if target:Alive() and self.Owner:Nick() != target:Nick() then
 
@@ -24,7 +24,7 @@ function SWEP:DrawHUD()
 			surface.DrawLine( ScrW()/2, ScrH()/2, tonumber(targetScreenpos.x), tonumber(targetScreenpos.y))
 
 		end
-	end
+	end*/
 end
 
 function SWEP:PrimaryAttack()
@@ -46,6 +46,7 @@ function SWEP:PrimaryAttack()
 
 			local status = {}
 			status.Name = "Gman_Mindray"
+			status.Inflictor = owner
 			status.DisplayName = "Propaganda"
 			status.Duration = 7
 			status.FuncStart = function() hitEntity:SetColor( Color(100, 40, 130 ) ) end

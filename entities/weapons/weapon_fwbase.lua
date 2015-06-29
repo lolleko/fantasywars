@@ -99,7 +99,7 @@ function SWEP:ShootBullet( damage, num_bullets, aimcone, distance, recoil )
 	bullet.Damage		= damage
 	bullet.AmmoType 	= "Pistol"
 	
-	if ((game.SinglePlayer() and SERVER) or
+	if ((game.SinglePlayer() and SERVER) or --RECOIL on TTT base
        ((not game.SinglePlayer()) and CLIENT and IsFirstTimePredicted())) then
 		if recoil then
 			local eyeang = self.Owner:EyeAngles()
@@ -211,7 +211,7 @@ function SWEP:MeleeAttack( dmg, distance, type)
 	ply:SetAnimation( PLAYER_ATTACK1 )
 
 	if IsValid(hitEntity) or trace.HitWorld then
-		self.Weapon:SendWeaponAnim( ACT_VM_HITCENTER )
+		self.Weapon:SendWeaponAnim( self.PrimaryAnim )
 		if hitEntity:IsPlayer() or hitEntity:IsNPC() then
 			if hitEntity:GetBloodColor() != DONT_BLEED or hitEntity:GetClass() == "prop_ragdoll" then
 				local effectdata = EffectData()
@@ -251,4 +251,17 @@ function SWEP:CompensatedTraceLine( distance )
     local tr = util.TraceLine({start=spos, endpos=sdest, filter=self.Owner, mask=MASK_SHOT_HULL})
     self.Owner:LagCompensation(false)
     return tr
+end
+
+local correctTick = math.floor(1 / engine.TickInterval())
+local tick = 0
+
+function SWEP:LessTicks( pS ) --function to only execute Think() content roughly once per second or however pS (per second) is set to
+	pS = pS or 1
+	tick = tick + 1
+	if tick == math.floor(correctTick / pS) then
+		tick = 0
+		return true
+	end
+	return false
 end

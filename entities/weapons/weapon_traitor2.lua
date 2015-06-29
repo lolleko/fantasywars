@@ -10,9 +10,14 @@ SWEP.Primary.Level 			= 4
 
 SWEP.ViewModel			= "models/weapons/cstrike/c_c4.mdl"
 SWEP.WorldModel			= "models/weapons/w_c4.mdl"
+SWEP.ShowViewModel 		= true
 local Preview = Model("models/weapons/w_c4_planted.mdl")
 SWEP.PreviewModel 		= Preview
 
+function SWEP:Deploy()
+	if SERVER and self.Owner:HasStatus("Traitor_Invisible") then self.Owner:RemoveStatus("Traitor_Invisible") end
+	return true
+end
 function SWEP:PrimaryAttack()
 	if not self:CanPrimaryAbility() then return end
 

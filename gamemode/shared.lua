@@ -14,12 +14,15 @@ TEAM_BLUE = 1
 
 TEAM_RED = 2
 
-WL:CreateList()
+FW:CreateList()
 
 function GM:CreateTeams()
 
 	team.SetUp( TEAM_BLUE, "Blue", Color(0,0,255))
 	team.SetUp( TEAM_RED, "Red", Color(255,0,0))
+
+	team.SetSpawnPoint( TEAM_BLUE, { "info_player_counterterrorist" } )
+	team.SetSpawnPoint( TEAM_RED, { "info_player_terrorist" } )
 
 	/*team.SetLevel( TEAM_BLUE, 1)
 	team.SetLevel( TEAM_RED, 1)

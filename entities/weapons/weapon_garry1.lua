@@ -53,6 +53,7 @@ function SWEP:SecondaryAttack()
 
 			local status = {}
 			status.Name = "Garry_Stun"
+			status.Inflictor = self.Owner
 			status.DisplayName = "Froozen by Garry"
 			status.Duration = 1.5
 			status.FuncStart = function() hitEntity:Freeze( true ) end

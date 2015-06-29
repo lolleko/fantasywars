@@ -1,6 +1,5 @@
 include( "shared.lua" )
 include( "vgui/DPickMenu.lua")
-include( "vgui/DWarriorInfo.lua")
 include( "cl_hud.lua")
 include( "cl_warriors.lua")
 

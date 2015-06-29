@@ -3,6 +3,7 @@ SWEP.Base = "weapon_fwbase"
 local PreviewdModel = Model("models/combine_turrets/floor_turret.mdl")
 SWEP.ViewModel = "models/weapons/c_Grenade.mdl"
 SWEP.PreviewModel = PreviewModel
+SWEP.ShowViewModel = false
 
 SWEP.OnWall = false
 SWEP.PlaceRange = 90

@@ -35,7 +35,7 @@ function FWHUD:DrawStatus( ply )
         whiteText = Color(255,255,255,255)
     }
     local x = 0
-    for _, status in pairs(WL:GetStatusTable()) do
+    for _, status in pairs(FW:GetStatusTable()) do
         if status.Show then 
             FWHUD:DrawText( 30, ScrH()/2 + x, status.DisplayName, "treb_small", clrs.whiteText )
             x = x+30
@@ -213,7 +213,9 @@ function FWHUD:Crosshair()
     local x = ScrW() / 2
     local y = ScrH() / 2
 
-    surface.DrawCircle( x, y, 1, Color(255,255,255) )
+    for w=1,5 do
+        surface.DrawCircle( x, y, w, Color(255/w,255/w,255/w,10) )
+    end
 end
 
 function FantasyHUD()
@@ -223,6 +225,11 @@ function FantasyHUD()
 	local hpp = ply:Health()/ply:GetMaxHealth()
     local ap = ply:Armor()
     local app = ply:Armor()/300
+    local state = FW:GetRoundState() or "State"
+    local time = FW:GetTimeInMinutes()
+    local roundnumber = FW:GetRoundNumber()
+    local bs = team.GetScore()
+    local rs = team.GetScore()
 
     local clrs = {
         hp = {
@@ -230,6 +237,8 @@ function FantasyHUD()
             fill = Color( 142, 41, 44, 255)
         },
         whiteText = Color(255,255,255,255),
+        redText = Color(255,0,0,255),
+        blueText = Color(0,0,255,255),
         ap = {
             fill = Color(25,25,100,255),
         },
@@ -253,6 +262,14 @@ function FantasyHUD()
     --ArmorBar
     FWHUD:DrawBar( 20, ScrH() - 144, 300, 24, clrs.ap , app )
     if ap > 0 then FWHUD:DrawText( 30, ScrH() - 140, ap, "treb_small", clrs.whiteText ) end
+
+    --Round
+    FWHUD:DrawText( 30, ScrH() - 400, time, "treb", clrs.whiteText )
+    FWHUD:DrawText( 30, ScrH() - 370, state .." ".. roundnumber , "treb", clrs.whiteText )
+
+    --Score
+    FWHUD:DrawText( ScrW()/3+10, 20, bs, "treb", clrs.blueText )
+    FWHUD:DrawText( ScrW()/1.5+35, 20, rs, "treb", clrs.redText )
 
 	/*
     local bl = team.GetLevel( TEAM_BLUE )

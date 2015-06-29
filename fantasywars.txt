@@ -35,6 +35,30 @@
 			"type"		"numeric"
 			"default"	"200"
 		}
+		4
+		{
+			"name"		"fw_roundtime"
+			"text"		"The roundtime"
+			"help"		"lel"
+			"type"		"numeric"
+			"default"	"300"
+		}
+		5
+		{
+			"name"		"fw_breaktime"
+			"text"		"The breaktime"
+			"help"		"lel"
+			"type"		"numeric"
+			"default"	"30"
+		}
+		6
+		{
+			"name"		"fw_maxrounds"
+			"text"		"Round number before mapchange"
+			"help"		"lel"
+			"type"		"numeric"
+			"default"	"5"
+		}
 
 	}
 

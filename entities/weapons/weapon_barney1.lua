@@ -19,6 +19,8 @@ SWEP.Primary.Sound       	= Sound( "Weapon_Crowbar.Single" )
 SWEP.ViewModel				= "models/weapons/c_crowbar.mdl"
 SWEP.WorldModel				= "models/weapons/w_crowbar.mdl"
 
+SWEP.PrimaryAnim        = ACT_VM_HITCENTER
+
 function SWEP:PrimaryAttack()
 
    self.Weapon:SetNextPrimaryFire( CurTime() + self.Primary.Delay )

@@ -70,7 +70,7 @@ function PMENU:Init()
 	PButton:SetDisabled(true )
 
 	
-	for _, warrior in pairs(WL:GetWarriorList()) do
+	for _, warrior in pairs(FW:GetWarriorList()) do
 
 		--create panel for each warrior
 		local HPanel = vgui.Create( "DPanel", List )

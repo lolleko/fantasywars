@@ -42,7 +42,7 @@ function plymeta:GetWarriorArmor()
 end
 
 function plymeta:SetWarrior( name )
-	local warrior = WL:GetWarrior( name )
+	local warrior = FW:GetWarrior( name )
 	local war = {}
 
 	--All character specific values will be stored here
@@ -140,7 +140,9 @@ end
 
 	local status = {}
 	status.Name = String required
+	status.Inflictor = Playeroptional default: self
 	status.DisplayName = String optional
+	status.Description = String optional
 	status.Duration = optional, but required with functick or funcend pass 0 for infinite duration
 	status.FuncStart = Function optional
 	status.FuncTick = Function optional
@@ -148,6 +150,8 @@ end
 	status.ScreenEffect = String optional
 	status.Icon = String(path) optional if not set default icon will be used 
 	status.DeBuff = Boolean optional default: false
+	status.Show = Boolean optional default: true
+	status.Log = Boolean optional default: true
 	
 */
 function plymeta:SetStatus( status )
@@ -157,15 +161,19 @@ function plymeta:SetStatus( status )
 	local funcend = status.FuncEnd
 	local functick = status.FuncTick
 	local newstatus = {} -- save only required stuff for later usage
+	if status.Inflictor then newstatus.Inflictor = status.Inflictor:Nick() else newstatus.Inflictor = self:Nick() end
 	newstatus.DisplayName = status.DisplayName or status.Name
-	if screeneffect then newstatus.ScreenEffect = screeneffect end
+	if status.Description then newstatus.Description = status.Description end
+	if status.screeneffect then newstatus.ScreenEffect = screeneffect end
 	newstatus.Icon = status.Icon or "path/to/default"
 	newstatus.DeBuff = status.Debuff or false
-	if not status.Show then newstatus.Show = status.Show else newstatus.Show = true end
-	net.Start( "FW_SetStatus" ) --Send info to client before adding function
+	if status.Show then newstatus.Show = status.Show else newstatus.Show = true end
+	if status.Log then newstatus.Log = status.Log else newstatus.Log = true end
+	net.Start( "FW_SetStatus" ) --Send info to client before adding functions
 		net.WriteString( status.Name )
 		net.WriteTable( newstatus )
 	net.Send( self )
+	if status.Inflictor then newstatus.Inflictor = status.Inflictor else newstatus.Inflictor = self end
 	if funcend then newstatus.FuncEnd = funcend end --save end function to be able to call it in RemoveStatus
 
 	self:GetStatusTable()[status.Name] = newstatus

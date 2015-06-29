@@ -31,7 +31,7 @@ function SWEP:PrimaryAttack()
 	local aimcone = self.Primary.Cone
 
 	if SERVER then if self.Owner:HasStatus("CT_Spray") then aimcone = (2^(shots/300)-1) + aimcone else shots = 0  end end
-	if CLIENT then if WL:HasStatus("CT_Spray") then aimcone = (2^(shots/300)-1) + aimcone else shots = 0  end end --For proper tracers and decals
+	if CLIENT then if FW:HasStatus("CT_Spray") then aimcone = (2^(shots/300)-1) + aimcone else shots = 0  end end --For proper tracers and decals
 	
 	self.Weapon:EmitSound(self.Primary.Sound)
 

@@ -12,8 +12,8 @@ SWEP.Secondary.Level    = 6
 
 SWEP.Primary.Sound       	= Sound( "Weapon_Crowbar.Single" )
 
-SWEP.ViewModel				= "models/weapons/c_crossbow.mdl"
-SWEP.WorldModel				= "models/weapons/w_crossbow.mdl"
+SWEP.ViewModel				= "models/weapons/v_rpg.mdl"
+SWEP.WorldModel				= "models/weapons/w_rpg.mdl"
 
 function SWEP:PrimaryAttack()
    if not self:CanPrimaryAbility() then return end

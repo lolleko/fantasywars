@@ -11,23 +11,18 @@ AddCSLuaFile( "vgui/DPickMenu.lua" )
 include( "shared.lua" )
 include( "player.lua" )
 include( "player_ext.lua" )
+include( "sv_warriors.lua")
 
 --net strings
-util.AddNetworkString('FW_SetWarrior' )
+util.AddNetworkString( "FW_SetWarrior" )
 util.AddNetworkString( "FW_SetStatus" )
 util.AddNetworkString( "FW_RemoveStatus" ) 
+util.AddNetworkString( "FW_SetRoundState" )
 
 net.Receive('FW_SetWarrior', function(length, ply)
-	if  ply:IsValid() and ply:IsPlayer() then
+	if  ply:IsValid() and ply:IsPlayer() then --add check if already picked
 		ply:SetWarrior(net.ReadString())
 	end
 end)
 
-function PlayerCount()
-   local playercount = 0
-
-   for _, ply in pairs(player.GetAll()) do
-        playercount = playercount + 1
-   end
-   return playercount
-end
+FW:CreateRound()

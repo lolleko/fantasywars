@@ -9,7 +9,6 @@ SWEP.ViewModel = "models/weapons/c_Grenade.mdl"
 SWEP.WorldModel = WorldModel
 SWEP.PreviewModel = WorldModel
 SWEP.Slot 				= 1
-SWEP.ShowViewModel = false
 
 SWEP.Primary.Slot 			= 1
 SWEP.Primary.Level 			= 2

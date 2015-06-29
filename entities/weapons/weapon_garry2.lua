@@ -65,6 +65,7 @@ function SWEP:SecondaryAttack()
 
 			local status = {}
 			status.Name = "Garry_Disarm"
+			status.Inflictor = self.Owner
 			status.DisplayName = "Disarmed by Garry"
 			status.Duration = 1.5
 			status.FuncStart = function() target:StripWeapons() end

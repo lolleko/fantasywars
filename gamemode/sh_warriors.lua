@@ -1,9 +1,9 @@
-WL = {}
-WL.__index = WL
+FW = {}
+FW.__index = FW
 
-WL.Warriors = {}
+FW.Warriors = {}
 
-function WL:CreateList()
+function FW:CreateList()
 	local wardata = file.Find('fantasywars/gamemode/warriors/*', 'LUA')
 
 	--Get table of all warriors stored in "warriros/" 
@@ -21,20 +21,19 @@ function WL:CreateList()
 
 end
 
-function WL:GetWarrior( name )
+function FW:GetWarrior( name )
 	return self.Warriors[name]
 end
 
-function WL:GetWarriorList()
+function FW:GetWarriorList()
 	return self.Warriors
 end
 
-function WL:GetNames()
+function FW:GetNames()
 	local wlist = {}
 	for _, warrior in pairs(self.Warriors) do
 		wlist[#wlist+1] = warrior.Name
 	end
 
-	return wlist
-	
+	return wlist	
 end
