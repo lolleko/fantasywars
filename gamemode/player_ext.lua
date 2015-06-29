@@ -116,7 +116,7 @@ function plymeta:CooldownThink( name )
 end
 
 function plymeta:ResetCooldown( cdname )
-	if timer.Exists(cdname) then timer.Destroy(cdname) end
+	if timer.Exists(self:SteamID()..cdname) then timer.Destroy(cdname) end
 	self:SetNWInt(cdname, 0)
 	self:GetWarrior().Cooldowns[cdname] = 0
 end
