@@ -40,7 +40,7 @@ function SWEP:SecondaryAttack()
 	if SERVER then -- we want the skill and cooldown to be handled by the SERVER not by the CLIENT
 		local cooldown = 10
 		local hitEntity = trace.Entity
-		if trace.Hit and IsValid(hitEntity) and hitEntity:Team() != self.Owner:Team() then -- if tracer hits player freeze him
+		if trace.Hit and IsValid(hitEntity) and (hitEntity:IsPlayer() and hitEntity:Team() != self.Owner:Team()) then -- if tracer hits player freeze him
 
 			--fancy sparks
 			local effectdata = EffectData()

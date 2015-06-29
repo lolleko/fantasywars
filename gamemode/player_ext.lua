@@ -107,13 +107,12 @@ end
 function plymeta:StartWarriorCooldown( name, duration )
 	self:GetWarrior().Cooldowns[name] = duration
 	self:SetNWInt(name,duration) -- Sent cooldown to client  HUD
-	timer.Create( name, 1, duration, function() self:CooldownThink( name ) end) -- reduce cooldown till 0
+	timer.Create( self:SteamID()..name, 1, duration, function() self:CooldownThink( name ) end) -- reduce cooldown till 0
 end
 
 function plymeta:CooldownThink( name )
 	self:GetWarrior().Cooldowns[name] = self:GetWarrior().Cooldowns[name] - 1
-	self:SetNWInt(name, self:GetWarrior().Cooldowns[name])
-	print(self:Nick()..": "..name.." = ".. self:GetWarrior().Cooldowns[name])
+	self:SetNWInt( name, self:GetWarrior().Cooldowns[name])
 end
 
 function plymeta:ResetCooldown( cdname )
@@ -124,7 +123,6 @@ end
 
 function plymeta:ResetCooldowns()
 	for cdname,_ in pairs(self:GetWarrior().Cooldowns) do
-		print(cdname)
 		self:ResetCooldown( cdname )
 	end
 end

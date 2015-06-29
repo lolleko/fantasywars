@@ -14,6 +14,9 @@ include( "player.lua" )
 include( "player_ext.lua" )
 include( "sv_warriors.lua")
 
+--rsopurces
+resource.AddFile( "materials/sprites/scope.vmt" )
+
 --net strings
 util.AddNetworkString( "FW_SetWarrior" )
 util.AddNetworkString( "FW_SetStatus" )
