@@ -113,7 +113,7 @@ end
 function plymeta:CooldownThink( name )
 	self:GetWarrior().Cooldowns[name] = self:GetWarrior().Cooldowns[name] - 1
 	self:SetNWInt( name, self:GetWarrior().Cooldowns[name])
-	if self:GetWarrior().Cooldowns[name] == 0 end if timer.Exists(self:SteamID()..name) then timer.Destroy(self:SteamID()..name) end
+	if self:GetWarrior().Cooldowns[name] == 0 then if timer.Exists(self:SteamID()..name) then timer.Destroy(self:SteamID()..name) end end
 end
 
 function plymeta:ResetCooldown( cdname )
