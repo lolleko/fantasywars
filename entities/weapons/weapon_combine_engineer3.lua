@@ -55,7 +55,7 @@ function SWEP:PrimaryAttack()
 		end
 	end
 
-	self.Owner:SetStatus({Name = "Manhack_Placed", FuncEnd = function() ent:Remove() end, Show = false})
+	self.Owner:SetStatus({Name = "Manhack_Placed", FuncEnd = function() if IsValid(ent) then ent:Remove() end end, Show = false})
 
 	self:StartPrimaryCooldown( cooldown)-- Start cooldown for first "ability"
 end

@@ -18,9 +18,9 @@ function SWEP:Think()
 		for _,target in pairs(player.GetAll()) do
 			if target:GetPos():Distance(self.Owner:GetPos()) < 400 then
 				if target:Team() == self.Owner:Team() then 
-					target:SetStatus({ Name = "Medic_Heal_Aura", Inflictor = self.Owner, DisplayName = "You are healed by a nearby Medic.", Duration = 1, FuncStart = function() if target:Health() < target:GetMaxHealth() then target:SetHealth(target:Health()+1) end end })
+					target:SetStatus({ Name = "Medic_Heal_Aura", Inflictor = self.Owner, DisplayName = "You are healed by a nearby Medic.", Duration = 1, FuncStart = function() if target:Health() < target:GetMaxHealth() then target:SetHealth(target:Health()+3) end end })
 				else
-					target:SetStatus({ Name = "Medic_Damage_Aura", Inflictor = self.Owner, DisplayName = "You are damaged by a nearby Medic.", Duration = 1, FuncStart = function() target:SetHealth(target:Health()-1) end })
+					target:SetStatus({ Name = "Medic_Damage_Aura", Inflictor = self.Owner, DisplayName = "You are damaged by a nearby Medic.", Duration = 1, FuncStart = function() target:SetHealth(target:Health()-3) end })
 				end
 			end
 		end
@@ -42,11 +42,12 @@ function SWEP:PrimaryAttack()
 
 			local cooldown = 20
 			local healAmount = 25
+			local ply = self.Owner
 
 			--Set a status to notify the healed person
 			local status = {}
 			status.Name = "Medic_Heal"
-			status.Inflictor = self.Owner
+			status.Inflictor = ply
 			status.DisplayName = "You have been healed."
 			status.Duration = 1
 			status.FuncStart = 	function() if hitEntity:Health() + healAmount > hitEntity:GetMaxHealth() then hitEntity:SetHealth(hitEntity:GetMaxHealth()) else hitEntity:SetHealth(hitEntity:Health() + healAmount) end end

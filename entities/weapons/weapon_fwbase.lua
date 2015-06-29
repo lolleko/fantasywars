@@ -202,7 +202,7 @@ function SWEP:MeleeAttack( dmg, distance, type)
 	if IsValid(hitEntity) or trace.HitWorld then
 		self.Weapon:SendWeaponAnim( self.PrimaryAnim )
 		if hitEntity:IsPlayer() or hitEntity:IsNPC() then
-			if hitEntity:GetBloodColor() != DONT_BLEED or hitEntity:GetClass() == "prop_ragdoll" then
+			if hitEntity:IsPlayer() or hitEntity:GetBloodColor() != DONT_BLEED or hitEntity:GetClass() == "prop_ragdoll" then
 				local effectdata = EffectData()
 				effectdata:SetOrigin( hitEntity:GetPos() + hitEntity:OBBCenter() + Vector(0,0,10) )
 				util.Effect( "BloodImpact" , effectdata )
