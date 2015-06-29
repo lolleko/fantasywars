@@ -7,7 +7,7 @@ SWEP.Tracer				= 1
 
 SWEP.Primary.Damage 		= 30
 SWEP.Primary.Cone           = 0.1
-SWEP.Primary.Delay 			= 0.9
+SWEP.Primary.Delay 			= 0.7
 
 SWEP.Primary.Slot 			= 0
 SWEP.Secondary.Slot 		= 1

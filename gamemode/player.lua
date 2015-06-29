@@ -100,7 +100,7 @@ function GM:PlayerDeath( victim, infl, attacker)
 	victim:Extinguish()
 
 	if attacker:GetOwner():IsPlayer() and attacker:GetOwner():Team() != victim:Team() or attacker:IsPlayer() and attacker:Team() != victim:Team() then
-		team.AddScore(attacker:Team())
+		team.AddScore(attacker:Team(), 1)
 	end
 
 end
