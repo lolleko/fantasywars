@@ -113,6 +113,7 @@ end
 function plymeta:CooldownThink( name )
 	self:GetWarrior().Cooldowns[name] = self:GetWarrior().Cooldowns[name] - 1
 	self:SetNWInt(name, self:GetWarrior().Cooldowns[name])
+	print(self:Nick()..": "..name.." = ".. self:GetWarrior().Cooldowns[name])
 end
 
 function plymeta:ResetCooldown( cdname )
