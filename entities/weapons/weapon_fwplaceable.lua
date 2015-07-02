@@ -1,42 +1,41 @@
 SWEP.Base = "weapon_fwbase"
 
-local PreviewdModel = Model("models/combine_turrets/floor_turret.mdl")
-SWEP.ViewModel = "models/weapons/c_Grenade.mdl"
+local PreviewModel = Model("models/combine_turrets/floor_turret.mdl")
+SWEP.ViewModel = "models/weapons/c_arms.mdl"
+SWEP.WorldModel = ""
 SWEP.PreviewModel = PreviewModel
-SWEP.ShowViewModel = false
+SWEP.PreviewShow = true
 
 SWEP.OnWall = false
 SWEP.PlaceRange = 90
 
 function SWEP:DrawHUD()
-	if IsValid(self.preview) then
+	if IsValid(self.PreviewProp) then
 		local ply = LocalPlayer()
 		if ply:GetActiveWeapon() == self then
-			self.preview:SetNoDraw(false)
-			self.preview:SetPos( self:CalculatePos() )
-			self.preview:SetAngles( self:CalculateAngles() )
+			self.PreviewProp:SetNoDraw(false)
+			self.PreviewProp:SetPos( self:CalculatePos() )
+			self.PreviewProp:SetAngles( self:CalculateAngles() )
 			if not self:CanPlace() then
-				self.preview:SetColor(Color(128,0,0))
-				self.preview:SetMaterial("models/shiny")
+				self.PreviewProp:SetColor(Color(128,0,0))
+				self.PreviewProp:SetMaterial("models/shiny")
 			else
-				self.preview:SetColor(Color(255,255,255))
-				self.preview:SetMaterial("")
+				self.PreviewProp:SetColor(Color(255,255,255))
+				self.PreviewProp:SetMaterial("")
 			end
 		end
 	end
-
 end
 
 function SWEP:Initialize()
-	if CLIENT then
-		if !IsValid(self.preview) then
-			self.preview = ents.CreateClientProp(self.PreviewModel)
-			self.preview:SetNoDraw(true)
+	if CLIENT and self.PreviewShow then
+		if !IsValid(self.PreviewProp) then
+			self.PreviewProp = ents.CreateClientProp(self.PreviewModel)
+			self.PreviewProp:SetNoDraw(true)
 		end
-		if IsValid(self.preview) then
-			self.preview:SetParent(self)
-			self.preview:Spawn()
-			self:Think()
+		if IsValid(self.PreviewProp) then
+			self.PreviewProp:SetParent(self)
+			self.PreviewProp:Spawn()
 		end
 	end
 	return true
@@ -44,8 +43,8 @@ function SWEP:Initialize()
 end
 
 function SWEP:Holster()
-	if CLIENT then
-		self.preview:SetNoDraw(true)
+	if CLIENT and IsValid(self.PreviewProp) then
+		self.PreviewProp:SetNoDraw(true)
 	end
 	return true
 end
@@ -55,7 +54,18 @@ function SWEP:CanPlace()
 
 	if !trace.HitWorld then return false end
 	if trace.HitPos:Distance(self.Owner:GetPos()) > self.PlaceRange then return false end
-	if trace.HitNormal.z < 0.9 then return false end
+	if trace.HitNormal.z < 0.9 and !self.OnWall then return false end
+
+	/*local tracedata = {}
+	tracedata.start = trace.HitPos
+	tracedata.endpos = trace.HitPos
+	tracedata.mins = self.PreviewProp:OBBMins()
+	tracedata.maxs = self.PreviewProp:OBBMaxs()
+	trace = util.TraceHull( tracedata )
+
+	if trace.Hit then
+		return false
+    end*/
 
 	return true
 end
@@ -65,13 +75,19 @@ function SWEP:CalculatePos()
 end
 
 function SWEP:CalculateAngles()
-	local ang = self.Owner:EyeAngles()
-	ang.pitch = 0
-	ang.roll = 0
+	local ang
+	if self.OnWall then
+		ang = self.Owner:GetEyeTrace().HitNormal:Angle()
+		ang.pitch = ang.pitch + 90
+	else
+		ang = self.Owner:EyeAngles()
+		ang.pitch = 0
+		ang.roll = 0
+	end
 	return ang
 end
 
 function SWEP:OnRemove()
-	if CLIENT then self.preview:Remove() end
+	if CLIENT and IsValid(self.PreviewProp) then self.PreviewProp:Remove() end
 	return
 end

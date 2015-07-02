@@ -31,10 +31,7 @@ function SWEP:PrimaryAttack()
 		thumper:SetPos( self:CalculatePos() )
 		thumper:SetAngles( self:CalculateAngles() )
 		thumper:Spawn()
-		local thumperphys = thumper:GetPhysicsObject()
-	    if thumperphys:IsValid() then
-	       thumperphys:EnableMotion(false)
-	    end
+		thumper:SetMoveType(MOVETYPE_NONE)
 
 		self.Owner:SetStatus({Name = "Thumper_Placed", FuncEnd = function() thumper:Remove() end, Show = false})
 

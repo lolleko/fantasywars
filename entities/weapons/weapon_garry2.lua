@@ -39,11 +39,12 @@ function SWEP:PrimaryAttack()
 		local explode = ents.Create("env_explosion")
 			explode:SetPos( grenade:GetPos() )
 			grenade:Remove()
+			explode:SetCreator( self.Owner )
 			explode:SetOwner( self.Owner )
 			explode:Spawn()
 			explode:SetKeyValue("iMagnitude","75")
 			explode:Fire("Explode", 0, 0 )
-			explode:EmitSound("weapon_AWP.Single", 400, 400 )
+			explode:EmitSound( "ambient/explosions/explode_" .. math.random( 1, 9 ) .. ".wav", 400, 400 )
 		end)
 
 		self:StartPrimaryCooldown( cooldown )
@@ -69,9 +70,9 @@ function SWEP:SecondaryAttack()
 			status.DisplayName = "Disarmed by Garry"
 			status.Duration = 2.5
 			status.FuncStart = function() target:StripWeapons() end
-			status.FuncEnd = function() target:SetUpLoadout() end
+			status.FuncEnd = function() if target:Alive() then target:SetUpLoadout() end --this will reset ammo aon all players... is it a bug or a feature!?
 			
-			if target:Team() != ply:Team() then target:SetStatus( status ) end
+			if target:Team() != ply:Team() then target:SetStatus( status ) end end
 		end
 
 		self:StartSecondaryCooldown( cooldown )

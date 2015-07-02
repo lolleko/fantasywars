@@ -4,6 +4,7 @@ SWEP.Base = "weapon_fwplaceable"
 SWEP.Slot = 1
 
 SWEP.HoldType 			= "slam"
+SWEP.OnWall				= true
 
 SWEP.Primary.Slot 			= 2
 SWEP.Primary.Level 			= 4
@@ -14,10 +15,6 @@ SWEP.ShowViewModel 		= true
 local Preview = Model("models/weapons/w_c4_planted.mdl")
 SWEP.PreviewModel 		= Preview
 
-function SWEP:Deploy()
-	if SERVER and self.Owner:HasStatus("Traitor_Invisible") then self.Owner:RemoveStatus("Traitor_Invisible") end
-	return true
-end
 function SWEP:PrimaryAttack()
 	if not self:CanPrimaryAbility() then return end
 
@@ -37,10 +34,8 @@ function SWEP:PrimaryAttack()
 		explosive:SetPos( self:CalculatePos() )
 		explosive:SetAngles( self:CalculateAngles() )
 		explosive:Spawn()
-		local explosivephys = explosive:GetPhysicsObject()
-	    if explosivephys:IsValid() then
-	       explosivephys:EnableMotion(false)
-	    end
+		explosive:SetCollisionGroup(COLLISION_GROUP_WEAPON)
+		explosive:SetMoveType(MOVETYPE_NONE)
 
 		self.Owner:SetStatus({Name = "Explosive_Placed", FuncEnd = function()  Explode( explosive, ply ) end, Show = false})
 
@@ -60,7 +55,7 @@ function Explode( prop, ply )
 
 	local ent = ents.Create( "env_explosion" )
 	ent:SetPos( prop:GetPos() )
-	ent:SetOwner( ply )
+	ent:SetCreator( ply )
 	ent:Spawn()
 	ent:SetKeyValue( "iMagnitude", "125" )
 	ent:Fire( "Explode", 0, 0 )

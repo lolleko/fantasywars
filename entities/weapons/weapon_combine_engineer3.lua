@@ -4,8 +4,8 @@ SWEP.Base = "weapon_fwbase"
 
 SWEP.HoldType = "grenade"
 SWEP.ViewModelFOV = 74
-SWEP.ViewModel = "models/weapons/c_Grenade.mdl"
-SWEP.WorldModel = "models/weapons/w_eq_smokegrenade.mdl"
+SWEP.ViewModel = ""
+SWEP.WorldModel = ""
 SWEP.Slot 				= 2
 
 SWEP.Primary.Damage 		= 20
@@ -44,7 +44,7 @@ function SWEP:PrimaryAttack()
 	local ent = ents.Create( "npc_manhack" )
 	ent:SetPos( tr.HitPos + self.Owner:GetAimVector() * -16 )
 	ent:SetAngles( tr.HitNormal:Angle() )
-	ent:SetOwner( self.Owner )
+	ent:SetCreator( self.Owner )
 	ent:Spawn()
 
 	for _,target in pairs(player.GetAll()) do

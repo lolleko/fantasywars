@@ -2,11 +2,11 @@ AddCSLuaFile()
 
 SWEP.Base = "weapon_fwbase"
 
-SWEP.HoldType 			= "pistol"
+SWEP.HoldType 			= "revolver"
 SWEP.Tracer				= 1
 
 SWEP.Primary.Damage 		= 30
-SWEP.Primary.Cone           = 0.1
+SWEP.Primary.Cone           = 0.08
 SWEP.Primary.Delay 			= 0.7
 
 SWEP.Primary.Slot 			= 0

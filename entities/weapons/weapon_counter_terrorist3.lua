@@ -8,6 +8,7 @@ SWEP.HoldType        = "ar2"
 SWEP.TracerName      = "Tracer"
 SWEP.Tracer          = 4
 SWEP.Primary.Distance   = 10000
+SWEP.CSMuzzleFlashes  = true
 
 SWEP.Primary.Damage     = 50
 SWEP.Primary.Cone       = 0.001

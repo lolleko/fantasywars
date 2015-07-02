@@ -7,8 +7,7 @@ AddCSLuaFile()
 SWEP.Base = "weapon_base"
 
 SWEP.Spawnable          = false
-SWEP.ShowWorldModel 	= true
-SWEP.ShowViewModel 		= true
+SWEP.ViewModelFOV 		= 54
 
 SWEP.HoldType 			= "pistol"
 SWEP.AutoSwitchTo       = false
@@ -44,17 +43,7 @@ function SWEP:Initialize()
     self:SetWeaponHoldType( self.HoldType ) -- Allow custom weapon hold type since it's just "pistol" in weapon_base
 end
 
-function SWEP:DrawWorldModel()
-	if self.ShowWorldModel then
-		self:DrawModel()
-	end
-end
-
-function SWEP:PostDrawViewModel( vm, ply, weapon )
-	self.Owner:DrawViewModel( self.ShowViewModel )
-end
-
-function SWEP:CanPrimaryAbility()
+function SWEP:CanPrimaryAbility() --simiilar to CanPrimaryAttack checks for cooldown instead of ammo and delay
 	--if not self:IsLevelAchieved( self.Primary.Level ) then return false end
 	return not self:IsOnCooldown( self.Primary.Slot )
 end
@@ -89,7 +78,7 @@ function SWEP:ShootBullet( damage, num_bullets, aimcone, distance, recoil )
 	bullet.Damage		= damage
 	bullet.AmmoType 	= "Pistol"
 	
-	if ((game.SinglePlayer() and SERVER) or --RECOIL on TTT base
+	if ((game.SinglePlayer() and SERVER) or --RECOIL modified tttbase
        ((not game.SinglePlayer()) and CLIENT and IsFirstTimePredicted())) then
 		if recoil then
 			local eyeang = self.Owner:EyeAngles()
@@ -106,26 +95,26 @@ end
 function SWEP:StartSecondaryCooldown( duration)
 	if CLIENT then return end -- function should only be available for servers since all data is stored serverside
 
-	if duration < 1 then return end -- if duration < 1 there is no need for a cooldown
+	if duration < 1 then return end -- if duration < 1 there is no need for a cooldown why would anyone set such a cooldown!? but we check for it anyways
 
-	local cdcallname = "Cooldown."..self.Secondary.Slot -- Create Timer and Network name
+	local cdcallname = "Cooldown."..self.Secondary.Slot -- Create Timer and Network name e.g Cooldown.1 <- depends on the slot
 
 	if self:IsOnCooldown( cdcallname ) then return end -- check if a cooldown exists already in case player died with ability on cd (Maybe uneeded here because it should be checked in the Attack functions)
 
-	self.Owner:StartWarriorCooldown(cdcallname,duration) -- we need to call the timer in the player table so it still works if the swep owner dies
+	self.Owner:StartWarriorCooldown(cdcallname,duration) -- we need to call the timer in the player table so it still works if the swep owner dies or looses his swep
 	
 end
 
 function SWEP:StartPrimaryCooldown( duration)
-	if CLIENT then return end -- function should only be available for servers since all data is stored serverside
+	if CLIENT then return end
 
-	if duration < 1 then return end -- if duration < 1 there is no need for a cooldown
+	if duration < 1 then return end
 
-	local cdcallname = "Cooldown."..self.Primary.Slot -- Create Timer and Network name
+	local cdcallname = "Cooldown."..self.Primary.Slot
 
-	if self:IsOnCooldown( cdcallname ) then return end -- check if a cooldown exists already in case player died with ability on cd (Maybe uneeded here because it should be checked in the Attack functions)
+	if self:IsOnCooldown( cdcallname ) then return end
 
-	self.Owner:StartWarriorCooldown(cdcallname,duration) -- we need to call the timer in the player table so it still works if the swep owner dies
+	self.Owner:StartWarriorCooldown(cdcallname,duration)
 	
 end
 
@@ -204,7 +193,7 @@ function SWEP:MeleeAttack( dmg, distance, type)
 		if hitEntity:IsPlayer() or hitEntity:IsNPC() then
 			if hitEntity:IsPlayer() or hitEntity:GetBloodColor() != DONT_BLEED or hitEntity:GetClass() == "prop_ragdoll" then
 				local effectdata = EffectData()
-				effectdata:SetOrigin( hitEntity:GetPos() + hitEntity:OBBCenter() + Vector(0,0,10) )
+				effectdata:SetOrigin( hitEntity:GetPos() + hitEntity:OBBCenter() + Vector(0,0,10) ) -- trace.HitPos dont seem to work correctly so we will just emit a blood effect roughly at the center of the entity
 				util.Effect( "BloodImpact" , effectdata )
 			end
 			if SERVER then
@@ -253,4 +242,24 @@ function SWEP:LessTicks( pS ) --function to only execute Think() content roughly
 		return true
 	end
 	return false
+end
+
+function SWEP:CustomViewModelSequence( seqname )
+	local vm = self.Owner:GetViewModel()
+	if vm:LookupSequence( seqname ) then
+		vm:SendViewModelMatchingSequence( vm:LookupSequence( seqname ) )
+	end
+end
+
+--should have used accessorfuncs in the beginning now it's to late deal with it
+function SWEP:SetPrimarySlot( slot )
+	self.Primary.Slot = slot
+end
+
+function SWEP:SetSeondarySlot( slot )
+	self.Secondary.Slot = slot
+end
+
+function SWEP:SetSlot( slot )
+	self.Slot = slot
 end

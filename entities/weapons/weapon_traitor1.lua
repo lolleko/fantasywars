@@ -5,6 +5,7 @@ SWEP.Base = "weapon_fwbase"
 SWEP.HoldType 			= "ar2"
 SWEP.TracerName 		= "Tracer"
 SWEP.Tracer				= 1
+SWEP.CSMuzzleFlashes	= true
 SWEP.Primary.Distance 	= 1500
 
 SWEP.Primary.Damage 		= 10
@@ -60,7 +61,7 @@ function MakeVisible( ply, state ) -- TODO make weapon invis too
 		ply:GetWeapon( "weapon_traitor1" ):SetRenderMode(RENDERMODE_TRANSALPHA)
 		ply:GetWeapon( "weapon_traitor1" ):SetColor( Color(0, 0, 0, 255 ) )
 		ply:SetColor( Color(0, 0, 0, 255 ) )
-		ply:SetWarriorSpeed( ply:GetWalkSpeed() - 200 )
+		ply:SetWarriorSpeed( ply:GetWalkSpeed() - 100 )
 		ply:DrawViewModel( true )
 	else
 		ply:GetWeapon( "weapon_traitor1" ):SetRenderMode(RENDERMODE_TRANSALPHA)
@@ -68,6 +69,11 @@ function MakeVisible( ply, state ) -- TODO make weapon invis too
 		ply:SetRenderMode(RENDERMODE_TRANSALPHA)
 		ply:SetColor( Color(0, 0, 0, 15 ) )
 		ply:DrawViewModel( false )
-		ply:SetWarriorSpeed( ply:GetWalkSpeed() + 200 )
+		ply:SetWarriorSpeed( ply:GetWalkSpeed() + 100 )
 	end
+end
+
+function SWEP:Holster()
+	if SERVER and self.Owner:HasStatus("Traitor_Invisible") then self.Owner:RemoveStatus("Traitor_Invisible") end
+	return true
 end

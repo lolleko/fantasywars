@@ -5,6 +5,7 @@ SWEP.Base = "weapon_fwbase"
 SWEP.Slot            = 3
 
 SWEP.HoldType 			= "melee"
+SWEP.CSMuzzleFlashes	= true
 
 SWEP.Primary.Distance        = 80
 SWEP.Primary.Damage 		= 30

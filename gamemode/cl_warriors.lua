@@ -25,12 +25,6 @@ function FW:HasStatus( name )
 	return false
 end
 
-function FW:StartClientTimer(time)
-	print("Timer started?")
-	if timer.Exists("FW_RoundTimer") then timer.Destroy("FW_RoundTimer") end
-	timer.Create("FW_RoundTimer", 1, time, function() self.Time = self.Time + 1 end )
-end
-
 function FW:GetTimeInMinutes()
 	return string.ToMinutesSeconds(LocalPlayer():GetNWInt("Time", 0))
 end

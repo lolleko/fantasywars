@@ -44,35 +44,88 @@ function FWHUD:DrawStatus( ply )
 end
 
 function FWHUD:DrawAbilities( ply )
+    local defclrs = { red = Color(231,77,60), blue = Color(53,152,219), green = Color(45,204,113), purple = Color(108,113,196), yellow = Color(241,196,16), lightgrey = Color(236,240,241), grey = Color(42,42,42), darkgrey = Color(26,26,26), black = Color(0,0,0)}
     local clrs = {
         outerBackground = {
-            background = Color( 18, 18, 18, 255)
+            background = defclrs.grey
         },
         innerBackground = {
-            border = Color( 71,96,28,255),
-            background = Color( 25, 25, 25, 255)
+            border = Color(38,106,56),
+            background = defclrs.darkgrey
         },
         outerBackgroundActive = {
-            background = Color( 67, 67, 67, 255),
+            background = Color(38,106,56)
         },
         innerBackgroundCd = {
-            border = Color( 54,129,166,255),
-            background = Color( 25, 25, 25, 255)
+            border = defclrs.blue,
+            background = defclrs.darkgrey
         },
-        whiteText = Color( 255, 255, 255, 255 )
+        whiteText = Color( 255, 255, 255)
     }
 
     local weps = ply:GetWeapons()
-    local x = 20
-    local y = ScrH() - 98
-
-    local k = 72
+    local x = 24 --x pos of screen
+    local y = ScrH() - 114 --y pos of screen
+    local b = 4 --borderwidth
+    local k = 64 --ability panel size
 
     local actwep = ply:GetActiveWeapon()
 
     for slot,wep in pairs(weps) do --So many dirty little "ifs" (TIDY)
 
-        if not wep.Primary.Slot or not wep.Secondary.Slot then
+        if !wep.Secondary.Slot then
+            if actwep == wep then
+                self:DrawPanel(x-b,y+k+b*3,k+2*b,16, clrs.outerBackgroundActive)
+            else
+                self:DrawPanel(x-b,y+k+b*3,k+2*b,16, clrs.outerBackground)
+            end
+            self:DrawText(x+k/2,y+k+b*3, slot, "treb_small", clrs.whiteText ) 
+        end
+
+        if wep.Secondary.Slot and wep.Primary.Slot then
+            if actwep == wep then
+                self:DrawPanel(x-b,y+k+b*3,k*2+6*b,16, clrs.outerBackgroundActive)
+            else
+                self:DrawPanel(x-b,y+k+b*3,k*2+6*b,16, clrs.outerBackground)
+            end
+            self:DrawText(x+k+b,y+k+b*3, slot, "treb_small", clrs.whiteText ) 
+        end
+
+        if wep.Primary.Slot then
+            local bCd = false
+            local bClip = false
+            if wep:IsOnCooldown(wep.Primary.Slot, true) then clr = clrs.innerBackgroundCd bCd = true else clr = clrs.innerBackground end
+            if wep.Primary.Ammo != "none" then bClip = true if wep:Clip1() == 0 then clr = clrs.innerBackgroundCd end end
+            self:DrawPanel(x,y,k,k, clr, b)
+            if bCd then    
+                self:DrawText(x+17,y+14, ply:GetNWInt( "Cooldown."..wep.Primary.Slot ,0), "treb", clrs.whiteText )
+            end 
+            if bClip then
+                self:DrawText(x+17,y+14, wep:Clip1(), "treb", clrs.whiteText )
+            end
+            x = x+k+b*4
+        end
+
+        if wep.Secondary.Slot then
+            local bCd = false
+            local bClip = false
+            if wep:IsOnCooldown(wep.Secondary.Slot, true) then clr = clrs.innerBackgroundCd bCd = true else clr = clrs.innerBackground end
+            if wep.Secondary.Ammo != "none" then bClip = true if wep:Clip2() == 0 then clr = clrs.innerBackgroundCd end end
+            self:DrawPanel(x,y,k,k, clr, b)
+            if bCd then
+                self:DrawText(x+17,y+14, ply:GetNWInt( "Cooldown."..wep.Secondary.Slot ,0), "treb", clrs.whiteText )
+            end 
+            if bClip then
+                self:DrawText(x+17,y+14, wep:Clip2(), "treb", clrs.whiteText )
+            end
+            x = x+k+b*4
+        end
+
+        
+
+
+
+        /*if not wep.Primary.Slot or not wep.Secondary.Slot then
 
             local xsave = x
             local ysave = y
@@ -120,9 +173,9 @@ function FWHUD:DrawAbilities( ply )
             local ksave = k 
 
             if actwep and actwep.Slot == slot-1 then
-                self:DrawPanel(x,y,k*2-6,k, clrs.outerBackgroundActive)
+                self:DrawPanel(x+6,y+k-6,k*2-18,8, clrs.outerBackgroundActive)
             else
-                self:DrawPanel(x,y,k*2-6,k, clrs.outerBackground)
+                self:DrawPanel(x+6,y+k-6,k*2-18,8, clrs.outerBackground)
             end
 
             x = x+8
@@ -152,7 +205,7 @@ function FWHUD:DrawAbilities( ply )
             y = ysave
             k = ksave
 
-        end
+        end*/
     end
 
 end
@@ -233,21 +286,21 @@ function FantasyHUD()
 
     local clrs = {
         hp = {
-            background = Color( 18, 18, 18, 255),
-            fill = Color( 142, 41, 44, 255)
+            background = Color(26,26,26),
+            fill = Color( 142, 41, 44)
         },
-        whiteText = Color(255,255,255,255),
+        whiteText = Color(255,255,255),
         redText = Color(255,0,0,255),
         blueText = Color(0,0,255,255),
         ap = {
-            fill = Color(25,25,100,255),
+            fill = Color(25,25,100),
         },
         panelLightGrey = {
-            background = Color(25,25,25,100)
+            background = Color(26,26,26,170)
         }
     }
 
-    FWHUD:DrawPanel( 0, ScrH()-210, 440, 210, clrs.panelLightGrey)
+    --FWHUD:DrawPanel( 0, ScrH()-210, 440, 210, clrs.panelLightGrey)
 
     FWHUD:DrawAbilities( ply ) --wrapped in extra function due to size
 
@@ -256,12 +309,12 @@ function FantasyHUD()
     FWHUD:Crosshair()
 
     --Health Points
-    FWHUD:DrawBar( 20, ScrH() - 190, 400, 48, clrs.hp , hpp )
-    FWHUD:DrawText( 30, ScrH() - 180, hp, "treb", clrs.whiteText )
+    FWHUD:DrawBar( 20, ScrH() - 206, 400, 48, clrs.hp , hpp )
+    FWHUD:DrawText( 30, ScrH() - 196, hp, "treb", clrs.whiteText )
 
     --ArmorBar
-    FWHUD:DrawBar( 20, ScrH() - 144, 300, 24, clrs.ap , app )
-    if ap > 0 then FWHUD:DrawText( 30, ScrH() - 140, ap, "treb_small", clrs.whiteText ) end
+    FWHUD:DrawBar( 20, ScrH() - 160, 300, 24, clrs.ap , app )
+    if ap > 0 then FWHUD:DrawText( 30, ScrH() - 156, ap, "treb_small", clrs.whiteText ) end
 
     --Round
     FWHUD:DrawText( 30, ScrH() - 400, time, "treb", clrs.whiteText )

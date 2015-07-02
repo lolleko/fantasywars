@@ -27,14 +27,11 @@ function SWEP:PrimaryAttack()
 
 		local turret = ents.Create( "npc_turret_floor" )
 		if ( !IsValid( turret ) ) then return end
-		turret:SetOwner( self.Owner )
+		turret:SetCreator( self.Owner )
 		turret:SetPos( self:CalculatePos() )
 		turret:SetAngles( self:CalculateAngles() )
 		turret:Spawn()
-		local turretphys = turret:GetPhysicsObject()
-	    if turretphys:IsValid() then
-	       turretphys:EnableMotion(false)
-	    end
+		turret:SetMoveType(MOVETYPE_NONE)
 
 	    for _,target in pairs(player.GetAll()) do
 			if target:Team() != self.Owner:Team() then

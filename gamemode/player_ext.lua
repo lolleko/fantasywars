@@ -63,6 +63,8 @@ function plymeta:SetWarrior( name )
 end
 
 function plymeta:RemoveWarrior()
+	self:ClearStatus()
+	self:ResetCooldowns()
 	self.Warrior = nil
 end
 
@@ -123,7 +125,7 @@ function plymeta:ResetCooldown( cdname )
 end
 
 function plymeta:ResetCooldowns()
-	if not self:GetWarrior().Cooldowns then return end
+	if !self:HasWarrior() or  !self:GetWarrior().Cooldowns then return end
 	for cdname,_ in pairs(self:GetWarrior().Cooldowns) do
 		self:ResetCooldown( cdname )
 	end
@@ -139,6 +141,7 @@ end
 --Status Table for setting Status effects on players
 
 function plymeta:GetStatusTable()
+	if !self:HasWarrior() then return nil end
 	return self:GetWarrior().Status
 end
 
@@ -163,7 +166,7 @@ function plymeta:HasStatus( name )
 end
 
 function plymeta:CreateStatusTimerName( name )
-	return self:Nick().."."..name
+	return self:SteamID().."."..name
 end
 /*
 	-- Sets a Status --
@@ -175,7 +178,8 @@ end
 	status.Inflictor = Playeroptional default: self
 	status.DisplayName = String optional
 	status.Description = String optional
-	status.Duration = optional, but required with functick or funcend pass 0 for infinite duration
+	status.Duration = Integer optional, but required with functick or funcend pass 0 for infinite duration
+	status.TickDuration = Integer the length of a tick optional default: 1
 	status.FuncStart = Function optional
 	status.FuncTick = Function optional
 	status.FuncEnd = Function optional
@@ -187,16 +191,16 @@ end
 	
 */
 function plymeta:SetStatus( status )
-
 	if status.FuncStart then status.FuncStart() end
 
 	local funcend = status.FuncEnd
 	local functick = status.FuncTick
+	local tickDuration = status.TickDuration or 1
 	local newstatus = {} -- save only required stuff for later usage
 	if status.Inflictor then newstatus.Inflictor = status.Inflictor:Nick() else newstatus.Inflictor = self:Nick() end
 	newstatus.DisplayName = status.DisplayName or status.Name
 	if status.Description then newstatus.Description = status.Description end
-	if status.screeneffect then newstatus.ScreenEffect = screeneffect end
+	if status.ScreenEffect then newstatus.ScreenEffect = status.ScreenEffect end
 	newstatus.Icon = status.Icon or "path/to/default"
 	newstatus.DeBuff = status.Debuff or false
 	if status.Show then newstatus.Show = status.Show else newstatus.Show = true end
@@ -214,20 +218,22 @@ function plymeta:SetStatus( status )
 	if timer.Exists( tname..".Tick" ) then -- if timer already exists adjust it
 		timer.Adjust( tname..".Tick", 1, status.Duration, functick  )
 	else
-		if functick and status.Duration then functick() timer.Create( tname..".Tick", 1, status.Duration, functick ) end
+		if functick and status.Duration then functick() timer.Create( tname..".Tick", tickDuration, status.Duration/tickDuration, functick ) end
 	end
 	
 	if timer.Exists( tname..".End" ) then -- if timer already exists adjust it
 		timer.Adjust( tname..".End", status.Duration, 1, function() self:RemoveStatus( status.Name ) end  )
 	else
-		if funcend and status.Duration or status.Duration then timer.Create( tname..".End", status.Duration, 1, function() self:RemoveStatus( status.Name ) end  ) end
+		if funcend and status.Duration or status.Duration and status.Duration != 0 then timer.Create( tname..".End", status.Duration, 1, function() self:RemoveStatus( status.Name ) end  ) end
 	end
 end
 
 --Removes named Status
 function plymeta:RemoveStatus( name )
 
-	local funcend = self:GetStatusFuncend( name )
+	local funcend
+
+	if self:GetStatusFuncend( name ) then  funcend = self:GetStatusFuncend( name ) end
 
 	tname = self:CreateStatusTimerName( name )
 
@@ -250,6 +256,7 @@ end
 
 --Clears every status called on GM:PlayerDeath
 function plymeta:ClearStatus()
+	if !self:GetStatusTable() then return end
 	for name ,_ in pairs(self:GetStatusTable()) do
 		self:RemoveStatus( name )
 	end

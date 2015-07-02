@@ -15,12 +15,14 @@ SWEP.WorldModel = "models/weapons/w_medkit.mdl"
 
 function SWEP:Think()
 	if SERVER and self:LessTicks() then
+		local healAmount = 3
+		local dmgAmount = 3
 		for _,target in pairs(player.GetAll()) do
 			if target:GetPos():Distance(self.Owner:GetPos()) < 400 then
 				if target:Team() == self.Owner:Team() then 
-					target:SetStatus({ Name = "Medic_Heal_Aura", Inflictor = self.Owner, DisplayName = "You are healed by a nearby Medic.", Duration = 1, FuncStart = function() if target:Health() < target:GetMaxHealth() then target:SetHealth(target:Health()+3) end end })
+					target:SetStatus({ Name = "Medic_Heal_Aura", Inflictor = self.Owner, DisplayName = "You are healed by a nearby Medic.", Duration = 1, FuncStart = function() if target:Health()+healAmount < target:GetMaxHealth() then target:SetHealth(target:Health()+healAmount) else target:SetHealth(target:GetMaxHealth() - target:Health()) end end })
 				else
-					target:SetStatus({ Name = "Medic_Damage_Aura", Inflictor = self.Owner, DisplayName = "You are damaged by a nearby Medic.", Duration = 1, FuncStart = function() target:SetHealth(target:Health()-3) end })
+					target:SetStatus({ Name = "Medic_Damage_Aura", Inflictor = self.Owner, DisplayName = "You are damaged by a nearby Medic.", Duration = 1, FuncStart = function() if target:Health() - dmgAmount > 0 then target:SetHealth(target:Health() - dmgAmount) else target:SetHealth(1) end end })
 				end
 			end
 		end
@@ -34,7 +36,7 @@ function SWEP:PrimaryAttack()
 	local trace = self:CompensatedTraceLine(400)
 	local hitEntity = trace.Entity
 
-	if trace.Hit and hitEntity:IsPlayer() and hitEntity:Team() == self.owner:Team() then
+	if trace.Hit and hitEntity:IsPlayer() and hitEntity:Team() == self.Owner:Team() then
 
 		self:ShootEffects()
 
@@ -63,4 +65,8 @@ function SWEP:PrimaryAttack()
 
 	end
 
+end
+
+function SWEP:SecondaryAttack()
+	--TODO place medkit
 end

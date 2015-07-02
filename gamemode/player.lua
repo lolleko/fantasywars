@@ -40,8 +40,8 @@ function GM:PlayerShouldTakeDamage( ply, victim )
 		if ply:Team() == victim:Team() then
 			return false
 		end
-	elseif ply:IsPlayer() and IsEntity( victim ) then
-		if victim:GetOwner():IsPlayer() and ply:Team() == victim:GetOwner():Team() then
+	elseif ply:IsPlayer() and victim:GetCreator() then
+		if victim:GetCreator():IsPlayer() and ply:Team() == victim:GetCreator():Team() and ply != victim:GetCreator() then
 			return false
 		end
 	end
@@ -82,7 +82,8 @@ function GM:PlayerSpawn( ply )
 	-- Set player model
 	hook.Call( "PlayerSetModel", GAMEMODE, ply )
 
-	ply:SetUpStats()	
+	ply:SetUpStats()
+
 end
 
 function GM:PlayerDeath( victim, infl, attacker)
@@ -99,10 +100,11 @@ function GM:PlayerDeath( victim, infl, attacker)
 
 	victim:Extinguish()
 
-	if attacker:GetOwner():IsPlayer() and attacker:GetOwner():Team() != victim:Team() or attacker:IsPlayer() and attacker:Team() != victim:Team() then
-		team.AddScore(attacker:Team(), 1)
+	if FW:GetRoundState() == FW_ROUND then
+		if attacker:GetOwner():IsPlayer() and attacker:GetOwner():Team() != victim:Team() or attacker:IsPlayer() and attacker:Team() != victim:Team() then
+			team.AddScore(attacker:Team(), 1)
+		end
 	end
-
 end
 
 

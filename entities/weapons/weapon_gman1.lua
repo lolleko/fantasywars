@@ -2,10 +2,10 @@ AddCSLuaFile()
 
 SWEP.Base = "weapon_fwbase"
 
-SWEP.ShowWorldModel = false
-SWEP.ShowViewModel = false
 SWEP.HoldType 			= "normal"
 SWEP.Primary.Damage 		= 0.0075 --pecantage (x100)
+SWEP.ViewModel = "models/weapons/c_arms.mdl"
+SWEP.WorldModel = ""
 
 SWEP.Primary.Slot 			= 0
 SWEP.Secondary.Slot 		= 1
@@ -54,12 +54,13 @@ function SWEP:SecondaryAttack()
 	--laser effect (modified green laser)
 	local trace = self.Owner:GetEyeTrace()
 
+	self:CustomViewModelSequence("seq_admire")
+
 	if SERVER then -- we want the skill and cooldown to be handled by the SERVER not by the CLIENT
 
 		local cooldown = 2
 
-		--Shittiest stuck prevention ever (maybe redo at some point) 
-		--NOTE TO ME Redo it with normalized vectors
+		--Shittiest stuck prevention ever (maybe redo at some point)
 		if trace.HitPos:Distance(trace.StartPos) > 3000 then
 			
 			self.Owner:PrintMessage( HUD_PRINTTALK, "Can't Teleport so far.")

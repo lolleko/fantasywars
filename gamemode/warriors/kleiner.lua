@@ -1,0 +1,9 @@
+WARRIOR.Name = "Kleiner"
+WARRIOR.Model = "models/player/kleiner.mdl"
+WARRIOR.Speed = 200
+WARRIOR.JumpPower = 200
+WARRIOR.Health = 150
+WARRIOR.Armor = 50
+WARRIOR.HealthGain  = 10
+WARRIOR.Weapons = {"weapon_kleiner1"}
+WARRIOR.Lore = "Is he mad?"

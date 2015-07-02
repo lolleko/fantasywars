@@ -3,10 +3,11 @@ AddCSLuaFile()
 SWEP.Base = "weapon_fwbase"
 SWEP.Slot            = 1
 
-SWEP.HoldType        = "ar2"
+SWEP.HoldType        = "pistol"
 SWEP.TracerName      = "Tracer"
 SWEP.Tracer          = 4
 SWEP.Primary.Distance   = 10000
+SWEP.CSMuzzleFlashes	= true
 
 SWEP.Primary.Damage     = 15
 SWEP.Primary.Cone       = 0.001

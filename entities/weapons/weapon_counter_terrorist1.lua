@@ -6,21 +6,25 @@ SWEP.HoldType 			= "ar2"
 SWEP.TracerName 		= "Tracer"
 SWEP.Tracer				= 4
 SWEP.Primary.Distance 	= 1500
+SWEP.CSMuzzleFlashes	= true
 
-SWEP.Primary.Damage 		= 21
+SWEP.Primary.Damage 		= 18
 SWEP.Primary.Cone           = 0.005
 SWEP.Primary.Delay 			= 0.18
 SWEP.Primary.Automatic 		= true
 SWEP.Primary.Recoil 		= 1.1
 SWEP.Primary.Slot 			= 0
-SWEP.Primary.ClipSize       = 30
+SWEP.Primary.ClipSize       = 20
 SWEP.Primary.DefaultClip    = 60
 SWEP.Primary.Ammo           = "Pistol"
 
 SWEP.ViewModelFOV		= 54
 SWEP.ViewModel			= "models/weapons/cstrike/c_rif_m4a1.mdl"
-SWEP.WorldModel			= "models/weapons/w_rif_m4a1.mdl"
-SWEP.Primary.Sound			= Sound( "Weapon_m4a1.Single" )
+SWEP.WorldModel			= "models/weapons/w_rif_m4a1_silencer.mdl"
+SWEP.Primary.Sound			= Sound( "Weapon_m4a1.Silenced" )
+
+SWEP.PrimaryAnim = ACT_VM_PRIMARYATTACK_SILENCED
+SWEP.ReloadAnim = ACT_VM_RELOAD_SILENCED
 
 local shots = 0
 
@@ -48,4 +52,9 @@ function SWEP:PrimaryAttack()
 
 	shots = shots +1
 
+end
+
+function SWEP:Deploy()
+   self:SendWeaponAnim(ACT_VM_DRAW_SILENCED)
+   return true
 end

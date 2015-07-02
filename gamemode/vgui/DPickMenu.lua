@@ -10,7 +10,17 @@ surface.CreateFont( "Info_Text", {
 	size = 24
 } )
 
-local clrs = {steamdarkblue = Color(18,20,25), steamblue = Color(21,29,42), steamgrey = Color(150,150,150), lightgrey = Color(190,190,190)}
+surface.CreateFont( "Button_Normal", {
+	font = "Roboto",
+	size = 16
+} )
+
+surface.CreateFont( "Button_Small", {
+	font = "Roboto",
+	size = 12
+} )
+
+local clrs = { red = Color(231,77,60), blue = Color(53,152,219), green = Color(45,204,113), purple = Color(108,113,196), yellow = Color(241,196,16), lightgrey = Color(236,240,241), grey = Color(42,42,42), darkgrey = Color(26,26,26), black = Color(0,0,0)}
 
 function PMENU:Init()
 
@@ -27,60 +37,89 @@ function PMENU:Init()
 	Frame:ShowCloseButton( true )
 	Frame:MakePopup()*/
 
+	--Pick part
 	local Scroll = vgui.Create( "DScrollPanel", self ) //Create the Scroll panel
-	Scroll:SetSize( ScrW()/1.5 , ScrH() )
-	Scroll:SetPos( 20, 30 )
+	Scroll:SetSize( ScrW()/1.5 -30 , ScrH()-40 )
+	Scroll:SetPos( 20, 20 )
 
 	local List	= vgui.Create( "DIconLayout", Scroll )
-	List:SetSize( ScrW()/1.5 , ScrH() )
-	List:SetPos( 0, 0 )
-	List:SetSpaceY( 5 )
-	List:SetSpaceX( 5 )
+	List:Dock(FILL)
+	List:SetSpaceY( 7 )
+	List:SetSpaceX( 7 )
 
-	local ScrollInfo = vgui.Create( "DListLayout", self )
-	ScrollInfo:SetPos( ScrW()/1.50, 20)
-	ScrollInfo:SetSize( ScrW()/3 , ScrH() )
+	--Info part
+	local IPanel = vgui.Create( "DPanel", self)
+	IPanel:SetPos( ScrW()/1.5 + 10, 20)
+	IPanel:SetSize( ScrW()/3 - 30, ScrH() -110 )
+	function IPanel:Paint()
+		return
+	end
 
-	local InfoName = vgui.Create("DLabel", ScrollInfo)
-	InfoName:SetFont("Info_Header")
-	InfoName:SetTextColor( clrs.steamgrey )
-	InfoName:SetText("")
-	ScrollInfo:Add(InfoName)
+	local IScroll = vgui.Create( "DScrollPanel", IPanel ) //Create the Scroll panel
+	IScroll:SetSize( IPanel:GetSize() )
 
-	local InfoLore = vgui.Create("DLabel", ScrollInfo)
-	InfoLore:SetFont("Info_Text")
-	InfoLore:SetTextColor( clrs.steamgrey )
-	InfoLore:SetText("")
-	InfoLore:SetWrap(true)
-	InfoLore:SetAutoStretchVertical( true )
-	ScrollInfo:Add(InfoLore)
+	local IList	= vgui.Create( "DIconLayout", IScroll )
+	IList:Dock(FILL)
+	IList:SetSpaceY( 20 )
 
-	local InfoStats = vgui.Create("DLabel", ScrollInfo)
-	InfoStats:SetFont("Info_Text")
-	InfoStats:SetTextColor( clrs.steamgrey )
-	InfoStats:SetText("")
-	InfoStats:SetWrap(true)
-	InfoStats:SetAutoStretchVertical( true )
-	ScrollInfo:Add(InfoStats)
+	local NLabel = vgui.Create("DLabel", IList)
+	NLabel:SetWide(IPanel:GetWide())
+	NLabel:SetFont("Info_Header")
+	NLabel:SetTextColor( clrs.red )
+	NLabel:SetText("")
+	NLabel:SizeToContentsY()
+
+	local LLabel = vgui.Create("DLabel", IList)
+	LLabel:SetWide(IPanel:GetWide())
+	LLabel:SetFont("Info_Text")
+	LLabel:SetTextColor( clrs.lightgrey )
+	LLabel:SetWrap(true)
+	LLabel:SetText("")
+
+	local SLabel = vgui.Create("DLabel", IList)
+	SLabel:SetSize( IPanel:GetWide()/3 , 142 )
+	SLabel:SetFont("Info_Text")
+	SLabel:SetTextColor( clrs.yellow )
+	SLabel:SetText("")
+
+	local SCLabel = vgui.Create("DLabel", IList)
+	SCLabel:SetSize( IPanel:GetWide()/1.5 , 142 )
+	SCLabel:SetFont("Info_Text")
+	SCLabel:SetTextColor( clrs.yellow )
+	SCLabel:SetText("")
 
 	local PButton = vgui.Create( "DButton", self )
-	PButton:SetPos( ScrW()/1.5 +20, ScrH()-60)
-	PButton:SetSize( ScrW()/3 - 40, 40 )
-	PButton:SetText( "CHOOSE YOUR WARRIOR!" )
+	PButton:SetPos( ScrW()/1.5 +20, ScrH()-90)
+	PButton:SetSize( IPanel:GetWide(), 40 )
+	PButton:SetFont("Button_Normal")
+	PButton:SetText( "Choose your warrior!" )
+	PButton:SetTextColor( clrs.lightgrey )
 	PButton:SetDisabled(true )
+	function PButton:Paint( w, h)
+		draw.RoundedBox( 0, 0, 0, w, h, clrs.grey )
+	end
 
 	local SButton = vgui.Create( "DButton", self )
-	SButton:SetPos( ScrW()/1.5 +20, ScrH()-20)
-	SButton:SetSize( ScrW()/3 - 40, 20 )
+	SButton:SetPos( ScrW()/1.5 +20, ScrH()-40)
+	SButton:SetSize( IPanel:GetWide(), 20 )
+	SButton:SetFont("Button_Small")
 	SButton:SetText( "Spectate" )
+	SButton:SetTextColor( clrs.lightgrey )
 	SButton.DoClick = function() self:Remove() gui.EnableScreenClicker(false) end
-	
+	function SButton:Paint( w, h)
+		draw.RoundedBox( 0, 0, 0, w, h, clrs.black )
+	end
+
 	for _, warrior in pairs(FW:GetWarriorList()) do
 
 		--create panel for each warrior
 		local HPanel = vgui.Create( "DPanel", List )
 		HPanel:SetSize( 240, 260 )
-		HPanel:SetBackgroundColor( clrs.steamblue )
+		function HPanel:Paint( w, h )
+			draw.RoundedBox( 0, 0, 0, w, h, clrs.grey )
+			draw.RoundedBox( 0, 0, h-5, w, h, clrs.red )
+		end
+		--HPanel:SetBackgroundColor( clrs.grey )
 
 		local icon = vgui.Create( "DModelPanel", HPanel )
 		icon:SetSize( 240, 260 )
@@ -96,15 +135,35 @@ function PMENU:Init()
 		WButton:SetText( warrior.Name )
 		WButton.Paint = function() return end
 		WButton.DoClick = function()
-			InfoName:SetText( string.upper(warrior.Name) ) 
-			InfoName:SizeToContents()
 
-			if warrior.Lore then InfoLore:SetText(warrior.Lore) else InfoLore:SetText("") end
-			InfoLore:SetSize(ScrW()/3 - 20, 0)
-			
-			InfoStats:SetText("Speed: "..warrior.Speed .."\nJump Power: "..warrior.JumpPower.."\nHealth: "..warrior.Health.."\nArmor:"..warrior.Armor)
-			InfoStats:SetSize(ScrW()/3 - 20, 0)
-			
+			--set warrior name
+			NLabel:SetText(warrior.Name)
+			IList:Add(NLabel)
+
+			--set lore
+			if warrior.Lore then
+				LLabel:SetText(warrior.Lore)
+				LLabel:SizeToContentsY()
+				IList:Add(LLabel)
+			else
+				LLabel:SetText("")
+				LLabel:SizeToContentsY()
+				IList:Add(LLabel)
+			end
+
+			--set stats
+			SLabel:SetText("Speed:\nJump Power:\nHealth:\nArmor:")
+			IList:Add(SLabel)
+
+			SCLabel:SetText(warrior.Speed .."\n"..warrior.JumpPower.."\n"..warrior.Health.."\n"..warrior.Armor)
+			IList:Add(SCLabel)
+
+			--weapons
+
+			--update pick button
+			function PButton:Paint( w, h)
+				draw.RoundedBox( 0, 0, 0, w, h, clrs.black )
+			end
 			PButton:SetText( "Pick!" )
 			PButton:SetDisabled( false )
 			PButton.DoClick = function() 
@@ -121,19 +180,8 @@ function PMENU:Init()
 	end
 end
 
-function PMENU:AddInfo(warrior)
-
-	
-
-end
-
-function PMENU:RemoveInfo(warrior)
-
-end
-
 function PMENU:Paint( w, h )
-	draw.RoundedBoxEx( 0, 0, 0, w/1.5, h, clrs.steamdarkblue )
-	draw.RoundedBoxEx( 0, w/1.5, 0, w/3, h, clrs.steamdarkblue )
+	draw.RoundedBox( 0, 0, 0, w, h, clrs.darkgrey )
 end
 
 vgui.Register('DPickMenu', PMENU)
