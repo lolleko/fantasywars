@@ -105,7 +105,16 @@ function GM:PlayerDeath( victim, infl, attacker)
 			team.AddScore(attacker:Team(), 1)
 		end
 	end
+
+	local respawnTime = 5
+
+	victim.NextSpawnTime = CurTime() + respawnTime
+
+	victim.DeathTime = CurTime()
+
+	victim:SetNWInt("RespawnTimer", respawnTime)
+	timer.Create(victim:SteamID().."RespawnTimer", 1, respawnTime, function()
+		respawnTime = respawnTime -1
+		victim:SetNWInt("RespawnTimer", respawnTime)
+	end)
 end
-
-
-

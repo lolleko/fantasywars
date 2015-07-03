@@ -18,20 +18,19 @@ util.PrecacheModel( SWEP.WorldModel )
 function SWEP:PrimaryAttack()
 	if not self:CanPrimaryAbility() then return end
 
+	local trace = self.Owner:GetEyeTrace()
+
 	self:ShootEffects()
+
+	self:CustomTracer("tooltracer", trace.HitPos)
 
 	if SERVER then -- we want the skill and cooldown to be handled by the SERVER not by the CLIENT
 
-		local trace = self.Owner:GetEyeTrace()
-
 		local cooldown = 7
 
-		self:ShootEffects() 
-
-		self:CustomTracer("tooltracer", trace.HitPos)
-
-		local grenade = ents.Create( "grenade_helicopter" )
+		local grenade = ents.Create( "prop_physics" )
 		if ( !IsValid( grenade ) ) then return end
+		grenade:SetModel("models/combine_helicopter/helicopter_bomb01.mdl")
 		grenade:SetOwner( self.Owner )
 		grenade:SetPos( trace.HitPos + Vector(0,0,15) )
 		grenade:Spawn()
@@ -63,14 +62,14 @@ function SWEP:SecondaryAttack()
 		local cooldown = 60
 
 		for _,target in pairs(player.GetAll()) do
-
+			print(target)
 			local status = {}
 			status.Name = "Garry_Disarm"
-			status.Inflictor = self.Owner
+			status.Inflictor = ply
 			status.DisplayName = "Disarmed by Garry"
 			status.Duration = 2.5
 			status.FuncStart = function() target:StripWeapons() end
-			status.FuncEnd = function() if target:Alive() then target:SetUpLoadout() end --this will reset ammo aon all players... is it a bug or a feature!?
+			status.FuncEnd = function() if target:Alive() then target:SetUpLoadout() end --this will reset ammo on all players... is it a bug or a feature!?
 			
 			if target:Team() != ply:Team() then target:SetStatus( status ) end end
 		end

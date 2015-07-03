@@ -52,6 +52,7 @@ function SWEP:SecondaryAttack()
 			status.Duration = 30
 			status.FuncStart = 	function() 
 									local wepclass = hitEntity:GetActiveWeapon():GetClass()
+									print(wepclass)
 									ply:Give(wepclass)
 
 									local wep = ply:GetWeapon(wepclass)
@@ -60,6 +61,8 @@ function SWEP:SecondaryAttack()
 									wep:SetSecondarySlot(3)
 								end
 			status.FuncEnd = function() ply:StripWeapon(ply:GetWeapons()[2]:GetClass()) end
+
+			ply:SetStatus(status)
 		else
 			cooldown = cooldown/5 -- if target not hit reset to a lower cooldown
 		end

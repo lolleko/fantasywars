@@ -324,6 +324,15 @@ function FantasyHUD()
     FWHUD:DrawText( ScrW()/3+10, 20, bs, "treb", clrs.blueText )
     FWHUD:DrawText( ScrW()/1.5+35, 20, rs, "treb", clrs.redText )
 
+    --RespawnTimer
+    --local bRespawn = false
+    if ply:GetNWInt("RespawnTimer", 0) > 0 and !ply:Alive() then
+       --bRespawn = true
+        FWHUD:DrawText( ScrW()/2-170, ScrH()/2, "You can respawn in "..ply:GetNWInt("RespawnTimer", 0).." seconds.", "treb", clrs.whiteText )
+    end
+    if ply:GetNWInt("RespawnTimer", 0) == 0 and !ply:Alive() then
+        FWHUD:DrawText( ScrW()/2-100, ScrH()/2, "Click to respawn...", "treb", clrs.whiteText )
+    end
 	/*
     local bl = team.GetLevel( TEAM_BLUE )
     local rl = team.GetLevel( TEAM_RED )
@@ -374,7 +383,4 @@ function FantasyHUD()
 	end*/
 end
 hook.Add( "HUDPaint", "FantasyHUD", FantasyHUD)
-
-
-
 

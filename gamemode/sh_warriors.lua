@@ -1,6 +1,8 @@
 FW = {}
 FW.__index = FW
 
+--Data managment
+
 FW.Warriors = {}
 
 function FW:CreateList()
@@ -13,6 +15,7 @@ function FW:CreateList()
 
 			include( "warriors/"..warrior )
 
+			WARRIOR.Picked = false
 			self.Warriors[WARRIOR.Name] = WARRIOR
 	end
 
@@ -36,4 +39,8 @@ function FW:GetNames()
 	end
 
 	return wlist	
+end
+
+function FW:SetPicked( name, b )
+	self.Warriors[name].Picked = b
 end

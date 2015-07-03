@@ -15,8 +15,8 @@ SWEP.Secondary.Level 		= 2
 local gmantracer = 0 
 
 function SWEP:Think()
-	--laser effect (modified green laser)
-	local trace = self.Owner:GetEyeTrace()
+	--laser effect (modified red laser)
+	local trace = self:CompensatedTraceLine()
 
 	local hitEntity = trace.Entity
 
@@ -58,7 +58,7 @@ function SWEP:SecondaryAttack()
 
 	if SERVER then -- we want the skill and cooldown to be handled by the SERVER not by the CLIENT
 
-		local cooldown = 2
+		local cooldown = 3
 
 		--Shittiest stuck prevention ever (maybe redo at some point)
 		if trace.HitPos:Distance(trace.StartPos) > 3000 then

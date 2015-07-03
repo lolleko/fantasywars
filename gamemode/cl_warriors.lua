@@ -1,3 +1,5 @@
+--ClientSide Status table for hud stuff
+
 FW.Status = {}
 
 net.Receive('FW_SetStatus', function(length)

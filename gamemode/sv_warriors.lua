@@ -1,3 +1,5 @@
+--Round Controller
+
 FW.RoundDuration = GetConVar("fw_roundtime"):GetInt()
 FW.BreakDuration = GetConVar("fw_breaktime"):GetInt()
 FW.RoundState = FW_WAITING

@@ -31,16 +31,19 @@ function SWEP:SecondaryAttack()
 
 	self.Weapon:EmitSound(self.Secondary.Sound)
 
-	local ent = ents.Create( "prophunter_nuke" )
-	if ( !IsValid( ent ) ) then return end
-	ent:SetPos( self.Owner:EyePos() + ( self.Owner:GetAimVector() ) )
-	ent:SetAngles( self.Owner:EyeAngles() )
-	ent:Spawn()
-	local phys = ent:GetPhysicsObject()
-	if ( !IsValid( phys ) ) then ent:Remove() return end
-	local velocity = self.Owner:GetAimVector()
-	velocity = velocity * 4700 + Vector(0,0,500)
-	phys:ApplyForceCenter( velocity )
+	if SERVER then 
 
-	if SERVER then self:StartSecondaryCooldown( 10 ) end
+		local ent = ents.Create( "prophunter_nuke" )
+		if ( !IsValid( ent ) ) then return end
+		ent:SetPos( self.Owner:EyePos() + ( self.Owner:GetAimVector() ) )
+		ent:SetAngles( self.Owner:EyeAngles() )
+		ent:Spawn()
+		local phys = ent:GetPhysicsObject()
+		if ( !IsValid( phys ) ) then ent:Remove() return end
+		local velocity = self.Owner:GetAimVector()
+		velocity = velocity * 4700 + Vector(0,0,500)
+		phys:ApplyForceCenter( velocity )
+
+		self:StartSecondaryCooldown( 10 )
+	end
 end

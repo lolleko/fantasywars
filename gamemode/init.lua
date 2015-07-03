@@ -21,6 +21,7 @@ resource.AddFile( "materials/sprites/scope.vmt" )
 util.AddNetworkString( "FW_SetWarrior" )
 util.AddNetworkString( "FW_SetStatus" )
 util.AddNetworkString( "FW_RemoveStatus" ) 
+util.AddNetworkString( "PlayerDeath" )
 
 net.Receive('FW_SetWarrior', function(length, ply)
 	if  ply:IsValid() and ply:IsPlayer() then --TODO add check if already picked
