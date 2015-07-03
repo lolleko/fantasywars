@@ -8,6 +8,10 @@ function GM:PlayerInitialSpawn( ply )
 	player_manager.SetPlayerClass( ply, "player_warrior")
 end
 
+function GM:PlayerDisconnected( ply )
+	ply:RemoveWarrior()
+end
+
 function GM:ScalePlayerDamage( ply, hitgroup, dmginfo )
 
 	-- Disable Headshots include option later maybe

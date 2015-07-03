@@ -37,32 +37,28 @@ function SWEP:SecondaryAttack()
 	self:ShootEffects()
 		
 	if SERVER then -- we want the skill and cooldown to be handled by the SERVER not by the CLIENT
-		local cooldown = 20
+		local cooldown  = 10
 		local hitEntity = trace.Entity
 		if trace.Hit and IsValid(hitEntity) and (hitEntity:IsPlayer() and hitEntity:Team() != self.Owner:Team()) then
 
 			local ply = self.Owner
 
-			if ply:HasStatus("Weapon_Steal") then ply:RemoveStatus("Weapon_Steal") end
+			if self.Owner:HasStatus("Weapon_Steal") then self.Owner:RemoveStatus("Weapon_Steal") end
 
 			local status = {}
 			status.Name = "Weapon_steal"
 			status.Inflictor = ply
 			status.DisplayName = "stolen"
-			status.Duration = 30
-			status.FuncStart = 	function() 
+			status.Duration = 20
+			status.FuncStart = 	function()
+									ply:ResetCooldowns()
+									ply:StripWeapons() 
 									local wepclass = hitEntity:GetActiveWeapon():GetClass()
-									print(wepclass)
 									ply:Give(wepclass)
-
-									local wep = ply:GetWeapon(wepclass)
-									wep:SetSlot(1)
-									wep:SetPrimarySlot(2)
-									wep:SetSecondarySlot(3)
 								end
-			status.FuncEnd = function() ply:StripWeapon(ply:GetWeapons()[2]:GetClass()) end
+			status.FuncEnd = function() ply:StripWeapons() ply:SetUpLoadout() end
 
-			ply:SetStatus(status)
+			self.Owner:SetStatus(status)
 		else
 			cooldown = cooldown/5 -- if target not hit reset to a lower cooldown
 		end

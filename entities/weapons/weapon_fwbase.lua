@@ -253,11 +253,11 @@ end
 
 --should have used accessorfuncs in the beginning now it's to late deal with it
 function SWEP:SetPrimarySlot( slot )
-	self.Primary.Slot = slot
+	if self.Primary.Slot then self.Primary.Slot = slot end
 end
 
-function SWEP:SetSeondarySlot( slot )
-	self.Secondary.Slot = slot
+function SWEP:SetSecondarySlot( slot )
+	if self.Primary.Slot then self.Secondary.Slot = slot end
 end
 
 function SWEP:SetSlot( slot )

@@ -42,19 +42,19 @@ function SWEP:PrimaryAttack()
 	self.Weapon:EmitSound(self.Primary.Sound)
 	self.Weapon:ShootEffects()
 
-	local ent = ents.Create( "prophunter_proj" )
-	if ( !IsValid( ent ) ) then return end
-	ent:SetPos( self.Owner:GetShootPos() + ( self.Owner:GetAimVector()  ) )
-	ent:SetAngles( self.Owner:EyeAngles() )
-	ent:SetDamage( 40 )
-	ent:Spawn()
-	local phys = ent:GetPhysicsObject()
-	if ( !IsValid( phys ) ) then ent:Remove() return end
-	local velocity = self.Owner:GetAimVector()
-	velocity = velocity * 2500
-	phys:ApplyForceCenter( velocity )
-
 	if SERVER then
+		local ent = ents.Create( "prophunter_proj" )
+		if ( !IsValid( ent ) ) then return end
+		ent:SetPos( self.Owner:GetShootPos() + ( self.Owner:GetAimVector()  ) )
+		ent:SetAngles( self.Owner:EyeAngles() )
+		ent:SetDamage( 40 )
+		ent:Spawn()
+		local phys = ent:GetPhysicsObject()
+		if ( !IsValid( phys ) ) then ent:Remove() return end
+		local velocity = self.Owner:GetAimVector()
+		velocity = velocity * 2500
+		phys:ApplyForceCenter( velocity )
+
 		self:TakePrimaryAmmo(1)
 	end
 

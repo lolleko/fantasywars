@@ -24,14 +24,13 @@ util.AddNetworkString( "FW_RemoveStatus" )
 util.AddNetworkString( "PlayerDeath" )
 
 net.Receive('FW_SetWarrior', function(length, ply)
+	local name = net.ReadString()
 	if  ply:IsValid() and ply:IsPlayer() then --TODO add check if already picked
 		ply:SetTeam(team.BestAutoJoinTeam())
 		ply:RemoveWarrior()
-		if ply:HasWarrior() then
-			ply:ClearStatus()
-		end
+		FW:SetPicked(name, true)
 		ply:StripWeapons()
-		ply:SetWarrior(net.ReadString())
+		ply:SetWarrior(name)
 		ply:Spawn()
 	end
 end)

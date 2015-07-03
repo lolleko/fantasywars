@@ -20,7 +20,7 @@ function SWEP:Think()
 		for _,target in pairs(player.GetAll()) do
 			if target:GetPos():Distance(self.Owner:GetPos()) < 400 then
 				if target:Team() == self.Owner:Team() then 
-					target:SetStatus({ Name = "Medic_Heal_Aura", Inflictor = self.Owner, DisplayName = "You are healed by a nearby Medic.", Duration = 1, FuncStart = function() if target:Health()+healAmount < target:GetMaxHealth() then target:SetHealth(target:Health()+healAmount) else target:SetHealth(target:GetMaxHealth() - target:Health()) end end })
+					target:SetStatus({ Name = "Medic_Heal_Aura", Inflictor = self.Owner, DisplayName = "You are healed by a nearby Medic.", Duration = 1, FuncStart = function() if target:Health()+healAmount < target:GetMaxHealth() then target:SetHealth(target:Health()+healAmount) else target:SetHealth(target:GetMaxHealth()) end end })
 				else
 					target:SetStatus({ Name = "Medic_Damage_Aura", Inflictor = self.Owner, DisplayName = "You are damaged by a nearby Medic.", Duration = 1, FuncStart = function() if target:Health() - dmgAmount > 0 then target:SetHealth(target:Health() - dmgAmount) else target:SetHealth(1) end end })
 				end

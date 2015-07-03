@@ -62,16 +62,15 @@ function SWEP:SecondaryAttack()
 		local cooldown = 60
 
 		for _,target in pairs(player.GetAll()) do
-			print(target)
 			local status = {}
 			status.Name = "Garry_Disarm"
 			status.Inflictor = ply
 			status.DisplayName = "Disarmed by Garry"
 			status.Duration = 2.5
 			status.FuncStart = function() target:StripWeapons() end
-			status.FuncEnd = function() if target:Alive() then target:SetUpLoadout() end --this will reset ammo on all players... is it a bug or a feature!?
+			status.FuncEnd = function() if target:Alive() then target:SetUpLoadout() end end --this will reset ammo on all players... is it a bug or a feature!?
 			
-			if target:Team() != ply:Team() then target:SetStatus( status ) end end
+			if target:Team() != ply:Team() then target:SetStatus( status ) end
 		end
 
 		self:StartSecondaryCooldown( cooldown )

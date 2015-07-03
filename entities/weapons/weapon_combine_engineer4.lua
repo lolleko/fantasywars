@@ -40,3 +40,7 @@ function SWEP:PrimaryAttack()
 
 	end
 end
+
+function SWEP:OnRemove()
+	if self.Owner:HasStatus("Thumper_Placed") then self.Owner:RemoveStatus("Thumper_Placed") end
+end

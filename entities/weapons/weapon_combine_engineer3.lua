@@ -59,3 +59,7 @@ function SWEP:PrimaryAttack()
 
 	self:StartPrimaryCooldown( cooldown)-- Start cooldown for first "ability"
 end
+
+function SWEP:OnRemove()
+	if self.Owner:HasStatus("Manhack_Placed") then self.Owner:RemoveStatus("Manhack_Placed") end
+end

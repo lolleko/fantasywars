@@ -21,20 +21,19 @@ function SWEP:PrimaryAttack()
 
       local cooldown = 5
 
-      local trace = self:CompensatedTraceLine( 2000 )
-
+      local trace = self:CompensatedTraceLine( 1000 )
 
       local hitEntity = trace.Entity
 
 
       if trace.Hit and IsValid(hitEntity) then
-         hitEntity:SetPos(trace.StartPos)
+         hitEntity:SetPos(self.Owner:GetShootPos() + self.Owner:GetAimVector()*4 )
       end
 
       self:StartPrimaryCooldown( cooldown)-- Start cooldown for first "ability"
 
    end
-
+   
 end
 
 function SWEP:SecondaryAttack()

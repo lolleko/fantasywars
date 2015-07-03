@@ -15,7 +15,6 @@ function FW:CreateList()
 
 			include( "warriors/"..warrior )
 
-			WARRIOR.Picked = false
 			self.Warriors[WARRIOR.Name] = WARRIOR
 	end
 
@@ -39,8 +38,4 @@ function FW:GetNames()
 	end
 
 	return wlist	
-end
-
-function FW:SetPicked( name, b )
-	self.Warriors[name].Picked = b
 end

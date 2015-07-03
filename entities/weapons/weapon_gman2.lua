@@ -10,23 +10,6 @@ SWEP.Slot 				= 1
 SWEP.Primary.Slot 			= 2
 SWEP.Primary.Level 			= 4
 
-
-function SWEP:DrawHUD()
-	/*if not self:IsLevelAchieved(6, true) then return end
-	for id,target in pairs(player.GetAll()) do
-		if target:Alive() and self.Owner:Nick() != target:Nick() then
-
-			local targetModelHeight = target:OBBMaxs():Length()
-			local targetPos = target:GetPos() + Vector(0,0,targetModelHeight/2)
-			local targetScreenpos = targetPos:ToScreen()
-			
-			surface.SetDrawColor( 200, 0, 0)
-			surface.DrawLine( ScrW()/2, ScrH()/2, tonumber(targetScreenpos.x), tonumber(targetScreenpos.y))
-
-		end
-	end*/
-end
-
 function SWEP:PrimaryAttack()
 	if not self:CanPrimaryAbility() then return end
 
@@ -35,6 +18,8 @@ function SWEP:PrimaryAttack()
 	self:CustomTracer( "gman_propaganda", trace.HitPos )
 
 	local hitEntity = trace.Entity
+
+	local owner = self.Owner
 
 	if trace.Hit and hitEntity:IsPlayer() and hitEntity:Team() != owner:Team() then
 		local effectdata = EffectData()
@@ -50,11 +35,9 @@ function SWEP:PrimaryAttack()
 
 		local cooldown = 15
 
-		local owner = self.Owner
-
 		if trace.Hit and hitEntity:IsPlayer() and hitEntity:Team() != owner:Team() then
 			
-			local wep = self
+			local wep = self.Weapon
 
 			local status = {}
 			status.Name = "Gman_Mindray"

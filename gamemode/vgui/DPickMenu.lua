@@ -85,7 +85,7 @@ function PMENU:Init()
 	local SCLabel = vgui.Create("DLabel", IList)
 	SCLabel:SetSize( IPanel:GetWide()/1.5 , 142 )
 	SCLabel:SetFont("Info_Text")
-	SCLabel:SetTextColor( clrs.yellow )
+	SCLabel:SetTextColor( clrs.lightgrey )
 	SCLabel:SetText("")
 
 	local PButton = vgui.Create( "DButton", self )
@@ -133,7 +133,9 @@ function PMENU:Init()
 		WButton:SetFont( "Info_Text" )
 		WButton:SetTextColor( clrs.lightgrey )
 		WButton:SetText( warrior.Name )
-		WButton.Paint = function() return end
+		function WButton:Paint()
+			return
+		end
 		WButton.DoClick = function()
 
 			--set warrior name
@@ -175,7 +177,7 @@ function PMENU:Init()
 			end
 		end
 
-	List:Add(HPanel)
+		List:Add(HPanel)
 
 	end
 end

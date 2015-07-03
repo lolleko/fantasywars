@@ -48,3 +48,7 @@ function SWEP:PrimaryAttack()
 
 	end
 end
+
+function SWEP:OnRemove()
+	if self.Owner:HasStatus("Turret_Placed") then self.Owner:RemoveStatus("Turret_Placed") end
+end
