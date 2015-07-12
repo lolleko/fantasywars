@@ -47,6 +47,7 @@ function SWEP:PrimaryAttack()
 		if ( !IsValid( ent ) ) then return end
 		ent:SetPos( self.Owner:GetShootPos() + ( self.Owner:GetAimVector()  ) )
 		ent:SetAngles( self.Owner:EyeAngles() )
+		ent:SetOwner( self.Owner )
 		ent:SetDamage( 40 )
 		ent:Spawn()
 		local phys = ent:GetPhysicsObject()

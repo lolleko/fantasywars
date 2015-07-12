@@ -19,15 +19,15 @@ function SWEP:PrimaryAttack()
 
    if SERVER then -- we want the skill and cooldown to be handled by the SERVER not by the CLIENT
 
-      local cooldown = 5
+      local cooldown = 15
 
-      local trace = self:CompensatedTraceLine( 1000 )
+      local trace = self:CompensatedTraceLine( 3000 )
 
       local hitEntity = trace.Entity
 
 
       if trace.Hit and IsValid(hitEntity) then
-         hitEntity:SetPos(self.Owner:GetShootPos() + self.Owner:GetAimVector()*4 )
+         hitEntity:SetPos(self.Owner:GetShootPos() + self.Owner:GetAimVector()*70 )
       end
 
       self:StartPrimaryCooldown( cooldown)-- Start cooldown for first "ability"

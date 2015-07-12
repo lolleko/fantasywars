@@ -38,19 +38,25 @@ SWEP.DeploySpeed = 2 -- high deploy speed since you need to switch for additiona
 SWEP.ViewModel		= "models/weapons/c_pistol.mdl"
 SWEP.WorldModel		= "models/weapons/w_357.mdl"
 
+--AccessorFuncs for our Cooldown/Ability slots we want to be able to change them
+AccessorFunc(SWEP, "PrimarySlot", "PrimarySlot", FORCE_NUMBER)
+AccessorFunc(SWEP, "SecondarySlot", "SecondarySlot", FORCE_NUMBER)
+
 function SWEP:Initialize()
 	self:SetDeploySpeed( self.DeploySpeed )	-- set deployspeed for every wepaon (very fast by default)
     self:SetWeaponHoldType( self.HoldType ) -- Allow custom weapon hold type since it's just "pistol" in weapon_base
+    self:SetPrimarySlot( self.Primary.Slot ) -- Setup slots here since we want to be able to change them
+    self:SetSecondarySlot( self.Secondary.Slot )
 end
 
 function SWEP:CanPrimaryAbility() --simiilar to CanPrimaryAttack checks for cooldown instead of ammo and delay
 	--if not self:IsLevelAchieved( self.Primary.Level ) then return false end
-	return not self:IsOnCooldown( self.Primary.Slot )
+	return not self:IsPrimaryOnCooldown()
 end
 
 function SWEP:CanSecondaryAbility()
 	--if not self:IsLevelAchieved( self.Secondary.Level ) then return false end
-	return not self:IsOnCooldown( self.Secondary.Slot )
+	return not self:IsSecondaryOnCooldown()
 end
 
 function SWEP:Reload()
@@ -97,9 +103,9 @@ function SWEP:StartSecondaryCooldown( duration)
 
 	if duration < 1 then return end -- if duration < 1 there is no need for a cooldown why would anyone set such a cooldown!? but we check for it anyways
 
-	local cdcallname = "Cooldown."..self.Secondary.Slot -- Create Timer and Network name e.g Cooldown.1 <- depends on the slot
+	local cdcallname = "Cooldown."..self:GetSecondarySlot() -- Create Timer and Network name e.g Cooldown.1 <- depends on the slot
 
-	if self:IsOnCooldown( cdcallname ) then return end -- check if a cooldown exists already in case player died with ability on cd (Maybe uneeded here because it should be checked in the Attack functions)
+	if self:IsSecondaryOnCooldown() then return end -- check if a cooldown exists already in case player died with ability on cd (Maybe uneeded here because it should be checked in the Attack functions)
 
 	self.Owner:StartWarriorCooldown(cdcallname,duration) -- we need to call the timer in the player table so it still works if the swep owner dies or looses his swep
 	
@@ -110,21 +116,34 @@ function SWEP:StartPrimaryCooldown( duration)
 
 	if duration < 1 then return end
 
-	local cdcallname = "Cooldown."..self.Primary.Slot
+	local cdcallname = "Cooldown."..self:GetPrimarySlot()
 
-	if self:IsOnCooldown( cdcallname ) then return end
+	if self:IsPrimaryOnCooldown() then return end
 
 	self.Owner:StartWarriorCooldown(cdcallname,duration)
 	
 end
 
-function SWEP:IsOnCooldown( slot, supressmsg )
-	if  self.Owner:GetNWInt( "Cooldown."..slot ,0) == 0 then -- return if NWInt exists (is it safe to check the nwint!?) since this function is only relevant client side its probably safe... prove me wrong
+function SWEP:IsPrimaryOnCooldown( supressmsg )
+	if  self.Owner:GetNWInt( "Cooldown."..self:GetPrimarySlot() ,0) == 0 then -- return if NWInt exists (is it safe to check the nwint!?) since this function is only relevant client side its probably safe... prove me wrong
 
 		return false
 
 	else
-		if not supressmsg then self.Owner:PrintMessage( HUD_PRINTTALK, "Wait "..self.Owner:GetNWInt( "Cooldown."..slot ,0).." more seconds to use that again.") end
+		if not supressmsg then self.Owner:PrintMessage( HUD_PRINTTALK, "Wait "..self.Owner:GetNWInt( "Cooldown."..self:GetPrimarySlot() ,0).." more seconds to use that again.") end
+		
+		return true
+
+	end
+end
+
+function SWEP:IsSecondaryOnCooldown( supressmsg )
+	if  self.Owner:GetNWInt( "Cooldown."..self:GetSecondarySlot() ,0) == 0 then -- return if NWInt exists (is it safe to check the nwint!?) since this function is only relevant client side its probably safe... prove me wrong
+
+		return false
+
+	else
+		if not supressmsg then self.Owner:PrintMessage( HUD_PRINTTALK, "Wait "..self.Owner:GetNWInt( "Cooldown."..self:GetSecondarySlot() ,0).." more seconds to use that again.") end
 		
 		return true
 
@@ -249,17 +268,4 @@ function SWEP:CustomViewModelSequence( seqname )
 	if vm:LookupSequence( seqname ) then
 		vm:SendViewModelMatchingSequence( vm:LookupSequence( seqname ) )
 	end
-end
-
---should have used accessorfuncs in the beginning now it's to late deal with it
-function SWEP:SetPrimarySlot( slot )
-	if self.Primary.Slot then self.Primary.Slot = slot end
-end
-
-function SWEP:SetSecondarySlot( slot )
-	if self.Primary.Slot then self.Secondary.Slot = slot end
-end
-
-function SWEP:SetSlot( slot )
-	self.Slot = slot
 end

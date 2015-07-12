@@ -28,6 +28,7 @@ function SWEP:PrimaryAttack()
 		local turret = ents.Create( "npc_turret_floor" )
 		if ( !IsValid( turret ) ) then return end
 		turret:SetCreator( self.Owner )
+		turret:SetOwner( self.Owner )
 		turret:SetPos( self:CalculatePos() )
 		turret:SetAngles( self:CalculateAngles() )
 		turret:Spawn()
@@ -47,8 +48,4 @@ function SWEP:PrimaryAttack()
 		self:StartPrimaryCooldown( cooldown)-- Start cooldown for first "ability"
 
 	end
-end
-
-function SWEP:OnRemove()
-	if self.Owner:HasStatus("Turret_Placed") then self.Owner:RemoveStatus("Turret_Placed") end
 end

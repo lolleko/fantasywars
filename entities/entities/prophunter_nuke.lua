@@ -26,5 +26,5 @@ function ENT:PhysicsCollide( data, phys )
 	explode:Spawn()
 	explode:SetKeyValue("iMagnitude","75")
 	explode:Fire("Explode", 0, 0 )
-	explode:EmitSound( "ambient/explosions/explode_" .. math.random( 1, 9 ) .. ".wav", 400, 400 )
+	explode:EmitSound( "ambient/explosions/explode_" .. math.random( 1, 9 ) .. ".wav", 100, 400 )
 end

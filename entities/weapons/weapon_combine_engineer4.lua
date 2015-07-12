@@ -28,6 +28,7 @@ function SWEP:PrimaryAttack()
 		local thumper = ents.Create( "prop_physics" )
 		if ( !IsValid( thumper ) ) then return end
 		thumper:SetModel( "models/props_combine/combinethumper002.mdl" )
+		thumper:SetCreator( self.Owner )
 		thumper:SetPos( self:CalculatePos() )
 		thumper:SetAngles( self:CalculateAngles() )
 		thumper:Spawn()
@@ -39,8 +40,4 @@ function SWEP:PrimaryAttack()
 		self:StartPrimaryCooldown( cooldown)-- Start cooldown for first "ability"
 
 	end
-end
-
-function SWEP:OnRemove()
-	if self.Owner:HasStatus("Thumper_Placed") then self.Owner:RemoveStatus("Thumper_Placed") end
 end

@@ -31,7 +31,7 @@ function ENT:PhysicsCollide( data, phys )
 	if self.Hit then
 		self.Hit = false
 		self:SetCollisionGroup(COLLISION_GROUP_WEAPON)
-		if data.HitEntity:IsNPC() or data.HitEntity:IsPlayer() then
+		if (data.HitEntity:IsNPC() and data.HitEntity:GetCreator():IsPlayer() and data.HitEntity:GetCreator():Team() != self:GetCreator():Team()) or (data.HitEntity:IsPlayer() and  data.HitEntity:Team() != self.Owner:Team())  then
 			data.HitEntity:TakeDamage( self:GetDamage() or 10, self:GetCreator(), self)
 			local effectdata = EffectData()
 			effectdata:SetOrigin( data.HitPos )

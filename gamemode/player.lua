@@ -6,6 +6,7 @@ function GM:PlayerInitialSpawn( ply )
 	ply:SetCanZoom( false )
 
 	player_manager.SetPlayerClass( ply, "player_warrior")
+
 end
 
 function GM:PlayerDisconnected( ply )
@@ -105,7 +106,7 @@ function GM:PlayerDeath( victim, infl, attacker)
 	victim:Extinguish()
 
 	if FW:GetRoundState() == FW_ROUND then
-		if attacker:GetOwner():IsPlayer() and attacker:GetOwner():Team() != victim:Team() or attacker:IsPlayer() and attacker:Team() != victim:Team() then
+		if attacker:GetOwner() and attacker:GetOwner():IsPlayer() and attacker:GetOwner():Team() != victim:Team() or attacker:IsPlayer() and attacker:Team() != victim:Team() then
 			team.AddScore(attacker:Team(), 1)
 		end
 	end

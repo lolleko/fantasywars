@@ -31,6 +31,7 @@ function FW:RoundStart()
 	for _, ply in pairs( player.GetAll() ) do
 		ply:Spawn()
 		ply:ResetCooldowns()
+		ply:ClearStatus()
 	end
 	team.SetScore( TEAM_BLUE, 0)
 	team.SetScore( TEAM_RED, 0)
@@ -56,6 +57,15 @@ function FW:RoundEnd()
 	self.TimeLeft = self.BreakDuration
 	self:SetRoundState(FW_BREAK)
 	self:BroadcastRoundState()
+	if self.RoundNumber > 0 then
+		if team.GetScore( TEAM_BLUE ) > team.GetScore( TEAM_RED ) then
+			PrintMessage( HUD_PRINTTALK, "Team Blue victory!" )
+		elseif team.GetScore( TEAM_BLUE ) == team.GetScore( TEAM_RED ) then
+			PrintMessage( HUD_PRINTTALK, "Draw, you loosers!" )
+		else
+			PrintMessage( HUD_PRINTTALK, "Team Red Victory!" )
+		end
+	end
 	print("Round ended")
 	print("Break started")
 end

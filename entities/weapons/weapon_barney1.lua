@@ -6,8 +6,8 @@ SWEP.Base = "weapon_fwbase"
 SWEP.HoldType 			= "melee"
 
 SWEP.Primary.Distance        = 80
-SWEP.Primary.Damage 		= 40
-SWEP.Primary.Delay 			= 0.5
+SWEP.Primary.Damage 		= 30
+SWEP.Primary.Delay 			= 0.7
 SWEP.Primary.Automatic = true
 
 SWEP.Primary.Slot 		= 0

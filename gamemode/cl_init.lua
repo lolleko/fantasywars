@@ -5,6 +5,6 @@ include( "cl_warriors.lua")
 
 vgui.Create('DPickMenu')
 
-concommand.Add( "fw_pick", function()
+/*concommand.Add( "fw_pick", function()
 	vgui.Create('DPickMenu')
-end )
+end )*/

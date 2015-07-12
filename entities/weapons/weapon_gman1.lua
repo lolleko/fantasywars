@@ -3,7 +3,7 @@ AddCSLuaFile()
 SWEP.Base = "weapon_fwbase"
 
 SWEP.HoldType 			= "normal"
-SWEP.Primary.Damage 		= 0.0075 --pecantage (x100)
+SWEP.Primary.Damage 		= 0.005 --pecantage (x100)
 SWEP.ViewModel = "models/weapons/c_arms.mdl"
 SWEP.WorldModel = ""
 

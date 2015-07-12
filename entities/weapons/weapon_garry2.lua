@@ -43,7 +43,7 @@ function SWEP:PrimaryAttack()
 			explode:Spawn()
 			explode:SetKeyValue("iMagnitude","75")
 			explode:Fire("Explode", 0, 0 )
-			explode:EmitSound( "ambient/explosions/explode_" .. math.random( 1, 9 ) .. ".wav", 400, 400 )
+			explode:EmitSound( "ambient/explosions/explode_" .. math.random( 1, 9 ) .. ".wav", 100, 400 )
 		end)
 
 		self:StartPrimaryCooldown( cooldown )
@@ -59,7 +59,7 @@ function SWEP:SecondaryAttack()
 	if SERVER then -- we want the skill and cooldown to be handled by the SERVER not by the CLIENT
 
 		local ply = self.Owner
-		local cooldown = 60
+		local cooldown = 35
 
 		for _,target in pairs(player.GetAll()) do
 			local status = {}

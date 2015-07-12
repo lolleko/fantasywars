@@ -73,7 +73,7 @@ function FWHUD:DrawAbilities( ply )
 
     for slot,wep in pairs(weps) do --So many dirty little "ifs" (TIDY)
 
-        if !wep.Secondary.Slot then
+        if !wep:GetSecondarySlot() then
             if actwep == wep then
                 self:DrawPanel(x-b,y+k+b*3,k+2*b,16, clrs.outerBackgroundActive)
             else
@@ -82,7 +82,7 @@ function FWHUD:DrawAbilities( ply )
             self:DrawText(x+k/2,y+k+b*3, slot, "treb_small", clrs.whiteText ) 
         end
 
-        if wep.Secondary.Slot and wep.Primary.Slot then
+        if wep:GetSecondarySlot() and wep:GetPrimarySlot() then
             if actwep == wep then
                 self:DrawPanel(x-b,y+k+b*3,k*2+6*b,16, clrs.outerBackgroundActive)
             else
@@ -91,14 +91,14 @@ function FWHUD:DrawAbilities( ply )
             self:DrawText(x+k+b,y+k+b*3, slot, "treb_small", clrs.whiteText ) 
         end
 
-        if wep.Primary.Slot then
+        if wep:GetPrimarySlot() then
             local bCd = false
             local bClip = false
-            if wep:IsOnCooldown(wep.Primary.Slot, true) then clr = clrs.innerBackgroundCd bCd = true else clr = clrs.innerBackground end
+            if wep:IsPrimaryOnCooldown(true) then clr = clrs.innerBackgroundCd bCd = true else clr = clrs.innerBackground end
             if wep.Primary.Ammo != "none" then bClip = true if wep:Clip1() == 0 then clr = clrs.innerBackgroundCd end end
             self:DrawPanel(x,y,k,k, clr, b)
             if bCd then    
-                self:DrawText(x+17,y+14, ply:GetNWInt( "Cooldown."..wep.Primary.Slot ,0), "treb", clrs.whiteText )
+                self:DrawText(x+17,y+14, ply:GetNWInt( "Cooldown."..wep:GetPrimarySlot() ,0), "treb", clrs.whiteText )
             end 
             if bClip then
                 self:DrawText(x+17,y+14, wep:Clip1(), "treb", clrs.whiteText )
@@ -106,14 +106,14 @@ function FWHUD:DrawAbilities( ply )
             x = x+k+b*4
         end
 
-        if wep.Secondary.Slot then
+        if wep:GetSecondarySlot() then
             local bCd = false
             local bClip = false
-            if wep:IsOnCooldown(wep.Secondary.Slot, true) then clr = clrs.innerBackgroundCd bCd = true else clr = clrs.innerBackground end
+            if wep:IsSecondaryOnCooldown(true) then clr = clrs.innerBackgroundCd bCd = true else clr = clrs.innerBackground end
             if wep.Secondary.Ammo != "none" then bClip = true if wep:Clip2() == 0 then clr = clrs.innerBackgroundCd end end
             self:DrawPanel(x,y,k,k, clr, b)
             if bCd then
-                self:DrawText(x+17,y+14, ply:GetNWInt( "Cooldown."..wep.Secondary.Slot ,0), "treb", clrs.whiteText )
+                self:DrawText(x+17,y+14, ply:GetNWInt( "Cooldown."..wep:GetSecondarySlot() ,0), "treb", clrs.whiteText )
             end 
             if bClip then
                 self:DrawText(x+17,y+14, wep:Clip2(), "treb", clrs.whiteText )
@@ -275,7 +275,7 @@ function FantasyHUD()
 
 	local ply = LocalPlayer()
 	local hp = ply:Health()
-	local hpp = ply:Health()/ply:GetMaxHealth()
+	local hpp = hp/ply:GetMaxHealth()
     local ap = ply:Armor()
     local app = ply:Armor()/300
     local state = FW:GetRoundState() or "State"
@@ -333,6 +333,18 @@ function FantasyHUD()
     if ply:GetNWInt("RespawnTimer", 0) == 0 and !ply:Alive() then
         FWHUD:DrawText( ScrW()/2-100, ScrH()/2, "Click to respawn...", "treb", clrs.whiteText )
     end
+
+    for id,target in pairs(player.GetAll()) do
+        if target:Alive() and ply:Team() == target:Team() and ply != target then
+
+            local targetCenter = target:OBBCenter()
+            local targetPos = target:GetPos() + targetCenter
+            local targetScreenpos = targetPos:ToScreen()
+
+            surface.DrawCircle( tonumber(targetScreenpos.x), tonumber(targetScreenpos.y), 10, team.GetColor(ply:Team()))
+        end
+    end
+
 	/*
     local bl = team.GetLevel( TEAM_BLUE )
     local rl = team.GetLevel( TEAM_RED )
@@ -368,19 +380,40 @@ function FantasyHUD()
     surface.DrawText( rxp )*/
 
     /*
-	for id,target in pairs(player.GetAll()) do
-		if target:Alive() and ply:IsLineOfSightClear(target:GetPos()) then
-
-			local targetModelHeight = target:OBBMaxs():Length()
-			local targetPos = target:GetPos() + Vector(-50,0,targetModelHeight)
-			local targetScreenpos = targetPos:ToScreen()
-
-			local hpp = target:Health()/target:GetMaxHealth() * 100
-			
-			draw.RoundedBox( 0, tonumber(targetScreenpos.x), tonumber(targetScreenpos.y), 100, 10, Color(0,0,0) )
-			draw.RoundedBox( 0, tonumber(targetScreenpos.x), tonumber(targetScreenpos.y), hpp, 10, Color(230,40,40) )
-		end
-	end*/
+*/
 end
 hook.Add( "HUDPaint", "FantasyHUD", FantasyHUD)
 
+function GM:HUDDrawTargetID()
+    local clrs = {
+        hp = {
+            background = Color(26,26,26),
+            fill = Color( 142, 41, 44)
+        },
+        whiteText = Color(255,255,255),
+    }
+
+    local trace = LocalPlayer():GetEyeTrace()
+
+    local hitEntity = trace.Entity
+
+    if hitEntity and hitEntity:IsPlayer() or hitEntity:IsNPC() then
+        local clr
+        local name
+        if hitEntity:IsNPC() then
+            name = hitEntity:GetClass()
+            if hitEntity:GetOwner() and hitEntity:GetOwner():IsPlayer() then
+                clr = team.GetColor(hitEntity:GetOwner():Team())
+            else
+                clr =  clrs.whiteText
+            end
+        else
+            name = hitEntity:Nick() clr = team.GetColor(hitEntity:Team())
+        end
+        local hp = hitEntity:Health()
+        local hpp = hp/hitEntity:GetMaxHealth()
+        FWHUD:DrawBar( ScrW()/2-200, 60, 400, 48, clrs.hp , hpp )
+        FWHUD:DrawText( ScrW()/2-190, 20, name, "treb", clr )
+        FWHUD:DrawText( ScrW()/2-190, 70, hp, "treb", clrs.whiteText )
+    end
+end

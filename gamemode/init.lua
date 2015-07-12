@@ -28,7 +28,6 @@ net.Receive('FW_SetWarrior', function(length, ply)
 	if  ply:IsValid() and ply:IsPlayer() then --TODO add check if already picked
 		ply:SetTeam(team.BestAutoJoinTeam())
 		ply:RemoveWarrior()
-		FW:SetPicked(name, true)
 		ply:StripWeapons()
 		ply:SetWarrior(name)
 		ply:Spawn()

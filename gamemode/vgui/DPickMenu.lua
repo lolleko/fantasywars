@@ -109,6 +109,7 @@ function PMENU:Init()
 	function SButton:Paint( w, h)
 		draw.RoundedBox( 0, 0, 0, w, h, clrs.black )
 	end
+	SButton:SetDisabled(true)
 
 	for _, warrior in pairs(FW:GetWarriorList()) do
 

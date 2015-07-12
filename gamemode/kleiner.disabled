@@ -1,4 +1,4 @@
-WARRIOR.Name = "Kleiner"
+WARRIOR.Name = "Kleiner [Buggy]"
 WARRIOR.Model = "models/player/kleiner.mdl"
 WARRIOR.Speed = 200
 WARRIOR.JumpPower = 200

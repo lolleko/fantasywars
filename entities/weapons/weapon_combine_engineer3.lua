@@ -44,6 +44,7 @@ function SWEP:PrimaryAttack()
 	local ent = ents.Create( "npc_manhack" )
 	ent:SetPos( tr.HitPos + self.Owner:GetAimVector() * -16 )
 	ent:SetAngles( tr.HitNormal:Angle() )
+	ent:SetOwner( self.Owner )
 	ent:SetCreator( self.Owner )
 	ent:Spawn()
 
@@ -58,8 +59,4 @@ function SWEP:PrimaryAttack()
 	self.Owner:SetStatus({Name = "Manhack_Placed", FuncEnd = function() if IsValid(ent) then ent:Remove() end end, Show = false})
 
 	self:StartPrimaryCooldown( cooldown)-- Start cooldown for first "ability"
-end
-
-function SWEP:OnRemove()
-	if self.Owner:HasStatus("Manhack_Placed") then self.Owner:RemoveStatus("Manhack_Placed") end
 end

@@ -28,13 +28,15 @@ function SWEP:DrawHUD()
 end
 
 function SWEP:Initialize()
+    self:SetPrimarySlot( self.Primary.Slot ) -- Setup slots here since we want to be able to change them
+    self:SetSecondarySlot( self.Secondary.Slot )
 	if CLIENT and self.PreviewShow then
 		if !IsValid(self.PreviewProp) then
 			self.PreviewProp = ents.CreateClientProp(self.PreviewModel)
 			self.PreviewProp:SetNoDraw(true)
 		end
 		if IsValid(self.PreviewProp) then
-			self.PreviewProp:SetParent(self)
+			self.PreviewProp:SetOwner(self)
 			self.PreviewProp:Spawn()
 		end
 	end
